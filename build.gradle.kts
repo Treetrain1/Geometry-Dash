@@ -248,6 +248,9 @@ dependencies {
         //modApi(files("libs/frozenlib.jar"))?.apply { include(this) }
         modApi("maven.modrinth:frozenlib:$frozenlib_version")?.let { include(it) }
 
+    // Gravity Changer
+    api(project(":GravityChanger", configuration = "namedElements"))?.let { include(it) }
+
     // Reach Entity Attributes
     modApi("com.github.Treetrain1:reach-entity-attributes:1.20-SNAPSHOT")?.let { include(it) }
 

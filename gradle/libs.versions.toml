@@ -2,20 +2,20 @@
 
 # Fabric Properties
 # Get new versions at https://fabricmc.net/develop and https://lambdaurora.dev/tools/import_quilt.html
-minecraft = "1.20.2"
-quilt_mappings = "1.20.2+build.3"
+minecraft = "1.20.4"
+quilt_mappings = "1.20.4+build.2"
 parchment_mappings = "2023.10.22"
-fabric_loader = "0.14.24"
+fabric_loader = "0.15.3"
 
 # Dependencies
-fabric_api = "0.91.1+1.20.2"
-kotlin = "1.9.21"
-fabric_kotlin = "1.10.15+kotlin.1.9.21"
-frozenLib = "1.4.4-mc1.20.2"
+fabric_api = "0.91.2+1.20.4"
+kotlin = "1.9.22"
+fabric_kotlin = "1.10.17+kotlin.1.9.22"
+frozenLib = "1.5.2-mc1.20.4"
 
 # External Mods
-clothConfig = "12.0.111"
-modMenu = "8.0.0"
+clothConfig = "13.0.114"
+modMenu = "9.0.0-pre.1"
 terraBlender = "1.20.2-3.2.0.14"
 
 [libraries]

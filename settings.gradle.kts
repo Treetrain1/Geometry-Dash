@@ -27,15 +27,16 @@ pluginManagement {
 
 rootProject.name = "Geometry Dash"
 
-localRepository("FrozenLib", "maven.modrinth:frozenlib", true)
+//localRepository("FrozenLib", "maven.modrinth:frozenlib", true)
+localRepository("GravityChanger", null, false)
 
 
-fun localRepository(repo: String, dependencySub: String, kotlin: Boolean) {
+fun localRepository(repo: String, dependencySub: String?, kotlin: Boolean) {
     println("Attempting to include local repo $repo")
 
     val github = System.getenv("GITHUB_ACTIONS") == "true"
 
-    val allowLocalRepoUse = false
+    val allowLocalRepoUse = true
     val allowLocalRepoInConsoleMode = true
 
     val androidInjectedInvokedFromIde by extra("android.injected.invoked.from.ide")
