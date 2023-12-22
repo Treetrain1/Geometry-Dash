@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "id": "geometry_dash",
+  "version": "${version}",
+
+  "name": "Geometry Dash",
+  "description": "Adds Geometry Dash to Minecraft",
+  "authors": [
+    "Treetrain1"
+  ],
+  "contact": {
+    "homepage": "https://modrinth.com/mod/geometry-dash",
+    "sources": "https://github.com/Treetrain1/Geometry-Dash",
+    "issues": "https://github.com/Treetrain1/Geometry-Dash/issues"
+  },
+
+  "license": "LGPL-3.0",
+  "icon": "assets/geometry_dash/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      {
+        "adapter": "kotlin",
+        "value": "me.treetrain1.geometrydash.GeometryDash"
+      }
+    ]
+  },
+  "mixins": [
+  ],
+  "accessWidener": "geometry_dash.accesswidener",
+
+  "depends": {
+    "frozenlib": ">=1.5-",
+    "fabric-language-kotlin": "${fabric_kotlin_version}",
+    "fabricloader": ">=0.15.1",
+    "fabric-api": ">=0.91.0",
+    "minecraft": "${minecraft_version}"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/EpkBWm844s"
+      },
+      "badges": [
+        "frozenblock"
+      ]
+    }
+  }
+}
