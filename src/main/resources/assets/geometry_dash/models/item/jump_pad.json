@@ -1,3 +1,16 @@
 {
-  "parent": "geometry_dash:block/jump_pad"
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "geometry_dash:block/jump_pad_top"
+  },
+  "display": {
+    "ground": {
+      "firstperson_righthand": {
+        "scale": [ 0.34, 0.68, 0.34 ]
+      }
+    },
+    "fixed": {
+      "scale": [ 0.5, 1, 0.5 ]
+    }
+  }
 }
