@@ -228,28 +228,20 @@ dependencies {
     // Fabric Language Kotlin. Required for Kotlin support.
     modImplementation("net.fabricmc:fabric-language-kotlin:${fabric_kotlin_version}")
 
-    // get deps manually because FKE cant give them to compile classpath without an error
-    api("org.jetbrains.kotlinx:kotlinx-metadata-jvm:0.7.0")
-    modApi(kotlin("scripting-common"))
-    modApi(kotlin("scripting-jvm"))
-    modApi(kotlin("scripting-jsr223"))
-    modApi(kotlin("scripting-jvm-host"))
-    modApi(kotlin("scripting-compiler-embeddable"))
-    modApi(kotlin("scripting-dependencies"))
-    modApi(kotlin("scripting-dependencies-maven"))
-
-    api("net.fabricmc:mapping-io:0.5.1")
-    api("net.fabricmc:tiny-remapper:0.8.11")
-
     // FrozenLib
-    if (local_frozenlib)
+/*    if (local_frozenlib)
         api(project(":FrozenLib", configuration = "namedElements"))?.let { include(it) }
     else
         //modApi(files("libs/frozenlib.jar"))?.apply { include(this) }
         modApi("maven.modrinth:frozenlib:$frozenlib_version")?.let { include(it) }
-
+*/
     // Gravity Changer
     api(project(":GravityChanger", configuration = "namedElements"))?.let { include(it) }
+
+    // Pehkui
+    modApi("com.github.Virtuoel:Pehkui:3.7.12") {
+        exclude(group = "net.fabricmc.fabric-api")
+    }
 
     // Reach Entity Attributes
     modApi("com.github.Treetrain1:reach-entity-attributes:1.20-SNAPSHOT")?.let { include(it) }

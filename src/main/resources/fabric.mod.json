@@ -31,9 +31,8 @@
   "accessWidener": "geometry_dash.accesswidener",
 
   "depends": {
-    "frozenlib": ">=1.5-",
     "fabric-language-kotlin": "${fabric_kotlin_version}",
-    "fabricloader": ">=0.15.1",
+    "fabricloader": ">=0.15.3",
     "fabric-api": ">=0.91.0",
     "minecraft": "${minecraft_version}"
   },
