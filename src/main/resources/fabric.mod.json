@@ -3,10 +3,11 @@
   "id": "geometry_dash",
   "version": "${version}",
 
-  "name": "Geometry Dash",
-  "description": "Adds Geometry Dash to Minecraft",
+  "name": "Geometry Dash: Minecraft",
+  "description": "An unofficial port of Geometry Dash to Minecraft.",
   "authors": [
-    "Treetrain1"
+    "Treetrain1",
+    "RobTop - Original Game"
   ],
   "contact": {
     "homepage": "https://modrinth.com/mod/geometry-dash",
@@ -27,6 +28,7 @@
     ]
   },
   "mixins": [
+    "geometry_dash.mixins.json"
   ],
   "accessWidener": "geometry_dash.accesswidener",
 

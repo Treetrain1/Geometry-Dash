@@ -4,22 +4,26 @@ import gravity_changer.api.GravityChangerAPI
 import gravity_changer.command.LocalDirection
 import gravity_changer.util.RotationUtil
 import net.minecraft.core.Direction
+import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.entity.Entity
+import net.minecraft.world.item.CreativeModeTab
+import kotlin.jvm.optionals.getOrNull
 
 // GRAVITY
 
-fun setRelative(entity: Entity, direction: LocalDirection) {
-    val gravityDirection = GravityChangerAPI.getGravityDirection(entity)
+fun Entity.setRelative(direction: LocalDirection) {
+    val gravityDirection = GravityChangerAPI.getGravityDirection(this)
     val combinedRelativeDirection = when (direction) {
         LocalDirection.DOWN -> Direction.DOWN
         LocalDirection.UP -> Direction.UP
         LocalDirection.FORWARD, LocalDirection.BACKWARD, LocalDirection.LEFT, LocalDirection.RIGHT -> Direction.from2DDataValue(
-            direction.horizontalOffset + Direction.fromYRot(entity.yRot.toDouble()).get2DDataValue()
+            direction.horizontalOffset + Direction.fromYRot(this.yRot.toDouble()).get2DDataValue()
         )
     }
     val newGravityDirection = RotationUtil.dirPlayerToWorld(combinedRelativeDirection, gravityDirection)
-    GravityChangerAPI.setBaseGravityDirection(entity, newGravityDirection)
+    GravityChangerAPI.setBaseGravityDirection(this, newGravityDirection)
 }
 
 // LOGGING
