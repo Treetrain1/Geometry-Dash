@@ -23,7 +23,9 @@ object GeometryDash : ModInitializer {
         FabricItemGroup.builder()
             .title(Component.literal("Geometry Dash"))
             .icon { ItemStack(Items.DIAMOND) }
-            .displayItems { params, entries ->}
+            .displayItems { params, entries ->
+                entries.accept(RegisterBlocks.JUMP_PAD)
+            }
             .build()
     ).key!!
 
