@@ -2,6 +2,8 @@ package me.treetrain1.geometrydash.command
 
 import com.mojang.brigadier.CommandDispatcher
 import me.treetrain1.geometrydash.duck.PlayerDuck
+import me.treetrain1.geometrydash.network.GDModeSyncPacket
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.Commands
 import net.minecraft.commands.arguments.EntityArgument
@@ -33,7 +35,9 @@ object GDCommand {
     private fun toggle(source: CommandSourceStack, players: Collection<ServerPlayer>): Int {
         for (player in players) {
             val duck = player as PlayerDuck
-            duck.`geometryDash$setGDMode`(!duck.`geometryDash$isGDMode`())
+            val packet = GDModeSyncPacket(!duck.`geometryDash$isGDMode`())
+            duck.`geometryDash$setGDMode`(packet.mode)
+            ServerPlayNetworking.send(player, packet)
         }
 
         if (players.size == 1) {
@@ -46,8 +50,10 @@ object GDCommand {
     }
 
     private fun exit(source: CommandSourceStack, players: Collection<ServerPlayer>): Int {
+        val packet = GDModeSyncPacket(false)
         for (player in players) {
             (player as PlayerDuck).`geometryDash$setGDMode`(false)
+            ServerPlayNetworking.send(player, packet)
         }
 
         if (players.size == 1) {
