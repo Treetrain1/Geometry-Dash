@@ -1,7 +1,9 @@
 @file:Suppress("OVERRIDE_DEPRECATION", "DEPRECATION")
 
 package me.treetrain1.geometrydash.block
+import gravity_changer.api.GravityChangerAPI
 import gravity_changer.command.LocalDirection
+import gravity_changer.util.RotationUtil
 import me.treetrain1.geometrydash.block.entity.JumpPadBlockEntity
 import me.treetrain1.geometrydash.duck.PlayerDuck
 import me.treetrain1.geometrydash.util.setRelative
@@ -24,6 +26,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties
 import net.minecraft.world.level.block.state.properties.BooleanProperty
 import net.minecraft.world.level.material.FluidState
 import net.minecraft.world.level.material.Fluids
+import net.minecraft.world.phys.Vec3
 import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.Shapes
 import net.minecraft.world.phys.shapes.VoxelShape
@@ -31,7 +34,7 @@ import net.minecraft.world.phys.shapes.VoxelShape
 @Suppress("MemberVisibilityCanBePrivate")
 open class JumpPadBlock(val type: JumpPadType, props: Properties) : HalfTransparentBlock(props), SimpleWaterloggedBlock, EntityBlock {
     companion object {
-        private const val COOLDOWN: Int = 3
+        private const val COOLDOWN: Int = 7
 
         @JvmField
         val WATERLOGGED: BooleanProperty = BlockStateProperties.WATERLOGGED
@@ -77,12 +80,12 @@ open class JumpPadBlock(val type: JumpPadType, props: Properties) : HalfTranspar
         // TODO: Add a better way to set GD Mode
         if (entity is Player) (entity as PlayerDuck).`geometryDash$setGDMode`(true)
 
+        if (type.shouldFlipGravity) {
+            entity.setRelative(LocalDirection.UP)
+        }
         if (type.shouldJump) {
             entity.setJumping(true)
             entity.applyDelta(type)
-        }
-        if (type.shouldFlipGravity) {
-            entity.setRelative(LocalDirection.UP)
         }
 
         blockEntity.cooldowns[entity.uuid.toString()] = COOLDOWN

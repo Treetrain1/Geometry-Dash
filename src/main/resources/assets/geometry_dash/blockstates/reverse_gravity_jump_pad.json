@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "geometry_dash:block/reverse_gravity_jump_pad"
+    }
+  }
+}

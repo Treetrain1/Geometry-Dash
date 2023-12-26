@@ -11,7 +11,7 @@ object RegisterBlocks {
 
     val JUMP_PAD: Block = register(
         "jump_pad",
-        jumpPad()
+        jumpPad(JumpPadBlock.JumpPadType.NORMAL)
     )
 
     val REVERSE_GRAVITY_JUMP_PAD: Block = register(
@@ -25,7 +25,7 @@ object RegisterBlocks {
     )
 }
 
-private fun jumpPad(type: JumpPadBlock.JumpPadType = JumpPadBlock.JumpPadType.NORMAL): JumpPadBlock
+private fun jumpPad(type: JumpPadBlock.JumpPadType): JumpPadBlock
     = JumpPadBlock(
         type,
         FabricBlockSettings.create()

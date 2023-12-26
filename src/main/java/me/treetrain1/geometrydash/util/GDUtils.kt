@@ -3,13 +3,11 @@ package me.treetrain1.geometrydash.util
 import gravity_changer.api.GravityChangerAPI
 import gravity_changer.command.LocalDirection
 import gravity_changer.util.RotationUtil
+import net.fabricmc.api.EnvType
+import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.core.Direction
-import net.minecraft.core.registries.BuiltInRegistries
-import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.entity.Entity
-import net.minecraft.world.item.CreativeModeTab
-import kotlin.jvm.optionals.getOrNull
 
 // GRAVITY
 
@@ -25,6 +23,14 @@ fun Entity.setRelative(direction: LocalDirection) {
     val newGravityDirection = RotationUtil.dirPlayerToWorld(combinedRelativeDirection, gravityDirection)
     GravityChangerAPI.setBaseGravityDirection(this, newGravityDirection)
 }
+
+// Kotlin stuff
+
+inline fun <T> ifClient(crossinline runnable: () -> T): T?
+    = if (FabricLoader.getInstance().environmentType == EnvType.CLIENT) runnable() else null
+
+inline fun ifClient(crossinline runnable: () -> Unit, crossinline elseRun: () -> Unit)
+    = ifClient(runnable) ?: elseRun()
 
 // LOGGING
 @JvmOverloads

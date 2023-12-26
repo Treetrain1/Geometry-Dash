@@ -1,6 +1,6 @@
 {
   "parent": "geometry_dash:item/jump_pad_template",
   "textures": {
-    "layer0": "geometry_dash:block/jump_pad_top"
+    "layer0": "geometry_dash:block/reverse_gravity_jump_pad_top"
   }
 }

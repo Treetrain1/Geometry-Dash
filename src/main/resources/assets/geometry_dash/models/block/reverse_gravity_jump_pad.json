@@ -1,0 +1,8 @@
+{
+  "parent": "geometry_dash:block/jump_pad_template",
+  "textures": {
+    "particle": "geometry_dash:block/reverse_gravity_jump_pad_top",
+    "top": "geometry_dash:block/reverse_gravity_jump_pad_top",
+    "side": "geometry_dash:block/reverse_gravity_jump_pad_top"
+  }
+}
