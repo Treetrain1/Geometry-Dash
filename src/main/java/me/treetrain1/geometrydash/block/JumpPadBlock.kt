@@ -32,7 +32,6 @@ import net.minecraft.world.phys.shapes.VoxelShape
 open class JumpPadBlock(val type: JumpPadType, props: Properties) : HalfTransparentBlock(props), SimpleWaterloggedBlock, EntityBlock {
     companion object {
         private const val COOLDOWN: Int = 3
-        private const val JUMP_POWER: Double = 1.0
 
         @JvmField
         val WATERLOGGED: BooleanProperty = BlockStateProperties.WATERLOGGED
