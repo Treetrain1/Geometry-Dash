@@ -40,9 +40,9 @@ open class JumpPadBlock(val type: JumpPadType, props: Properties) : HalfTranspar
         @JvmField
         protected val SHAPE: VoxelShape = Block.box(4.0, 0.0, 4.0, 12.0, 2.0, 12.0)
 
-        private fun Entity.applyDelta() {
+        private fun Entity.applyDelta(type: JumpPadType) {
             val delta = this.deltaMovement
-            this.setDeltaMovement(delta.x, JUMP_POWER, delta.z)
+            this.setDeltaMovement(delta.x, type.jumpPower, delta.z)
         }
     }
 
@@ -80,7 +80,7 @@ open class JumpPadBlock(val type: JumpPadType, props: Properties) : HalfTranspar
 
         if (type.shouldJump) {
             entity.setJumping(true)
-            entity.applyDelta()
+            entity.applyDelta(type)
         }
         if (type.shouldFlipGravity) {
             entity.setRelative(LocalDirection.UP)
@@ -108,26 +108,11 @@ open class JumpPadBlock(val type: JumpPadType, props: Properties) : HalfTranspar
 
     private fun blockEntity(level: Level, pos: BlockPos): JumpPadBlockEntity? = level.getBlockEntity(pos) as? JumpPadBlockEntity
 
-    enum class JumpPadType {
-        LOW,
+    enum class JumpPadType(val shouldJump: Boolean = true, val jumpPower: Double = 1.0, val shouldFlipGravity: Boolean = false) {
+        LOW(jumpPower = 0.2),
         NORMAL,
-        HIGH,
-        REVERSE_GRAVITY,
-        TELEPORT; // Spider vertical teleporting
-
-        val shouldJump: Boolean
-            get() = this == LOW || this == NORMAL || this == HIGH || this == REVERSE_GRAVITY
-
-        val jumpPower: Double
-            get() =
-                when (this) {
-                    LOW -> 0.2
-                    NORMAL, REVERSE_GRAVITY -> 1.0
-                    HIGH -> 2.0
-                    else -> 0.0
-                }
-
-        val shouldFlipGravity: Boolean
-            get() = this == REVERSE_GRAVITY || this == TELEPORT
+        HIGH(jumpPower = 2.0),
+        REVERSE_GRAVITY(shouldFlipGravity = true),
+        TELEPORT(shouldJump = false, shouldFlipGravity = true); // Spider vertical teleporting
     }
 }
