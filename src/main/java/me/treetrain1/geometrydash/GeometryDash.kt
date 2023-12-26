@@ -26,6 +26,7 @@ object GeometryDash : ModInitializer {
             .displayItems { params, entries ->
                 entries.accept(RegisterBlocks.JUMP_PAD)
                 entries.accept(RegisterBlocks.REVERSE_GRAVITY_JUMP_PAD)
+                entries.accept(RegisterBlocks.TELEPORT_PAD)
             }
             .build()
     ).key!!
