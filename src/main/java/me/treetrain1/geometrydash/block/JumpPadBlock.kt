@@ -1,21 +1,22 @@
 @file:Suppress("OVERRIDE_DEPRECATION", "DEPRECATION")
 
 package me.treetrain1.geometrydash.block
+import com.mojang.serialization.MapCodec
 import gravity_changer.command.LocalDirection
 import me.treetrain1.geometrydash.block.entity.JumpPadBlockEntity
 import me.treetrain1.geometrydash.duck.PlayerDuck
 import me.treetrain1.geometrydash.util.isCollidingWithPad
 import me.treetrain1.geometrydash.util.setRelative
 import net.minecraft.core.BlockPos
+import net.minecraft.core.Direction
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.BlockGetter
 import net.minecraft.world.level.Level
-import net.minecraft.world.level.block.Block
-import net.minecraft.world.level.block.EntityBlock
-import net.minecraft.world.level.block.HalfTransparentBlock
-import net.minecraft.world.level.block.SimpleWaterloggedBlock
+import net.minecraft.world.level.LevelAccessor
+import net.minecraft.world.level.LevelReader
+import net.minecraft.world.level.block.*
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.entity.BlockEntityTicker
 import net.minecraft.world.level.block.entity.BlockEntityType
@@ -30,7 +31,7 @@ import net.minecraft.world.phys.shapes.Shapes
 import net.minecraft.world.phys.shapes.VoxelShape
 
 @Suppress("MemberVisibilityCanBePrivate")
-open class JumpPadBlock(val type: JumpPadType, props: Properties) : HalfTransparentBlock(props), SimpleWaterloggedBlock, EntityBlock {
+open class JumpPadBlock(val type: JumpPadType, props: Properties) : MultifaceBlock(props), SimpleWaterloggedBlock, EntityBlock {
     companion object {
 
         @JvmField
@@ -45,21 +46,26 @@ open class JumpPadBlock(val type: JumpPadType, props: Properties) : HalfTranspar
         }
     }
 
+    private val grower = MultifaceSpreader(this)
+
     init {
-        this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, false))
+        this.registerDefaultState(this.defaultBlockState().setValue(WATERLOGGED, false))
     }
 
     override fun createBlockStateDefinition(builder: StateDefinition.Builder<Block, BlockState>) {
+        super.createBlockStateDefinition(builder)
         builder.add(WATERLOGGED)
     }
 
-    override fun getShape(
+    override fun getSpreader(): MultifaceSpreader = this.grower
+
+/*    override fun getShape(
         state: BlockState,
         level: BlockGetter,
         pos: BlockPos,
         context: CollisionContext
     ): VoxelShape = SHAPE
-
+*/
     override fun getCollisionShape(
         state: BlockState,
         level: BlockGetter,
@@ -88,9 +94,45 @@ open class JumpPadBlock(val type: JumpPadType, props: Properties) : HalfTranspar
         blockEntity.colliding.add(entity.id)
     }
 
+    override fun codec(): MapCodec<out MultifaceBlock>? = null
+
+    override fun isValidStateForPlacement(
+        level: BlockGetter,
+        state: BlockState,
+        pos: BlockPos,
+        direction: Direction
+    ): Boolean = this.isFaceSupported(direction) && (!state.`is`(this) || !hasFace(state, direction))
+
+    override fun updateShape(
+        state: BlockState,
+        direction: Direction,
+        neighborState: BlockState,
+        level: LevelAccessor,
+        pos: BlockPos,
+        neighborPos: BlockPos
+    ): BlockState {
+        if (state.hasProperty(WATERLOGGED) && state.getValue(WATERLOGGED)) {
+            level.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level))
+        }
+
+        return if (!hasAnyFace(state)) {
+            Blocks.AIR.defaultBlockState()
+        } else state
+    }
+
+    override fun canSurvive(state: BlockState, level: LevelReader, pos: BlockPos): Boolean {
+        for (direction in DIRECTIONS) {
+            if (hasFace(state, direction)) {
+                return true
+            }
+        }
+
+        return false
+    }
+
     override fun getFluidState(state: BlockState): FluidState {
         return if (state.hasProperty(WATERLOGGED) && state.getValue(WATERLOGGED))
-            Fluids.WATER.getSource(true)
+            Fluids.WATER.getSource(false)
         else
             super.getFluidState(state)
     }
