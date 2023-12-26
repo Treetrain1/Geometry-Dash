@@ -1,11 +1,13 @@
 package me.treetrain1.geometrydash
 
+import me.treetrain1.geometrydash.command.GDCommand
 import me.treetrain1.geometrydash.registry.RegisterBlockEntities
 import me.treetrain1.geometrydash.registry.RegisterBlocks
 import me.treetrain1.geometrydash.registry.key
 import me.treetrain1.geometrydash.registry.register
 import me.treetrain1.geometrydash.util.log
 import net.fabricmc.api.ModInitializer
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup
 import net.minecraft.core.Registry
 import net.minecraft.network.chat.Component
@@ -35,6 +37,10 @@ object GeometryDash : ModInitializer {
         val time = measureNanoTime {
             RegisterBlocks
             RegisterBlockEntities
+
+            CommandRegistrationCallback.EVENT.register { dispatcher, ctx, selection ->
+                GDCommand.register(dispatcher)
+            }
         }
 
         log("Geometry Dash took $time nanoseconds")
