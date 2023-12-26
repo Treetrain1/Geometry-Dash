@@ -25,6 +25,7 @@ object GeometryDash : ModInitializer {
             .icon { ItemStack(Items.DIAMOND) }
             .displayItems { params, entries ->
                 entries.accept(RegisterBlocks.JUMP_PAD)
+                entries.accept(RegisterBlocks.REVERSE_GRAVITY_JUMP_PAD)
             }
             .build()
     ).key!!

@@ -9,6 +9,6 @@ object RegisterBlockEntities {
     val JUMP_PAD: BlockEntityType<JumpPadBlockEntity> = register(
         "jump_pad",
         ::JumpPadBlockEntity,
-        RegisterBlocks.JUMP_PAD
+        RegisterBlocks.JUMP_PAD, RegisterBlocks.REVERSE_GRAVITY_JUMP_PAD
     )
 }

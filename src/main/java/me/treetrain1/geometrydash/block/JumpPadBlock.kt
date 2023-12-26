@@ -29,7 +29,7 @@ import net.minecraft.world.phys.shapes.Shapes
 import net.minecraft.world.phys.shapes.VoxelShape
 
 @Suppress("MemberVisibilityCanBePrivate")
-open class JumpPadBlock(props: Properties, val type: JumpPadType = JumpPadType.NORMAL) : HalfTransparentBlock(props), SimpleWaterloggedBlock, EntityBlock {
+open class JumpPadBlock(val type: JumpPadType, props: Properties) : HalfTransparentBlock(props), SimpleWaterloggedBlock, EntityBlock {
     companion object {
         private const val COOLDOWN: Int = 3
         private const val JUMP_POWER: Double = 1.0
