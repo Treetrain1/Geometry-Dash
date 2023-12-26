@@ -117,6 +117,6 @@ open class JumpPadBlock(val type: JumpPadType, props: Properties) : HalfTranspar
         NORMAL,
         HIGH,
         REVERSE_GRAVITY,
-        REVERSE_GRAVITY_TELEPORT
+        TELEPORT // Spider vertical teleporting
     }
 }
