@@ -25,6 +25,12 @@
         "adapter": "kotlin",
         "value": "me.treetrain1.geometrydash.GeometryDash"
       }
+    ],
+    "client": [
+      {
+        "adapter": "kotlin",
+        "value": "me.treetrain1.geometrydash.GeometryDashClient"
+      }
     ]
   },
   "mixins": [
