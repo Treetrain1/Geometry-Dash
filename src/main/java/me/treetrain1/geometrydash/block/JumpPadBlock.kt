@@ -38,7 +38,42 @@ open class JumpPadBlock(val type: JumpPadType, props: Properties) : MultifaceBlo
         val WATERLOGGED: BooleanProperty = BlockStateProperties.WATERLOGGED
 
         @JvmField
-        protected val SHAPE: VoxelShape = Block.box(4.0, 0.0, 4.0, 12.0, 2.0, 12.0)
+        protected val DOWN: VoxelShape = Block.box(4.0, 0.0, 4.0, 12.0, 2.0, 12.0)
+        @JvmField
+        protected val UP: VoxelShape = Block.box(4.0, 14.0, 4.0, 12.0, 16.0, 12.0)
+        @JvmField
+        protected val NORTH: VoxelShape = Block.box(4.0, 4.0, 0.0, 12.0, 12.0, 2.0)
+        @JvmField
+        protected val SOUTH: VoxelShape = Block.box(4.0, 4.0, 14.0, 12.0, 12.0, 16.0)
+        @JvmField
+        protected val EAST: VoxelShape = Block.box(14.0, 4.0, 4.0, 16.0, 12.0, 12.0)
+        @JvmField
+        protected val WEST: VoxelShape = Block.box(0.0, 4.0, 4.0, 2.0, 12.0, 12.0)
+
+        @JvmField
+        protected val SHAPE_BY_DIRECTION: Map<Direction, VoxelShape> = mapOf(
+            Direction.UP to UP,
+            Direction.DOWN to DOWN,
+            Direction.NORTH to NORTH,
+            Direction.SOUTH to SOUTH,
+            Direction.EAST to EAST,
+            Direction.WEST to WEST
+        )
+
+        private fun calcShape(state: BlockState): VoxelShape {
+            var voxelShape = Shapes.empty()
+
+            for (direction in DIRECTIONS) {
+                if (hasFace(state, direction)) {
+                    voxelShape = Shapes.or(
+                        voxelShape,
+                        SHAPE_BY_DIRECTION[direction] ?: continue
+                    )
+                }
+            }
+
+            return if (voxelShape.isEmpty) Shapes.block() else voxelShape
+        }
 
         private fun Entity.applyDelta(type: JumpPadType) {
             val delta = this.deltaMovement
@@ -47,10 +82,19 @@ open class JumpPadBlock(val type: JumpPadType, props: Properties) : MultifaceBlo
     }
 
     private val grower = MultifaceSpreader(this)
+    private val shapesCache: Map<BlockState, VoxelShape>
 
     init {
         this.registerDefaultState(this.defaultBlockState().setValue(WATERLOGGED, false))
+        this.shapesCache = this.getShapeForEachState(::calcShape)
     }
+
+    override fun getShape(
+        state: BlockState,
+        level: BlockGetter,
+        pos: BlockPos,
+        context: CollisionContext
+    ): VoxelShape = this.shapesCache[state] ?: Shapes.block()
 
     override fun createBlockStateDefinition(builder: StateDefinition.Builder<Block, BlockState>) {
         super.createBlockStateDefinition(builder)
@@ -59,13 +103,6 @@ open class JumpPadBlock(val type: JumpPadType, props: Properties) : MultifaceBlo
 
     override fun getSpreader(): MultifaceSpreader = this.grower
 
-/*    override fun getShape(
-        state: BlockState,
-        level: BlockGetter,
-        pos: BlockPos,
-        context: CollisionContext
-    ): VoxelShape = SHAPE
-*/
     override fun getCollisionShape(
         state: BlockState,
         level: BlockGetter,
