@@ -39,6 +39,11 @@ open class JumpPadBlock(val type: JumpPadType, props: Properties) : HalfTranspar
 
         @JvmField
         protected val SHAPE: VoxelShape = Block.box(4.0, 0.0, 4.0, 12.0, 2.0, 12.0)
+
+        private fun Entity.applyDelta() {
+            val delta = this.deltaMovement
+            this.setDeltaMovement(delta.x, JUMP_POWER, delta.z)
+        }
     }
 
     init {
@@ -63,11 +68,6 @@ open class JumpPadBlock(val type: JumpPadType, props: Properties) : HalfTranspar
         context: CollisionContext
     ): VoxelShape = Shapes.empty()
 
-    private fun applyDelta(entity: Entity) {
-        val delta = entity.deltaMovement
-        entity.setDeltaMovement(delta.x, JUMP_POWER, delta.z)
-    }
-
     override fun entityInside(state: BlockState, level: Level, pos: BlockPos, entity: Entity) {
         super.entityInside(state, level, pos, entity)
         if (entity !is LivingEntity) return
@@ -78,16 +78,12 @@ open class JumpPadBlock(val type: JumpPadType, props: Properties) : HalfTranspar
         // TODO: Add a better way to set GD Mode
         if (entity is Player) (entity as PlayerDuck).`geometryDash$setGDMode`(true)
 
-        entity.setJumping(true)
-        when (type) {
-            JumpPadType.NORMAL -> {
-                applyDelta(entity)
-            }
-            JumpPadType.REVERSE_GRAVITY -> {
-                applyDelta(entity)
-                entity.setRelative(LocalDirection.UP)
-            }
-            else -> {}
+        if (type.shouldJump) {
+            entity.setJumping(true)
+            entity.applyDelta()
+        }
+        if (type.shouldFlipGravity) {
+            entity.setRelative(LocalDirection.UP)
         }
 
         blockEntity.cooldowns[entity.uuid.toString()] = COOLDOWN
@@ -117,6 +113,21 @@ open class JumpPadBlock(val type: JumpPadType, props: Properties) : HalfTranspar
         NORMAL,
         HIGH,
         REVERSE_GRAVITY,
-        TELEPORT // Spider vertical teleporting
+        TELEPORT; // Spider vertical teleporting
+
+        val shouldJump: Boolean
+            get() = this == LOW || this == NORMAL || this == HIGH || this == REVERSE_GRAVITY
+
+        val jumpPower: Double
+            get() =
+                when (this) {
+                    LOW -> 0.2
+                    NORMAL, REVERSE_GRAVITY -> 1.0
+                    HIGH -> 2.0
+                    else -> 0.0
+                }
+
+        val shouldFlipGravity: Boolean
+            get() = this == REVERSE_GRAVITY || this == TELEPORT
     }
 }
