@@ -5,9 +5,14 @@ import gravity_changer.command.LocalDirection
 import gravity_changer.util.RotationUtil
 import net.fabricmc.api.EnvType
 import net.fabricmc.loader.api.FabricLoader
+import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.entity.Entity
+import net.minecraft.world.level.Level
+import net.minecraft.world.phys.shapes.BooleanOp
+import net.minecraft.world.phys.shapes.CollisionContext
+import net.minecraft.world.phys.shapes.Shapes
 
 // GRAVITY
 
@@ -22,6 +27,18 @@ fun Entity.setRelative(direction: LocalDirection) {
     }
     val newGravityDirection = RotationUtil.dirPlayerToWorld(combinedRelativeDirection, gravityDirection)
     GravityChangerAPI.setBaseGravityDirection(this, newGravityDirection)
+}
+
+/**
+ * @return if colliding with a jump pad block
+ */
+fun Entity.isCollidingWithPad(level: Level, pos: BlockPos): Boolean {
+    if (this.isRemoved) return false
+
+    val state = level.getBlockState(pos)
+    val shape = state.getShape(level, pos, CollisionContext.of(this))
+    val shape2 = shape.move(pos.x.toDouble(), pos.y.toDouble(), pos.z.toDouble())
+    return Shapes.joinIsNotEmpty(shape2, Shapes.create(this.boundingBox), BooleanOp.AND)
 }
 
 // Kotlin stuff

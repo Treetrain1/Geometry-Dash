@@ -1,11 +1,10 @@
 @file:Suppress("OVERRIDE_DEPRECATION", "DEPRECATION")
 
 package me.treetrain1.geometrydash.block
-import gravity_changer.api.GravityChangerAPI
 import gravity_changer.command.LocalDirection
-import gravity_changer.util.RotationUtil
 import me.treetrain1.geometrydash.block.entity.JumpPadBlockEntity
 import me.treetrain1.geometrydash.duck.PlayerDuck
+import me.treetrain1.geometrydash.util.isCollidingWithPad
 import me.treetrain1.geometrydash.util.setRelative
 import net.minecraft.core.BlockPos
 import net.minecraft.world.entity.Entity
@@ -26,7 +25,6 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties
 import net.minecraft.world.level.block.state.properties.BooleanProperty
 import net.minecraft.world.level.material.FluidState
 import net.minecraft.world.level.material.Fluids
-import net.minecraft.world.phys.Vec3
 import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.Shapes
 import net.minecraft.world.phys.shapes.VoxelShape
@@ -34,7 +32,6 @@ import net.minecraft.world.phys.shapes.VoxelShape
 @Suppress("MemberVisibilityCanBePrivate")
 open class JumpPadBlock(val type: JumpPadType, props: Properties) : HalfTransparentBlock(props), SimpleWaterloggedBlock, EntityBlock {
     companion object {
-        private const val COOLDOWN: Int = 7
 
         @JvmField
         val WATERLOGGED: BooleanProperty = BlockStateProperties.WATERLOGGED
@@ -72,10 +69,10 @@ open class JumpPadBlock(val type: JumpPadType, props: Properties) : HalfTranspar
 
     override fun entityInside(state: BlockState, level: Level, pos: BlockPos, entity: Entity) {
         super.entityInside(state, level, pos, entity)
-        if (entity !is LivingEntity) return
+        if (entity !is LivingEntity || !entity.isCollidingWithPad(level, pos)) return
 
         val blockEntity = this.blockEntity(level, pos) ?: return
-        if (blockEntity.cooldowns.containsKey(entity.uuid.toString())) return
+        if (blockEntity.colliding.contains(entity.id)) return
 
         // TODO: Add a better way to set GD Mode
         if (entity is Player) (entity as PlayerDuck).`geometryDash$setGDMode`(true)
@@ -88,7 +85,7 @@ open class JumpPadBlock(val type: JumpPadType, props: Properties) : HalfTranspar
             entity.applyDelta(type)
         }
 
-        blockEntity.cooldowns[entity.uuid.toString()] = COOLDOWN
+        blockEntity.colliding.add(entity.id)
     }
 
     override fun getFluidState(state: BlockState): FluidState {
