@@ -14,7 +14,10 @@ public class KeyboardInputMixin {
 	@SuppressWarnings("DataFlowIssue")
 	@Inject(method = "tick", at = @At("TAIL"))
 	private void holdUpInGD(boolean isSneaking, float sneakingSpeedMultiplier, CallbackInfo ci) {
-		if (((PlayerDuck) Minecraft.getInstance().player).geometryDash$isGDMode())
-			((KeyboardInput) (Object) this).forwardImpulse = 1.0F;
+		KeyboardInput input = KeyboardInput.class.cast(this);
+		if (((PlayerDuck) Minecraft.getInstance().player).geometryDash$isGDMode()) {
+			input.forwardImpulse = 1.0F;
+			input.leftImpulse = 0.0F;
+		}
 	}
 }
