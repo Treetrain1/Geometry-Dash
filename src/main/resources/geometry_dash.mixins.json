@@ -9,6 +9,8 @@
     "PlayerMixin"
   ],
   "client": [
+    "client.CameraMixin",
+    "client.CameraTypeMixin",
     "client.KeyboardInputMixin",
     "client.LocalPlayerMixin",
     "client.MouseHandlerMixin"
