@@ -11,9 +11,11 @@
   "client": [
     "client.CameraMixin",
     "client.CameraTypeMixin",
+    "client.GameRendererMixin",
     "client.KeyboardInputMixin",
     "client.LocalPlayerMixin",
-    "client.MouseHandlerMixin"
+    "client.MouseHandlerMixin",
+    "client.PlayerRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -50,7 +50,7 @@ public abstract class CameraMixin {
 		);
 		this.setRotation(entity.getViewYRot(partialTick), entity.getViewXRot(partialTick));
 
-		this.move(0, 0, -10);
+		this.move(0, -1.3, -10);
 		this.setRotation(this.getYRot() + 270.0F, this.getXRot());
 	}
 }
