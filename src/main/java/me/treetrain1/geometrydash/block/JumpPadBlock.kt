@@ -79,6 +79,14 @@ open class JumpPadBlock(val type: JumpPadType, props: Properties) : MultifaceBlo
             val delta = this.deltaMovement
             this.setDeltaMovement(delta.x, type.jumpPower, delta.z)
         }
+
+        private fun Entity.vertTeleport() {
+            /*
+                TODO: make a raycast thing going up relative to the entity gravity
+                teleport when it hits
+                if it doesn't hit, tp to y 1000 & kill the entity
+            */
+        }
     }
 
     private val grower = MultifaceSpreader(this)
@@ -128,12 +136,7 @@ open class JumpPadBlock(val type: JumpPadType, props: Properties) : MultifaceBlo
             entity.applyDelta(type)
         }
         if (type.shouldTeleport) {
-            /*
-                TODO:
-                make a raycast thing going up relative to the entity gravity
-                teleport when it hits
-                if it doesn't hit, tp to y 1000 & kill the entity
-            */
+            entity.vertTeleport()
         }
 
         blockEntity.colliding.add(entity.id)
