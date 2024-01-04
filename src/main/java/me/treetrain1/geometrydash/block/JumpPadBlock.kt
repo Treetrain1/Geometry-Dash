@@ -7,6 +7,7 @@ import me.treetrain1.geometrydash.block.entity.JumpPadBlockEntity
 import me.treetrain1.geometrydash.duck.PlayerDuck
 import me.treetrain1.geometrydash.util.isCollidingWithPad
 import me.treetrain1.geometrydash.util.setRelative
+import me.treetrain1.geometrydash.util.vertTeleport
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.world.entity.Entity
@@ -78,31 +79,6 @@ open class JumpPadBlock(val type: JumpPadType, props: Properties) : MultifaceBlo
         private fun Entity.applyDelta(type: JumpPadType) {
             val delta = this.deltaMovement
             this.setDeltaMovement(delta.x, type.jumpPower, delta.z)
-        }
-
-        private fun Entity.vertTeleport(level: Level) {
-            /*
-                TODO: make a raycast thing going down relative to the entity gravity
-                (not up bc gravity is already flipped)
-                teleport when it hits
-                if it doesn't hit, tp to y 1000 & kill the entity
-            */
-            val gravDir = GravityChangerAPI.getGravityDirection(this)
-            val rayEnd: Vec3 = RotationUtil.vecWorldToPlayer(0.0, -1500.0, 0.0, gravDir)
-            val raycast: BlockHitResult = level.isBlockInLine(
-                ClipBlockStateContext(
-                    this.position(),
-                    rayEnd,
-                    {true}
-                )
-            ) ?: return
-
-            if (raycast.missed) {
-                // kill entity
-            } else {
-                val rayPos = raycast.pos
-                this.setPos(rayPos.x, rayPos.y, rayPos.z)
-            }
         }
     }
 

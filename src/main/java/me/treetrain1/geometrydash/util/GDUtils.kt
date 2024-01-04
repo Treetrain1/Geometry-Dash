@@ -30,6 +30,34 @@ fun Entity.setRelative(direction: LocalDirection) {
 }
 
 /**
+ * Teleports the entity downward
+ */
+fun Entity.vertTeleport(level: Level) {
+    /*
+        TODO: make a raycast thing going down relative to the entity gravity
+        (not up bc gravity is already flipped)
+        teleport when it hits
+        if it misses, tp to y 1000 & kill the entity
+    */
+    val gravDir = GravityChangerAPI.getGravityDirection(this)
+    val rayEnd: Vec3 = RotationUtil.vecPlayerToWorld(0.0, -1500.0, 0.0, gravDir)
+    val raycast: BlockHitResult = level.isBlockInLine(
+        ClipBlockStateContext(
+            this.position(),
+            rayEnd,
+            {true}
+        )
+    ) ?: return
+
+    if (raycast.missed) {
+        // TODO: kill entity
+    } else {
+        val rayPos = raycast.pos
+        this.setPos(rayPos.x, rayPos.y, rayPos.z)
+    }
+}
+
+/**
  * @return if colliding with a jump pad block
  */
 fun Entity.isCollidingWithPad(level: Level, pos: BlockPos): Boolean {
