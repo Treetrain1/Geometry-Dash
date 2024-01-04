@@ -1,0 +1,6 @@
+{
+  "parent": "geometry_dash:item/jump_pad_template",
+  "textures": {
+    "layer0": "geometry_dash:block/teleport_pad_top"
+  }
+}

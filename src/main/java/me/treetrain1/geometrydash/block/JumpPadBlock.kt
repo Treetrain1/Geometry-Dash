@@ -118,7 +118,7 @@ open class JumpPadBlock(val type: JumpPadType, props: Properties) : MultifaceBlo
         if (blockEntity.colliding.contains(entity.id)) return
 
         // TODO: Add a better way to set GD Mode
-        if (entity is Player) (entity as PlayerDuck).`geometryDash$setGDMode`(true)
+        if (entity is PlayerDuck) entity.`geometryDash$setGDMode`(true)
 
         if (type.shouldFlipGravity) {
             entity.setRelative(LocalDirection.UP)

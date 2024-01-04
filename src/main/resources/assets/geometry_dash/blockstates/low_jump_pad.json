@@ -1,0 +1,153 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "geometry_dash:block/low_jump_pad",
+        "x": 270
+      },
+      "when": {
+        "north": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "geometry_dash:block/low_jump_pad"
+      },
+      "when": {
+        "down": "false",
+        "east": "false",
+        "north": "false",
+        "south": "false",
+        "up": "false",
+        "west": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "geometry_dash:block/low_jump_pad",
+        "uvlock": true,
+        "x": 90,
+        "y": 270
+      },
+      "when": {
+        "east": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "geometry_dash:block/low_jump_pad",
+        "uvlock": true,
+        "y": 90
+      },
+      "when": {
+        "down": "false",
+        "east": "false",
+        "north": "false",
+        "south": "false",
+        "up": "false",
+        "west": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "geometry_dash:block/low_jump_pad",
+        "uvlock": true,
+        "x": 90
+      },
+      "when": {
+        "south": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "geometry_dash:block/low_jump_pad",
+        "uvlock": true,
+        "y": 180
+      },
+      "when": {
+        "down": "false",
+        "east": "false",
+        "north": "false",
+        "south": "false",
+        "up": "false",
+        "west": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "geometry_dash:block/low_jump_pad",
+        "uvlock": true,
+        "x": 90,
+        "y": 90
+      },
+      "when": {
+        "west": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "geometry_dash:block/low_jump_pad",
+        "uvlock": true,
+        "y": 270
+      },
+      "when": {
+        "down": "false",
+        "east": "false",
+        "north": "false",
+        "south": "false",
+        "up": "false",
+        "west": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "geometry_dash:block/low_jump_pad",
+        "uvlock": true,
+        "x": 180
+      },
+      "when": {
+        "up": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "geometry_dash:block/low_jump_pad",
+        "uvlock": true,
+        "x": 270
+      },
+      "when": {
+        "down": "false",
+        "east": "false",
+        "north": "false",
+        "south": "false",
+        "up": "false",
+        "west": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "geometry_dash:block/low_jump_pad",
+        "uvlock": true,
+        "x": 0
+      },
+      "when": {
+        "down": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "geometry_dash:block/low_jump_pad",
+        "uvlock": true,
+        "x": 90
+      },
+      "when": {
+        "down": "false",
+        "east": "false",
+        "north": "false",
+        "south": "false",
+        "up": "false",
+        "west": "false"
+      }
+    }
+  ]
+}

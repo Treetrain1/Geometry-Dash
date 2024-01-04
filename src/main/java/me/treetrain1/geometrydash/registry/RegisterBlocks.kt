@@ -9,9 +9,19 @@ import net.minecraft.world.level.block.state.BlockBehaviour.Properties
 
 object RegisterBlocks {
 
+    val LOW_JUMP_PAD: Block = register(
+        "low_jump_pad",
+        jumpPad(JumpPadBlock.JumpPadType.LOW)
+    )
+
     val JUMP_PAD: Block = register(
         "jump_pad",
         jumpPad(JumpPadBlock.JumpPadType.NORMAL)
+    )
+
+    val HIGH_JUMP_PAD: Block = register(
+        "high_jump_pad",
+        jumpPad(JumpPadBlock.JumpPadType.HIGH)
     )
 
     val REVERSE_GRAVITY_JUMP_PAD: Block = register(
