@@ -127,6 +127,14 @@ open class JumpPadBlock(val type: JumpPadType, props: Properties) : MultifaceBlo
             entity.setJumping(true)
             entity.applyDelta(type)
         }
+        if (type.shouldTeleport) {
+            /*
+                TODO:
+                make a raycast thing going up relative to the entity gravity
+                teleport when it hits
+                if it doesn't hit, tp to y 1000 & kill the entity
+            */
+        }
 
         blockEntity.colliding.add(entity.id)
     }
@@ -186,11 +194,16 @@ open class JumpPadBlock(val type: JumpPadType, props: Properties) : MultifaceBlo
 
     private fun blockEntity(level: Level, pos: BlockPos): JumpPadBlockEntity? = level.getBlockEntity(pos) as? JumpPadBlockEntity
 
-    enum class JumpPadType(val shouldJump: Boolean = true, val jumpPower: Double = 1.0, val shouldFlipGravity: Boolean = false) {
+    enum class JumpPadType(
+        val shouldJump: Boolean = true,
+        val jumpPower: Double = 1.0,
+        val shouldFlipGravity: Boolean = false,
+        val shouldTeleport: Boolean = false,
+    ) {
         LOW(jumpPower = 0.2),
         NORMAL,
         HIGH(jumpPower = 2.0),
         REVERSE_GRAVITY(shouldFlipGravity = true),
-        TELEPORT(shouldJump = false, shouldFlipGravity = true); // Spider vertical teleporting
+        TELEPORT(shouldJump = false, shouldFlipGravity = true, shouldTeleport = true); // Spider vertical teleporting
     }
 }
