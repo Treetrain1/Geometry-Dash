@@ -31,6 +31,7 @@ fun Entity.setRelative(direction: LocalDirection) {
 
 /**
  * Teleports the entity downward
+ * WIP
  */
 fun Entity.vertTeleport(level: Level) {
     /*
