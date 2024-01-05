@@ -15,7 +15,7 @@ public class LocalPlayerMixin {
 
 	@Inject(method = "aiStep", at = @At("TAIL"))
 	private void forceGDSprint(CallbackInfo ci) {
-		if (((PlayerDuck) this).geometryDash$isGDMode())
+		if (((PlayerDuck) this).geometryDash$getGDData().isPlayingGD())
 			((LocalPlayer) (Object) this).setSprinting(true);
 	}
 }

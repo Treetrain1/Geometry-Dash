@@ -35,8 +35,9 @@ object GDCommand {
     private fun toggle(source: CommandSourceStack, players: Collection<ServerPlayer>): Int {
         for (player in players) {
             val duck = player as PlayerDuck
-            val packet = GDModeSyncPacket(!duck.`geometryDash$isGDMode`())
-            duck.`geometryDash$setGDMode`(packet.mode)
+            val dat: GDData = duck.`geometryDash$getGDData`()
+            dat.toggleGD()
+            val packet = GDModeSyncPacket(dat)
             ServerPlayNetworking.send(player, packet)
         }
 

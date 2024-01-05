@@ -43,5 +43,5 @@ internal inline fun <T : Entity?> register(id: String, entity: EntityType<T>): E
 internal inline fun register(id: String, tab: CreativeModeTab): CreativeModeTab
     = Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, id(id), tab)
 
-val CreativeModeTab.key: ResourceKey<CreativeModeTab>?
+inline val CreativeModeTab.key: ResourceKey<CreativeModeTab>?
     get() = BuiltInRegistries.CREATIVE_MODE_TAB.getResourceKey(this).getOrNull()

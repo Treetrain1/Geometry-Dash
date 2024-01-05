@@ -14,11 +14,11 @@ public abstract class PlayerMixin implements PlayerDuck {
 	private GameType gdPrevGameType;
 
 	@Unique
-	private boolean isGDMode = false;
+	private GDData gdData = new GDData(Player.class.cast(this), null, 1.0);
 
 	@Unique
 	@Override
-	public boolean geometryDash$isGDMode() {
+	public GDData geometryDash$getGDData() {
 		return this.isGDMode;
 	}
 
