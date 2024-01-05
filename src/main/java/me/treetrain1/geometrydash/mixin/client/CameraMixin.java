@@ -41,7 +41,7 @@ public abstract class CameraMixin {
 
 	@Inject(method = "setup", at = @At("TAIL"))
 	private void setupGD(BlockGetter level, Entity entity, boolean detached, boolean thirdPersonReverse, float partialTick, CallbackInfo ci) {
-		if (!(entity instanceof PlayerDuck duck) || !duck.geometryDash$isGDMode()) return;
+		if (!(entity instanceof PlayerDuck duck) || !duck.geometryDash$getGDData().isPlayingGD()) return;
 
 		this.setPosition(
 			Mth.lerp(partialTick, entity.xo, entity.getX()),

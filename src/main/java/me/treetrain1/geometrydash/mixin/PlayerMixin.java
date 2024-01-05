@@ -11,30 +11,11 @@ import org.spongepowered.asm.mixin.Unique;
 public abstract class PlayerMixin implements PlayerDuck {
 
 	@Unique
-	private GameType gdPrevGameType;
-
-	@Unique
 	private GDData gdData = new GDData(Player.class.cast(this), null, 1.0);
 
 	@Unique
 	@Override
 	public GDData geometryDash$getGDData() {
-		return this.isGDMode;
-	}
-
-	@Unique
-	@Override
-	public void geometryDash$setGDMode(boolean gdMode) {
-		this.isGDMode = gdMode;
-
-		var player = Player.class.cast(this);
-		if (player instanceof ServerPlayer serverPlayer) {
-			if (gdMode) {
-				this.gdPrevGameType = serverPlayer.gameMode.getGameModeForPlayer();
-				serverPlayer.setGameMode(GameType.ADVENTURE);
-			} else {
-				serverPlayer.setGameMode(this.gdPrevGameType);
-			}
-		}
+		return this.gdData;
 	}
 }

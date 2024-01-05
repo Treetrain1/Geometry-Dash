@@ -22,13 +22,13 @@ data class GDModeSyncPacket(@JvmField val mode: GDMode?, @JvmField val scale: Do
             val player = Minecraft.getInstance().player ?: return
             val duck = player as PlayerDuck
 
-            ClientPlayNetworking.send(GDModeSyncPacket(duck.`geometryDash$isGDMode`()))
+            ClientPlayNetworking.send(GDModeSyncPacket(duck.`geometryDash$getGDData`()))
         }
 
         fun sendS2C(player: ServerPlayer) {
             val duck = player as PlayerDuck
 
-            ServerPlayNetworking.send(player, GDModeSyncPacket(duck.`geometryDash$isGDMode`()))
+            ServerPlayNetworking.send(player, GDModeSyncPacket(duck.`geometryDash$getGDData`()))
         }
 
         inline fun sendS2C(players: Iterable<ServerPlayer>) = players.forEach { sendS2C(it) }

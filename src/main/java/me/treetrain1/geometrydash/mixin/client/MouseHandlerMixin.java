@@ -25,7 +25,7 @@ public class MouseHandlerMixin {
 	@Inject(method = "turnPlayer", at = @At("HEAD"), cancellable = true)
 	private void preventTurningGD(CallbackInfo ci) {
 		LocalPlayer player = this.minecraft.player;
-		if (player != null && ((PlayerDuck) player).geometryDash$isGDMode())
+		if (player != null && ((PlayerDuck) player).geometryDash$getGDData().isPlayingGD())
 			ci.cancel();
 	}
 }
