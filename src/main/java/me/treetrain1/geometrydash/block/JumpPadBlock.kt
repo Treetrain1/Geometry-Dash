@@ -82,7 +82,9 @@ open class JumpPadBlock(val type: JumpPadType, props: Properties) : MultifaceBlo
         }
     }
 
+    @JvmField
     private val grower = MultifaceSpreader(this)
+    @JvmField
     private val shapesCache: Map<BlockState, VoxelShape>
 
     init {

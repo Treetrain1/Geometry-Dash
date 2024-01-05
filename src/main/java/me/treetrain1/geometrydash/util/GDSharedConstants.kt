@@ -10,4 +10,4 @@ internal const val MOD_ID = "geometry_dash"
 internal const val MOD_NAME = "Geometry Dash"
 
 @JvmField
-internal val LOGGER: Logger? = LoggerFactory.getLogger(MOD_NAME)
+internal val LOGGER: Logger = LoggerFactory.getLogger(MOD_NAME)!!

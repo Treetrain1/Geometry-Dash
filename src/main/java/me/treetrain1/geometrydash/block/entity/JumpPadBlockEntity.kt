@@ -12,6 +12,7 @@ open class JumpPadBlockEntity(pos: BlockPos, blockState: BlockState) : BlockEnti
     /**
      * List of currently colliding entities.
      */
+    @JvmField
     val colliding: MutableList<Int> = mutableListOf()
 
     fun tick(level: Level, pos: BlockPos, state: BlockState) {
