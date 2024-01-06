@@ -19,13 +19,13 @@ public class EntityMixin {
 
 	@Inject(method = "checkFallDamage", at = @At("HEAD"), cancellable = true)
 	private void preventGDFallDamage(double y, boolean onGround, BlockState state, BlockPos pos, CallbackInfo ci) {
-		if (this instanceof PlayerDuck duck && duck.geometryDash$getGDData().isPlayingGD())
+		if (this instanceof PlayerDuck duck && duck.geometryDash$getGDData().getPlayingGD())
 			ci.cancel();
 	}
 
 	@WrapOperation(method = "spawnSprintParticle", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;addParticle(Lnet/minecraft/core/particles/ParticleOptions;DDDDDD)V"))
 	private void gdSprintParticles(Level instance, ParticleOptions particleData, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, Operation<Void> original) {
-		if (this instanceof PlayerDuck duck && duck.geometryDash$getGDData().isPlayingGD()) {
+		if (this instanceof PlayerDuck duck && duck.geometryDash$getGDData().getPlayingGD()) {
 			original.call(instance, DustParticleOptions.REDSTONE, x, y, z, xSpeed, ySpeed, zSpeed);
 		} else {
 			original.call(instance, particleData, x, y, z, xSpeed, ySpeed, zSpeed);

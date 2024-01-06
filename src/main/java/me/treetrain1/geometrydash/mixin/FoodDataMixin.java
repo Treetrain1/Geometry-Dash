@@ -13,7 +13,7 @@ public class FoodDataMixin {
 
 	@Inject(method = "tick", at = @At("HEAD"), cancellable = true)
 	private void preventHungerInGD(Player player, CallbackInfo ci) {
-		if (((PlayerDuck) player).geometryDash$getGDData().isPlayingGD()) {
+		if (((PlayerDuck) player).geometryDash$getGDData().getPlayingGD()) {
 			ci.cancel();
 		}
 	}

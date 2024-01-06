@@ -43,12 +43,12 @@ object GeometryDash : ModInitializer {
             RegisterBlocks
             RegisterBlockEntities
 
-            CommandRegistrationCallback.EVENT.register { dispatcher, ctx, selection ->
+            CommandRegistrationCallback.EVENT.register { dispatcher, _, _ ->
                 GDCommand.register(dispatcher)
             }
 
-            ServerPlayNetworking.registerGlobalReceiver(GDModeSyncPacket.PACKET_TYPE) { packet, player, sender ->
-                (player as PlayerDuck).`geometryDash$getGDData`().setGD(packet.mode)
+            ServerPlayNetworking.registerGlobalReceiver(GDModeSyncPacket.PACKET_TYPE) { packet, player, _ ->
+                (player as PlayerDuck).`geometryDash$getGDData`().mode = packet.mode
             }
         }
 

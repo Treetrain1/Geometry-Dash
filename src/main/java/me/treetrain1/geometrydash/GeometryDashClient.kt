@@ -10,8 +10,9 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 @Environment(EnvType.CLIENT)
 object GeometryDashClient : ClientModInitializer {
     override fun onInitializeClient() {
-        ClientPlayNetworking.registerGlobalReceiver(GDModeSyncPacket.PACKET_TYPE) { packet, player, sender ->
-            (player as PlayerDuck).`geometryDash$setGDMode`(packet.mode)
+        ClientPlayNetworking.registerGlobalReceiver(GDModeSyncPacket.PACKET_TYPE) { packet, player, _ ->
+            val data = (player as PlayerDuck).`geometryDash$getGDData`()
+            data.setGD(packet.mode, packet.scale)
         }
     }
 }

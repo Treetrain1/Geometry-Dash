@@ -1,5 +1,6 @@
 package me.treetrain1.geometrydash.mixin;
 
+import me.treetrain1.geometrydash.data.GDData;
 import me.treetrain1.geometrydash.duck.PlayerDuck;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;

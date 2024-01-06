@@ -1,6 +1,7 @@
 package me.treetrain1.geometrydash.command
 
 import com.mojang.brigadier.CommandDispatcher
+import me.treetrain1.geometrydash.data.GDData
 import me.treetrain1.geometrydash.duck.PlayerDuck
 import me.treetrain1.geometrydash.network.GDModeSyncPacket
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
@@ -51,9 +52,9 @@ object GDCommand {
     }
 
     private fun exit(source: CommandSourceStack, players: Collection<ServerPlayer>): Int {
-        val packet = GDModeSyncPacket(false)
+        val packet = GDModeSyncPacket(null, 1.0)
         for (player in players) {
-            (player as PlayerDuck).`geometryDash$setGDMode`(false)
+            (player as PlayerDuck).`geometryDash$getGDData`().exitGD()
             ServerPlayNetworking.send(player, packet)
         }
 

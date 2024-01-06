@@ -1,5 +1,7 @@
 package me.treetrain1.geometrydash.network
 
+import me.treetrain1.geometrydash.data.GDData
+import me.treetrain1.geometrydash.data.GDMode
 import me.treetrain1.geometrydash.duck.PlayerDuck
 import me.treetrain1.geometrydash.util.id
 import net.fabricmc.api.EnvType
@@ -36,10 +38,12 @@ data class GDModeSyncPacket(@JvmField val mode: GDMode?, @JvmField val scale: Do
 
     constructor(dat: GDData) : this(dat.mode, dat.scale)
 
-    constructor(buf: FriendlyByteBuf) : this(buf.readDouble()) // TODO: do this properly
+    constructor(buf: FriendlyByteBuf) : this(buf.readNullable { buf1 -> buf1.readInt() }?.let { GDMode.entries[it] }, buf.readDouble())
 
     override fun write(buf: FriendlyByteBuf) {
-        buf.writeBoolean(this.mode) // TODO: do this properly
+        buf.writeNullable(this.mode?.ordinal) { buf1, ord -> buf1.writeInt(ord) }
+
+        buf.writeDouble(this.scale) // TODO: do this properly
     }
 
     override fun getType(): PacketType<*> = PACKET_TYPE

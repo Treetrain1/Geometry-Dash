@@ -26,12 +26,12 @@ public class GameRendererMixin {
 	@SuppressWarnings({"DataFlowIssue", "InvalidInjectorMethodSignature"})
 	@ModifyExpressionValue(method = "renderLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/OptionInstance;get()Ljava/lang/Object;", ordinal = 0))
 	private Object setGDBob(Object original) {
-		return (boolean) original && !((PlayerDuck) this.minecraft.player).geometryDash$getGDData().isPlayingGD();
+		return (boolean) original && !((PlayerDuck) this.minecraft.player).geometryDash$getGDData().getPlayingGD();
 	}
 
 	@Inject(method = "renderItemInHand", at = @At("HEAD"), cancellable = true)
 	private void cancelItemRenderGD(PoseStack poseStack, Camera activeRenderInfo, float partialTicks, CallbackInfo ci) {
-		if (((PlayerDuck) this.minecraft.player).geometryDash$getGDData().isPlayingGD()) {
+		if (((PlayerDuck) this.minecraft.player).geometryDash$getGDData().getPlayingGD()) {
 			ci.cancel();
 		}
 	}

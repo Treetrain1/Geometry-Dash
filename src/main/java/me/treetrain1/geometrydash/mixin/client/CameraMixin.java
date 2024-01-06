@@ -19,9 +19,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class CameraMixin {
 
 	@Shadow
-	protected abstract void setPosition(double x, double y, double z);
-
-	@Shadow
 	protected abstract void setRotation(float yRot, float xRot);
 
 	@Shadow
@@ -33,24 +30,13 @@ public abstract class CameraMixin {
 	@Shadow
 	protected abstract void move(double distanceOffset, double verticalOffset, double horizontalOffset);
 
-	@Shadow
-	private float eyeHeightOld;
-
-	@Shadow
-	private float eyeHeight;
-
-	@Inject(method = "setup", at = @At("TAIL"))
+	@Inject(method = "setup", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Camera;setPosition(DDD)V", shift = At.Shift.AFTER), cancellable = true)
 	private void setupGD(BlockGetter level, Entity entity, boolean detached, boolean thirdPersonReverse, float partialTick, CallbackInfo ci) {
-		if (!(entity instanceof PlayerDuck duck) || !duck.geometryDash$getGDData().isPlayingGD()) return;
+		if (!(entity instanceof PlayerDuck duck) || !duck.geometryDash$getGDData().getPlayingGD()) return;
 
-		this.setPosition(
-			Mth.lerp(partialTick, entity.xo, entity.getX()),
-			Mth.lerp(partialTick, entity.yo, entity.getY()) + (double)Mth.lerp(partialTick, this.eyeHeightOld, this.eyeHeight),
-			Mth.lerp(partialTick, entity.zo, entity.getZ())
-		);
-		this.setRotation(entity.getViewYRot(partialTick), entity.getViewXRot(partialTick));
-
-		this.move(0, -1.3, -10);
+		this.move(0, -1.137, -10);
 		this.setRotation(this.getYRot() + 270.0F, this.getXRot());
+
+		ci.cancel();
 	}
 }

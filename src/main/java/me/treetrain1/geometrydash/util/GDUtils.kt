@@ -9,7 +9,11 @@ import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.entity.Entity
+import net.minecraft.world.level.ClipContext
 import net.minecraft.world.level.Level
+import net.minecraft.world.phys.BlockHitResult
+import net.minecraft.world.phys.HitResult
+import net.minecraft.world.phys.Vec3
 import net.minecraft.world.phys.shapes.BooleanOp
 import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.Shapes
@@ -41,20 +45,26 @@ fun Entity.vertTeleport(level: Level) {
         if it misses, tp to y 1000 & kill the entity
     */
     val gravDir = GravityChangerAPI.getGravityDirection(this)
-    val rayEnd: Vec3 = RotationUtil.vecPlayerToWorld(0.0, -1500.0, 0.0, gravDir)
-    val raycast: BlockHitResult = level.isBlockInLine(
-        ClipBlockStateContext(
+    val rayOffset: Vec3 = RotationUtil.vecPlayerToWorld(0.0, 100.0, 0.0, gravDir)
+    val rayEnd: Vec3 = this.position().add(rayOffset)
+    val raycast: BlockHitResult = level.clip(
+        ClipContext(
             this.position(),
             rayEnd,
-            {true}
+            ClipContext.Block.COLLIDER,
+            ClipContext.Fluid.NONE,
+            this
         )
     ) ?: return
 
-    if (raycast.missed) {
+    if (raycast.type == HitResult.Type.MISS) {
         // TODO: kill entity
     } else {
-        val rayPos = raycast.pos
-        this.setPos(rayPos.x, rayPos.y, rayPos.z)
+        val rayPos = raycast.location
+        val endOffset = RotationUtil.vecPlayerToWorld(0.0, -0.00001, 0.0, gravDir)
+        //val end = rayPos.add(endOffset)
+        this.teleportToWithTicket(rayPos.x, rayPos.y, rayPos.z)
+        this.setOnGround(true)
     }
 }
 
