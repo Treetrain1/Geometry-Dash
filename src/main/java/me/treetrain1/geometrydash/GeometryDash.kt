@@ -42,6 +42,7 @@ object GeometryDash : ModInitializer {
         val time = measureNanoTime {
             RegisterBlocks
             RegisterBlockEntities
+            RegisterEntities
 
             CommandRegistrationCallback.EVENT.register { dispatcher, _, _ ->
                 GDCommand.register(dispatcher)
