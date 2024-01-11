@@ -10,12 +10,34 @@ open class GDData(
     @JvmField val player: Player,
     @JvmField var mode: GDMode? = null,
     @JvmField var scale: Double = 1.0,
+    @JvmField val checkpoints: MutableList<Int> = mutableListOf()
 ) {
 
     inline val playingGD: Boolean
         get() = this.mode != null
 
     private var prevGameType: GameType? = null
+
+    private inline val level(): Level get() = this.player.level()
+
+    inline val lastValidCheckpoint: Vec3? get() {
+        val level = this.level
+        checkpoints.removeAll { id ->
+            val entity: Entity? = level.getEntity(id)
+            entity !is Checkpoint
+        }
+        for (id in checkpoints.reverse()) {
+            val entity: Entity? = level.getEntity(id)
+            if (entity == null) continue
+            return entity.position()
+        }
+        return null
+    }
+
+    fun updateCheckpoint() {
+        val lastValid: Vec3 = this.lastValidCheckpoint
+        // TODO: set player spawn to last checkpoint
+    }
 
     fun toggleGD() {
         if (this.playingGD)
