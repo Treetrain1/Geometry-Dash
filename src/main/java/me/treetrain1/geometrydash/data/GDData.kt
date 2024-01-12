@@ -10,7 +10,7 @@ open class GDData(
     @JvmField val player: Player,
     @JvmField var mode: GDMode? = null,
     @JvmField var scale: Double = 1.0,
-    @JvmField val checkpoints: MutableList<Int> = mutableListOf()
+    @JvmField var checkpoints: MutableList<Int> = mutableListOf()
 ) {
 
     inline val playingGD: Boolean
@@ -85,6 +85,19 @@ open class GDData(
             player.setGameMode(prevType)
             this.prevGameType = null
         }
+    }
+
+    // TODO: Use + Test
+    fun save(compound: CompoundTag) {
+        // TODO: how do you write an enum i forgot
+        compound.putDouble("scale", this.scale)
+        compound.putIntArray("checkpoints", this.checkpoints.toTypedArray())
+    }
+
+    // TODO: Use + Test
+    fun load(compound: CompoundTag) {
+        this.scale = compound.getDouble("scale")
+        this.checkpoints = compound.getIntArray("checkpoints").toList()
     }
 
     fun syncS2C() {

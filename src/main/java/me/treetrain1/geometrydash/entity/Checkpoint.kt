@@ -7,8 +7,8 @@ open class Checkpoint(
     level: Level,
 ) : Entity(type, level) {
 
-    override fun aiStep() {
-        super.aiStep()
+    override fun tick() {
+        super.tick()
 
         this.checkpointTick()
     }

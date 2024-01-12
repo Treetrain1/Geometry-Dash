@@ -5,6 +5,8 @@ open class EndPoint(
     level: Level,
 ) : Checkpoint(type, level) {
 
-    override protected fun checkpointTick() {
+    override protected fun addCheckpoint(gdData: GDData) {
+        // TODO: Try to come up with a better idea for end positions
+        gdData.exitGD()
     }
 }
