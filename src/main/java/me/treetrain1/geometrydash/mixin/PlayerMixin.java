@@ -5,6 +5,7 @@ import me.treetrain1.geometrydash.duck.PlayerDuck;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameType;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
@@ -12,10 +13,11 @@ import org.spongepowered.asm.mixin.Unique;
 public abstract class PlayerMixin implements PlayerDuck {
 
 	@Unique
-	private GDData gdData = new GDData(Player.class.cast(this), null, 1.0);
+	private GDData gdData = new GDData(Player.class.cast(this));
 
 	@Unique
 	@Override
+	@NotNull
 	public GDData geometryDash$getGDData() {
 		return this.gdData;
 	}

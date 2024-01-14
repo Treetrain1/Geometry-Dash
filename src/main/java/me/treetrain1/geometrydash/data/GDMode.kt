@@ -1,14 +1,16 @@
 package me.treetrain1.geometrydash.data
 
-enum class GDMode(val name: String) : StringRepresentable {
-    CUBE("cube"),
-    SHIP("ship"),
-    BALL("ball"),
-    UFO("ufo"),
-    WAVE("wave"),
-    ROBOT("robot"),
-    SPIDER("spider"),
-    SWING("swing")
+import net.minecraft.util.StringRepresentable
+
+enum class GDMode : StringRepresentable {
+    CUBE,
+    SHIP,
+    BALL,
+    UFO,
+    WAVE,
+    ROBOT,
+    SPIDER,
+    SWING;
 
     override fun toString(): String = this.name
 

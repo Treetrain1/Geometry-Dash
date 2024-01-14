@@ -120,7 +120,7 @@ open class JumpPadBlock(val type: JumpPadType, props: Properties) : MultifaceBlo
         if (blockEntity.colliding.contains(entity.id)) return
 
         // TODO: Add a better way to set GD Mode
-        if (entity is PlayerDuck) entity.`geometryDash$getGDData`().setGD(true)
+        //if (entity is PlayerDuck) entity.`geometryDash$getGDData`().setGD(true)
 
         if (type.shouldFlipGravity) {
             entity.setRelative(LocalDirection.UP)
@@ -197,9 +197,9 @@ open class JumpPadBlock(val type: JumpPadType, props: Properties) : MultifaceBlo
         val shouldFlipGravity: Boolean = false,
         val shouldTeleport: Boolean = false,
     ) {
-        LOW(jumpPower = 0.2),
+        LOW(jumpPower = 0.5),
         NORMAL,
-        HIGH(jumpPower = 2.0),
+        HIGH(jumpPower = 1.5),
         REVERSE_GRAVITY(shouldFlipGravity = true),
         TELEPORT(shouldJump = false, shouldFlipGravity = true, shouldTeleport = true); // Spider vertical teleporting
     }

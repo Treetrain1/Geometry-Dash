@@ -1,12 +1,19 @@
 package me.treetrain1.geometrydash.data
 
+import me.treetrain1.geometrydash.entity.Checkpoint
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
+import net.minecraft.core.BlockPos
+import net.minecraft.nbt.CompoundTag
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.GameType
+import net.minecraft.world.level.Level
 
-open class GDData(
+@Suppress("MemberVisibilityCanBePrivate")
+
+open class GDData @JvmOverloads constructor(
     @JvmField val player: Player,
     @JvmField var mode: GDMode? = null,
     @JvmField var scale: Double = 1.0,
@@ -18,25 +25,20 @@ open class GDData(
 
     private var prevGameType: GameType? = null
 
-    private inline val level(): Level get() = this.player.level()
+    @PublishedApi
+    internal inline val level: Level get() = this.player.level()
 
-    inline val lastValidCheckpoint: Vec3? get() {
+    inline val lastValidCheckpoint: BlockPos? get() {
         val level = this.level
         checkpoints.removeAll { id ->
             val entity: Entity? = level.getEntity(id)
             entity !is Checkpoint
         }
-        for (id in checkpoints.reverse()) {
-            val entity: Entity? = level.getEntity(id)
-            if (entity == null) continue
-            return entity.position()
+        for (id in checkpoints.reversed()) {
+            val entity: Entity = level.getEntity(id) ?: continue
+            return entity.blockPosition()
         }
         return null
-    }
-
-    fun updateCheckpoint() {
-        val lastValid: Vec3 = this.lastValidCheckpoint
-        // TODO: set player spawn to last checkpoint
     }
 
     fun toggleGD() {
@@ -91,13 +93,13 @@ open class GDData(
     fun save(compound: CompoundTag) {
         // TODO: how do you write an enum i forgot
         compound.putDouble("scale", this.scale)
-        compound.putIntArray("checkpoints", this.checkpoints.toTypedArray())
+        compound.putIntArray("checkpoints", this.checkpoints)
     }
 
     // TODO: Use + Test
     fun load(compound: CompoundTag) {
         this.scale = compound.getDouble("scale")
-        this.checkpoints = compound.getIntArray("checkpoints").toList()
+        this.checkpoints = compound.getIntArray("checkpoints").toMutableList()
     }
 
     fun syncS2C() {

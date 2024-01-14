@@ -1,28 +1,29 @@
 package me.treetrain1.geometrydash.entity
 
-import net.minecraft.world.entity.Entity
+import me.treetrain1.geometrydash.data.GDData
+import me.treetrain1.geometrydash.duck.PlayerDuck
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.entity.EntityType
+import net.minecraft.world.level.Level
 
 open class Checkpoint(
     type: EntityType<out Checkpoint>,
     level: Level,
-) : Entity(type, level) {
+) : StaticEntity(type, level) {
 
     override fun tick() {
-        super.tick()
-
         this.checkpointTick()
     }
 
     protected open fun checkpointTick() {
-        val list: List<ServerPlayer> = this.level().getEntitiesOfClass(ServerPlayer::class.java, this.getBoundingBox())
+        val list: List<ServerPlayer> = this.level().getEntitiesOfClass(ServerPlayer::class.java, this.boundingBox)
         for (player in list) {
-            val gdData = (player as PlayerDuck).geometryDash$getGDData()
+            val gdData = (player as PlayerDuck).`geometryDash$getGDData`()
             this.addCheckpoint(gdData)
         }
     }
 
     protected open fun addCheckpoint(gdData: GDData) {
-        gdData.checkpoints.add(this.getStringUUID())
-        gdData.updateCheckpoints()
+        gdData.checkpoints.add(this.id)
     }
 }
