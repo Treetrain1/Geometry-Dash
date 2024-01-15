@@ -1,10 +1,10 @@
 package me.treetrain1.geometrydash.mixin.client;
 
+import java.util.List;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import java.util.List;
+import com.mojang.math.Axis;
 import me.treetrain1.geometrydash.duck.PlayerDuck;
-import me.treetrain1.geometrydash.duck.PlayerModelDuck;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.HumanoidModel;
@@ -14,6 +14,7 @@ import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -30,7 +31,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Environment(EnvType.CLIENT)
 @Mixin(PlayerModel.class)
-public class PlayerModelMixin<T extends LivingEntity> extends HumanoidModel<T> implements PlayerModelDuck {
+public abstract class PlayerModelMixin<T extends LivingEntity> extends HumanoidModel<T> {
 
 	@Shadow
 	@Final
@@ -106,11 +107,5 @@ public class PlayerModelMixin<T extends LivingEntity> extends HumanoidModel<T> i
 		} else {
 			super.renderToBuffer(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
 		}
-	}
-
-	@NotNull
-	@Override
-	public ModelPart geometryDash$getGDHead() {
-		return this.gdHead;
 	}
 }
