@@ -33,7 +33,7 @@ public abstract class CameraMixin {
 		if (!(entity instanceof PlayerDuck duck) || !duck.geometryDash$getGDData().getPlayingGD()) return;
 
 		this.move(0D, -1.137D, -10D);
-		this.setRotation(this.getYRot() + 270.0F, this.getXRot());
+		this.setRotation(this.getYRot() + 270.0F, 0F);
 
 		ci.cancel();
 	}
