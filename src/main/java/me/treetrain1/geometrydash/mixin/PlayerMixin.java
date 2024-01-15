@@ -31,7 +31,7 @@ public abstract class PlayerMixin implements PlayerDuck {
 		this.gdData.tick();
 		Player player = Player.class.cast(this);
 		boolean isFalling = player.fallDistance > 0D && !player.jumping;
-		if (!this.wasFallingBefore)
+		if (!this.wasFallingBefore && isFalling)
 			this.gdData.incrementCubeRotation(false);
 		this.wasFallingBefore = isFalling;
 	}
