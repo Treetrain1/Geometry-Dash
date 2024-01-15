@@ -44,15 +44,25 @@ public class GameRendererMixin {
 		}
 	}
 
-	@Inject(method = "renderLevel", at = @At("HEAD"))
-	public void frozenLib$shakeLevel(float partialTicks, long finishTimeNano, PoseStack poseStack, CallbackInfo info) {
+	@Inject(
+		method = "renderLevel",
+		at = @At(
+			value = "INVOKE",
+			target = "Lcom/mojang/blaze3d/vertex/PoseStack;mulPose(Lorg/joml/Quaternionf;)V",
+			ordinal = 3,
+			shift = At.Shift.AFTER
+		)
+	)
+	public void gd$rotateLevel(float partialTicks, long finishTimeNano, PoseStack poseStack, CallbackInfo info) {
 		Entity cameraEntity = this.mainCamera.getEntity();
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection(cameraEntity);
-        if (gravityDirection == Direction.UP) {
-            poseStack.mulPose(Axis.ZP.rotationDegrees(180F)); //Should be Roll/Z for flipping the level upside-down
-            // If you just want to negate the rotation, head over to Gravity Changer's GameRendererMixin instead.
-            // However, I can see why you wouldn't want to in case someone else were to port it...
-            // You could just copy the mixin and apply a negative rotation compared to that in this one, I suppose.
-        }
+		if (cameraEntity != null) {
+			Direction gravityDirection = GravityChangerAPI.getGravityDirection(cameraEntity);
+			if (gravityDirection == Direction.UP) {
+				poseStack.mulPose(Axis.ZP.rotationDegrees(180F)); //Should be Roll/Z for flipping the level upside-down
+				// If you just want to negate the rotation, head over to Gravity Changer's GameRendererMixin instead.
+				// However, I can see why you wouldn't want to in case someone else were to port it...
+				// You could just copy the mixin and apply a negative rotation compared to that in this one, I suppose.
+			}
+		}
     }
 }
