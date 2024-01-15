@@ -39,7 +39,7 @@ public abstract class PlayerModelMixin<T extends LivingEntity> extends HumanoidM
 			if (!playerDuck.geometryDash$getGDData().getPlayingGD()) {
 				super.prepareMobModel(entity, limbSwing, limbSwingAmount, partialTick);
 			} else {
-				this.head.y -= 8F;
+				this.head.y -= 4F;
 			}
 		}
 	}
