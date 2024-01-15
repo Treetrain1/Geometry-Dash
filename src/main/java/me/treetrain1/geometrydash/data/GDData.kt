@@ -132,7 +132,7 @@ open class GDData @JvmOverloads constructor(
 
     fun tick() {
         this.previousJumpRotation = this.jumpRotation
-        this.jumpRotation += (this.targetJumpRotation - this.jumpRotation) * 0.15F
+        this.jumpRotation += (this.targetJumpRotation - this.jumpRotation) * 0.25F
     }
 
     fun getJumpRotation(tickDelta: Float): Float {
