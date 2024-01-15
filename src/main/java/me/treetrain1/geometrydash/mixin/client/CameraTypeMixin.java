@@ -17,7 +17,7 @@ public class CameraTypeMixin {
 	@ModifyReturnValue(method = "isFirstPerson", at = @At("RETURN"))
 	private boolean isGDMode(boolean original) {
 		LocalPlayer player = Minecraft.getInstance().player;
-		boolean notGD = player == null || !((PlayerDuck) player).geometryDash$getGDData().getPlayingGD();
+		boolean notGD = !(player instanceof PlayerDuck playerDuck) || !playerDuck.geometryDash$getGDData().getPlayingGD();
 		return original && notGD;
 	}
 }

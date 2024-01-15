@@ -17,6 +17,7 @@ open class CheckpointRenderer(ctx: EntityRendererProvider.Context) : EntityRende
 
     companion object {
         private val TEXTURE = id("textures/entity/checkpoint.png")
+        private val TEXTURE_ALT = id("textures/entity/checkpoint_alt.png")
         private val LAYER = RenderType.entityCutout(TEXTURE)
 
         private const val Y_OFFSET: Float = 0.8F
@@ -98,5 +99,5 @@ open class CheckpointRenderer(ctx: EntityRendererProvider.Context) : EntityRende
         poseStack.popPose()
     }
 
-    override fun getTextureLocation(entity: Checkpoint): ResourceLocation = TEXTURE
+    override fun getTextureLocation(entity: Checkpoint): ResourceLocation = TEXTURE_ALT
 }
