@@ -3,7 +3,6 @@ package me.treetrain1.geometrydash.mixin.client;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import gravity_changer.RotationAnimation;
 import gravity_changer.api.GravityChangerAPI;
 import me.treetrain1.geometrydash.duck.PlayerDuck;
 import net.fabricmc.api.EnvType;

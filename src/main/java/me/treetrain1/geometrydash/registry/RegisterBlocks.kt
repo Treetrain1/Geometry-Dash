@@ -5,7 +5,6 @@ import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.Blocks.always
 import net.minecraft.world.level.block.Blocks.never
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties
 
 object RegisterBlocks {
 

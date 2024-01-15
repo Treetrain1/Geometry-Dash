@@ -4,7 +4,6 @@ package me.treetrain1.geometrydash.block
 import com.mojang.serialization.MapCodec
 import gravity_changer.command.LocalDirection
 import me.treetrain1.geometrydash.block.entity.JumpPadBlockEntity
-import me.treetrain1.geometrydash.duck.PlayerDuck
 import me.treetrain1.geometrydash.util.isCollidingWithPad
 import me.treetrain1.geometrydash.util.setRelative
 import me.treetrain1.geometrydash.util.vertTeleport
@@ -12,7 +11,6 @@ import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.LivingEntity
-import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.BlockGetter
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.LevelAccessor

@@ -4,6 +4,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
+import java.util.Optional;
 import me.treetrain1.geometrydash.data.GDData;
 import me.treetrain1.geometrydash.duck.PlayerDuck;
 import net.minecraft.core.BlockPos;
@@ -13,7 +14,6 @@ import net.minecraft.server.players.PlayerList;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import java.util.Optional;
 
 @Mixin(PlayerList.class)
 public class PlayerListMixin {

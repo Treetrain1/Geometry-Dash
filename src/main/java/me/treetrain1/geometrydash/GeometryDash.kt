@@ -4,7 +4,6 @@ import me.treetrain1.geometrydash.command.GDCommand
 import me.treetrain1.geometrydash.duck.PlayerDuck
 import me.treetrain1.geometrydash.network.GDModeSyncPacket
 import me.treetrain1.geometrydash.registry.*
-import me.treetrain1.geometrydash.registry.register
 import me.treetrain1.geometrydash.util.log
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback

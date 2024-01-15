@@ -1,9 +1,7 @@
 package me.treetrain1.geometrydash.item
 
 import me.treetrain1.geometrydash.data.GDMode
-import net.minecraft.world.InteractionResultHolder
 import net.minecraft.world.item.Item
-import net.minecraft.world.item.context.UseOnContext
 
 open class PortalItem(props: Properties) : Item(props) {
 
