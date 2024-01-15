@@ -6,6 +6,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import gravity_changer.api.GravityChangerAPI;
 import gravity_changer.util.RotationUtil;
 import me.treetrain1.geometrydash.duck.PlayerDuck;
+import me.treetrain1.geometrydash.duck.PlayerModelDuck;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.PlayerModel;
@@ -27,6 +28,7 @@ public class PlayerRendererMixin {
 	private void setGDProps(AbstractClientPlayer clientPlayer, CallbackInfo ci, PlayerModel<AbstractClientPlayer> playerModel) {
 		if (((PlayerDuck) clientPlayer).geometryDash$getGDData().getPlayingGD()) {
 			playerModel.setAllVisible(false);
+			((PlayerModelDuck)playerModel).geometryDash$getGDHead().visible = true;
 			ci.cancel();
 		}
 	}
@@ -34,7 +36,7 @@ public class PlayerRendererMixin {
 	@Inject(method = "getRenderOffset(Lnet/minecraft/client/player/AbstractClientPlayer;F)Lnet/minecraft/world/phys/Vec3;", at = @At("HEAD"), cancellable = true)
 	private void gdRenderOffset(AbstractClientPlayer entity, float partialTicks, CallbackInfoReturnable<Vec3> cir) {
 		if (((PlayerDuck) entity).geometryDash$getGDData().getPlayingGD()) {
-			cir.setReturnValue(RotationUtil.vecPlayerToWorld(0D, -4.1D, 0D, GravityChangerAPI.getGravityDirection(entity)));
+			cir.setReturnValue(RotationUtil.vecPlayerToWorld(0D, 0D, 0D, GravityChangerAPI.getGravityDirection(entity)));
 		}
 	}
 
