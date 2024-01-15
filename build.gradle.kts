@@ -169,10 +169,6 @@ repositories {
             includeGroup("curse.maven")
         }
     }
-    /*maven {
-        name = "Siphalor's Maven"
-        url = uri("https://maven.siphalor.de")
-    }*/
     maven {
         url = uri("https://maven.flashyreese.me/releases")
     }
@@ -261,6 +257,9 @@ dependencies {
 
     // Mod Menu
     modImplementation("com.terraformersmc:modmenu:${modmenu_version}")
+
+    // DimLib
+    modImplementation("maven.modrinth:dimlib:1.0.2+mc1.20.4")
 
     // TerraBlender
     modCompileOnly("com.github.glitchfiend:TerraBlender-fabric:${terrablender_version}")
