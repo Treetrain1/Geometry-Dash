@@ -260,6 +260,9 @@ dependencies {
 
     // DimLib
     modImplementation("maven.modrinth:dimlib:1.0.2+mc1.20.4")
+    
+    // MidnightLib
+    modImplementation("maven.modrinth:midnightlib:1.5.3-fabric")
 
     // TerraBlender
     modCompileOnly("com.github.glitchfiend:TerraBlender-fabric:${terrablender_version}")
