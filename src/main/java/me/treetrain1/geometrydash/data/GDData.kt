@@ -125,7 +125,7 @@ open class GDData @JvmOverloads constructor(
     fun incrementCubeRotation(isJumping: Boolean = true) {
         var additionalRotation = 180F
         if (!isJumping)
-            additionalRotation = 90F
+            additionalRotation = 90F;
         //how do i do the bl ? 180 : 90 stuff help me
         this.targetJumpRotation += additionalRotation
     }

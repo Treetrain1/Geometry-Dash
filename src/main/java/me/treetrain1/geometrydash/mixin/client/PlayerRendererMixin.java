@@ -27,6 +27,9 @@ public class PlayerRendererMixin {
 	private void setGDProps(AbstractClientPlayer clientPlayer, CallbackInfo ci, PlayerModel<AbstractClientPlayer> playerModel) {
 		if (((PlayerDuck) clientPlayer).geometryDash$getGDData().getPlayingGD()) {
 			playerModel.setAllVisible(false);
+			playerModel.head.visible = true;
+			playerModel.hat.visible = true;
+
 			ci.cancel();
 		}
 	}
@@ -34,7 +37,7 @@ public class PlayerRendererMixin {
 	@Inject(method = "getRenderOffset(Lnet/minecraft/client/player/AbstractClientPlayer;F)Lnet/minecraft/world/phys/Vec3;", at = @At("HEAD"), cancellable = true)
 	private void gdRenderOffset(AbstractClientPlayer entity, float partialTicks, CallbackInfoReturnable<Vec3> cir) {
 		if (((PlayerDuck) entity).geometryDash$getGDData().getPlayingGD()) {
-			cir.setReturnValue(RotationUtil.vecPlayerToWorld(0D, -4.1D, 0D, GravityChangerAPI.getGravityDirection(entity)));
+			cir.setReturnValue(RotationUtil.vecPlayerToWorld(0D, -2.8D, 0D, GravityChangerAPI.getGravityDirection(entity)));
 		}
 	}
 
@@ -46,5 +49,4 @@ public class PlayerRendererMixin {
 			original.call(instance, x, y, z);
 		}
 	}
-
 }
