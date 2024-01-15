@@ -119,15 +119,12 @@ open class JumpPadBlock(val type: JumpPadType, props: Properties) : MultifaceBlo
         val blockEntity = this.blockEntity(level, pos) ?: return
         if (blockEntity.colliding.contains(entity.id)) return
 
-        // TODO: Add a better way to set GD Mode
-        //if (entity is PlayerDuck) entity.`geometryDash$getGDData`().setGD(true)
-
-        if (type.shouldFlipGravity) {
-            entity.setRelative(LocalDirection.UP)
-        }
         if (type.shouldJump) {
             entity.setJumping(true)
             entity.applyDelta(type)
+        }
+        if (type.shouldFlipGravity) {
+            entity.setRelative(LocalDirection.UP)
         }
         if (type.shouldTeleport) {
             entity.vertTeleport(level)

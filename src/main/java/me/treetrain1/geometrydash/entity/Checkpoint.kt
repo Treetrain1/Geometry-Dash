@@ -24,6 +24,8 @@ open class Checkpoint(
     }
 
     protected open fun addCheckpoint(gdData: GDData) {
-        gdData.checkpoints.add(this.id)
+        val list = gdData.checkpoints
+        if (list.contains(this.id)) return
+        list.add(this.id)
     }
 }

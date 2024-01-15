@@ -6,10 +6,12 @@
   "mixins": [
     "EntityMixin",
     "FoodDataMixin",
+    "PlayerListMixin",
     "PlayerMixin",
     "ServerPlayerMixin"
   ],
   "client": [
+    "client.LevelRendererMixin",
     "client.CameraMixin",
     "client.CameraTypeMixin",
     "client.GameRendererMixin",

@@ -92,12 +92,19 @@ open class GDData @JvmOverloads constructor(
     // TODO: Use + Test
     fun save(compound: CompoundTag) {
         // TODO: how do you write an enum i forgot
+        compound.putString("mode", this.mode?.name)
         compound.putDouble("scale", this.scale)
         compound.putIntArray("checkpoints", this.checkpoints)
     }
 
     // TODO: Use + Test
     fun load(compound: CompoundTag) {
+        try {
+            this.mode = GDMode.valueOf(compound.getString("mode"))
+        } catch (e: IllegalArgumentException) {
+            this.mode = null
+        }
+
         this.scale = compound.getDouble("scale")
         this.checkpoints = compound.getIntArray("checkpoints").toMutableList()
     }

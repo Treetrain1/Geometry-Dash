@@ -14,7 +14,7 @@ object RegisterEntities {
         FabricEntityTypeBuilder.create(MobCategory.MISC, ::Checkpoint)
             .fireImmune()
             .dimensions(EntityDimensions.scalable(0.7F, 1.6F))
-            .trackRangeBlocks(16)
+            .trackRangeBlocks(32)
             .trackedUpdateRate(2)
             .build()
     )
