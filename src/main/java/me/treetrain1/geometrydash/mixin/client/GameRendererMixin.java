@@ -44,6 +44,7 @@ public class GameRendererMixin {
 		}
 	}
 
+	/*
 	@Inject(
 		method = "renderLevel",
 		at = @At(
@@ -65,4 +66,5 @@ public class GameRendererMixin {
 			}
 		}
     }
+	 */
 }

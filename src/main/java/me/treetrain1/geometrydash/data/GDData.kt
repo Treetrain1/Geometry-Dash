@@ -6,6 +6,7 @@ import net.fabricmc.api.Environment
 import net.minecraft.core.BlockPos
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.util.Mth
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.GameType
@@ -17,6 +18,9 @@ open class GDData @JvmOverloads constructor(
     @JvmField val player: Player,
     @JvmField var mode: GDMode? = null,
     @JvmField var scale: Double = 1.0,
+    @JvmField var jumpRotation: Float = 0.0F,
+    @JvmField var previousJumpRotation: Float = 0.0F,
+    @JvmField var targetJumpRotation: Float = 0.0F,
     @JvmField var checkpoints: MutableList<Int> = mutableListOf()
 ) {
 
@@ -117,4 +121,22 @@ open class GDData @JvmOverloads constructor(
     fun syncC2S() {
         // TODO: add packet
     }
+
+    fun incrementCubeRotation(isJumping: Boolean = true) {
+        var additionalRotation = 180F
+        if (!isJumping)
+            additionalRotation = 90F;
+        //how do i do the bl ? 180 : 90 stuff help me
+        this.targetJumpRotation += additionalRotation
+    }
+
+    fun tick() {
+        this.previousJumpRotation = this.jumpRotation
+        this.jumpRotation += (this.targetJumpRotation - this.jumpRotation) * 0.15F
+    }
+
+    fun getJumpRotation(tickDelta: Float): Float {
+        return Mth.lerp(tickDelta, this.previousJumpRotation, this.jumpRotation)
+    }
+
 }

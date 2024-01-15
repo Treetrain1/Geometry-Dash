@@ -11,13 +11,14 @@
     "ServerPlayerMixin"
   ],
   "client": [
-    "client.LevelRendererMixin",
     "client.CameraMixin",
     "client.CameraTypeMixin",
     "client.GameRendererMixin",
     "client.KeyboardInputMixin",
+    "client.LevelRendererMixin",
     "client.LocalPlayerMixin",
     "client.MouseHandlerMixin",
+    "client.PlayerModelMixin",
     "client.PlayerRendererMixin"
   ],
   "injectors": {

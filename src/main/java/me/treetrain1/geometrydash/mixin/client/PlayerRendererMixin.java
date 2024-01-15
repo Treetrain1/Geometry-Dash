@@ -37,14 +37,14 @@ public class PlayerRendererMixin {
 	@Inject(method = "getRenderOffset(Lnet/minecraft/client/player/AbstractClientPlayer;F)Lnet/minecraft/world/phys/Vec3;", at = @At("HEAD"), cancellable = true)
 	private void gdRenderOffset(AbstractClientPlayer entity, float partialTicks, CallbackInfoReturnable<Vec3> cir) {
 		if (((PlayerDuck) entity).geometryDash$getGDData().getPlayingGD()) {
-			cir.setReturnValue(RotationUtil.vecPlayerToWorld(0, -2.8, 0, GravityChangerAPI.getGravityDirection(entity)));
+			cir.setReturnValue(RotationUtil.vecPlayerToWorld(0D, -2.8D, 0D, GravityChangerAPI.getGravityDirection(entity)));
 		}
 	}
 
 	@WrapOperation(method = "scale(Lnet/minecraft/client/player/AbstractClientPlayer;Lcom/mojang/blaze3d/vertex/PoseStack;F)V", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;scale(FFF)V"))
 	private void setGDScale(PoseStack instance, float x, float y, float z, Operation<Void> original, AbstractClientPlayer player) {
 		if (((PlayerDuck) player).geometryDash$getGDData().getPlayingGD()) {
-			original.call(instance, x * 2, y * 2, z * 2);
+			original.call(instance, x * 2F, y * 2F, z * 2F);
 		} else {
 			original.call(instance, x, y, z);
 		}
