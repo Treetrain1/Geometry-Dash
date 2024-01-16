@@ -1,67 +1,77 @@
-package me.treetrain1.geometrydash.entity.render.model;
+package me.treetrain1.geometrydash.entity.render.model
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Axis;
-import me.treetrain1.geometrydash.duck.PlayerDuck;
-import net.minecraft.client.model.HierarchicalModel;
-import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.model.geom.PartPose;
-import net.minecraft.client.model.geom.builders.CubeListBuilder;
-import net.minecraft.client.model.geom.builders.LayerDefinition;
-import net.minecraft.client.model.geom.builders.MeshDefinition;
-import net.minecraft.client.player.AbstractClientPlayer;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.util.Mth;
-import org.jetbrains.annotations.NotNull;
+import com.mojang.blaze3d.vertex.PoseStack
+import com.mojang.blaze3d.vertex.VertexConsumer
+import com.mojang.math.Axis
+import me.treetrain1.geometrydash.duck.PlayerDuck
+import net.minecraft.client.model.HierarchicalModel
+import net.minecraft.client.model.geom.ModelPart
+import net.minecraft.client.model.geom.PartPose
+import net.minecraft.client.model.geom.builders.CubeListBuilder
+import net.minecraft.client.model.geom.builders.LayerDefinition
+import net.minecraft.client.model.geom.builders.MeshDefinition
+import net.minecraft.client.player.AbstractClientPlayer
+import net.minecraft.client.renderer.RenderType
+import net.minecraft.client.renderer.texture.OverlayTexture
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.util.Mth
+import java.util.function.Function
 
-public class CubePlayerModel<T extends AbstractClientPlayer> extends HierarchicalModel<T> {
-	private final ModelPart root;
-	private final ModelPart cube;
-	private float cubeRotation;
+class CubePlayerModel<T : AbstractClientPlayer?>(private val root: ModelPart) : HierarchicalModel<T>(
+    Function { location: ResourceLocation? -> RenderType.entityCutoutNoCull(location) }
+) {
 
-	public CubePlayerModel(@NotNull ModelPart root) {
-		super(RenderType::entityCutoutNoCull);
-		this.root = root;
-		this.cube = root.getChild("cube");
-	}
+    companion object {
+        fun createBodyLayer(): LayerDefinition {
+            val meshDefinition = MeshDefinition()
+            meshDefinition.root.addOrReplaceChild(
+                "cube", CubeListBuilder.create()
+                    .texOffs(0, 0).addBox(-4f, -4f, -4f, 8f, 8f, 8f), PartPose.ZERO
+            )
+
+            return LayerDefinition.create(meshDefinition, 64, 64)
+        }
+    }
+
+    private val cube: ModelPart = root.getChild("cube")
+    private var cubeRotation = 0f
 
 
-	@NotNull
-	public static LayerDefinition createBodyLayer() {
-		MeshDefinition meshdefinition = new MeshDefinition();
-		meshdefinition.getRoot().addOrReplaceChild("cube", CubeListBuilder.create()
-			.texOffs(0, 0).addBox(-4F, -4F, -4F, 8F, 8F, 8F), PartPose.ZERO);
+    override fun prepareMobModel(player: T, limbSwing: Float, limbSwingAmount: Float, partialTick: Float) {
+        root().allParts.forEach { obj: ModelPart -> obj.resetPose() }
+        if (player is PlayerDuck) {
+            this.cubeRotation =
+                (player.`geometryDash$getGDData`().gdModeData!!.getModelPitch(partialTick) % 360f) * Mth.DEG_TO_RAD
+        }
+    }
 
-		return LayerDefinition.create(meshdefinition, 64, 64);
-	}
+    override fun setupAnim(
+        entity: T,
+        limbSwing: Float,
+        limbSwingAmount: Float,
+        ageInTicks: Float,
+        netHeadYaw: Float,
+        headPitch: Float
+    ) {
+        this.root.xRot = 0f
+    }
 
-	@Override
-	public void prepareMobModel(@NotNull T player, float limbSwing, float limbSwingAmount, float partialTick) {
-		this.root().getAllParts().forEach(ModelPart::resetPose);
-		if (player instanceof PlayerDuck playerDuck) {
-			this.cubeRotation = (playerDuck.geometryDash$getGDData().gdModeData.getModelPitch(partialTick) % 360F) * Mth.DEG_TO_RAD;
-		}
-	}
+    override fun renderToBuffer(
+        poseStack: PoseStack,
+        vertexConsumer: VertexConsumer,
+        packedLight: Int,
+        packedOverlay: Int,
+        red: Float,
+        green: Float,
+        blue: Float,
+        alpha: Float
+    ) {
+        poseStack.pushPose()
+        poseStack.translate(0.0, 1.25, 0.0)
+        poseStack.mulPose(Axis.XP.rotation(this.cubeRotation))
+        root().render(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY, red, green, blue, alpha)
+        poseStack.popPose()
+    }
 
-	@Override
-	public void setupAnim(@NotNull T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-		this.root.xRot = 0F;
-	}
-
-	@Override
-	public void renderToBuffer(@NotNull PoseStack poseStack, @NotNull VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-		poseStack.pushPose();
-		poseStack.translate(0D, 1.25D, 0D);
-		poseStack.mulPose(Axis.XP.rotation(this.cubeRotation));
-		this.root().render(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY, red, green, blue, alpha);
-		poseStack.popPose();
-	}
-
-	@Override
-	@NotNull
-	public ModelPart root() {
-		return this.root;
-	}
+    override fun root(): ModelPart = this.root
 }
