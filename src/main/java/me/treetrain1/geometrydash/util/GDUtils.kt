@@ -4,7 +4,10 @@ import gravity_changer.api.GravityChangerAPI
 import gravity_changer.command.LocalDirection
 import gravity_changer.util.RotationUtil
 import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 import net.fabricmc.loader.api.FabricLoader
+import net.minecraft.client.Minecraft
+import net.minecraft.client.player.Input
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.resources.ResourceLocation
@@ -79,6 +82,11 @@ fun Entity.isCollidingWithPad(level: Level, pos: BlockPos): Boolean {
     val shape2 = shape.move(pos.x.toDouble(), pos.y.toDouble(), pos.z.toDouble())
     return Shapes.joinIsNotEmpty(shape2, Shapes.create(this.boundingBox), BooleanOp.AND)
 }
+
+// Minecraft accessors
+
+@Environment(EnvType.CLIENT)
+fun input(): Input? = Minecraft.getInstance().player?.input
 
 // Kotlin stuff
 
