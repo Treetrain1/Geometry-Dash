@@ -4,8 +4,8 @@
   "block.geometry_dash.teleport_pad": "Teleport Pad",
   "block.geometry_dash.spike": "Spike",
 
-  "commands.geometry_dash.toggle.success.single": "Toggled GD Mode for %s",
-  "commands.geometry_dash.toggle.success.multiple": "Toggled GD Mode for %s players",
-  "commands.geometry_dash.exit.success.single": "Exited GD Mode for %s",
-  "commands.geometry_dash.exit.success.multiple": "Exited GD Mode for %s players"
+  "commands.gd.toggle.success.single": "Toggled GD Mode for %s",
+  "commands.gd.toggle.success.multiple": "Toggled GD Mode for %s players",
+  "commands.gd.exit.success.single": "Exited GD Mode for %s",
+  "commands.gd.exit.success.multiple": "Exited GD Mode for %s players"
 }

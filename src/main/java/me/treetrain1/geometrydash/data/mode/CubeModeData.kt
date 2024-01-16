@@ -23,7 +23,7 @@ class CubeModeData : AbstractGDModeData() {
     }
 
     override fun onFall() {
-        if (!gdData!!.isInJump) this.targetCubeRotation += 90f
+        if (gdData?.isInJump == false) this.targetCubeRotation += 90f
     }
 
     override fun onLand() {

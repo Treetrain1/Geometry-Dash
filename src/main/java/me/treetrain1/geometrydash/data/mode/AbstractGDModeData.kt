@@ -5,7 +5,7 @@ import net.minecraft.nbt.CompoundTag
 
 abstract class AbstractGDModeData {
     @JvmField
-    protected var gdData: GDData? = null
+    var gdData: GDData? = null
 
     abstract fun tick()
 
@@ -20,8 +20,4 @@ abstract class AbstractGDModeData {
     abstract fun save(compound: CompoundTag)
 
     abstract fun load(compound: CompoundTag)
-
-    fun setGdData(gdData: GDData?) {
-        this.gdData = gdData
-    }
 }

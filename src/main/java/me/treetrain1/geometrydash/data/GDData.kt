@@ -13,7 +13,6 @@ import net.minecraft.world.level.GameType
 import net.minecraft.world.level.Level
 
 @Suppress("MemberVisibilityCanBePrivate")
-
 open class GDData @JvmOverloads constructor(
     @JvmField val player: Player,
     @JvmField var gdModeData: AbstractGDModeData? = null,
@@ -29,7 +28,7 @@ open class GDData @JvmOverloads constructor(
             val modeDataSupplier = value?.modeDataSupplier
             if (modeDataSupplier != null) {
                 val modeData = modeDataSupplier()
-                modeData.setGdData(this)
+                modeData.gdData = this
                 this.gdModeData = modeData
             }
         }
