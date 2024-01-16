@@ -107,6 +107,22 @@ open class GDData @JvmOverloads constructor(
         }
     }
 
+    fun tick() {
+        val isFalling = this.player.fallDistance > 0.0
+        val onGround = this.player.onGround()
+        if (this.wasFallingBefore != isFalling) {
+            if (!onGround) {
+                this.gdModeData?.onFall()
+                this.wasFallingBefore = isFalling
+            } else {
+                this.isInJump = false
+                this.wasFallingBefore = false
+            }
+        }
+        if (this.player.onGround()) this.isInJump = false
+        this.gdModeData?.tick()
+    }
+
     // TODO: Use + Test
     fun save(compound: CompoundTag) {
         compound.putString("mode", this.mode?.name ?: "")
@@ -146,21 +162,6 @@ open class GDData @JvmOverloads constructor(
     @Environment(EnvType.CLIENT)
     fun syncC2S() {
         // TODO: add packet
-    }
-
-    fun tick() {
-        val isFalling = this.player.fallDistance > 0.0
-        val onGround = this.player.onGround()
-        if (this.wasFallingBefore != isFalling) {
-            if (!onGround) {
-                this.gdModeData?.onFall()
-                this.wasFallingBefore = isFalling
-            } else {
-                this.isInJump = false
-                this.wasFallingBefore = false
-            }
-        }
-        if (this.player.onGround()) this.isInJump = false
     }
 
 }
