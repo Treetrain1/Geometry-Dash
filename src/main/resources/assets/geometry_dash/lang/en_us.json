@@ -2,5 +2,10 @@
   "block.geometry_dash.jump_pad": "Jump Pad",
   "block.geometry_dash.reverse_gravity_jump_pad": "Reverse Gravity Jump Pad",
   "block.geometry_dash.teleport_pad": "Teleport Pad",
-  "block.geometry_dash.spike": "Spike"
+  "block.geometry_dash.spike": "Spike",
+
+  "commands.geometry_dash.toggle.success.single": "Toggled GD Mode for %s",
+  "commands.geometry_dash.toggle.success.multiple": "Toggled GD Mode for %s players",
+  "commands.geometry_dash.exit.success.single": "Exited GD Mode for %s",
+  "commands.geometry_dash.exit.success.multiple": "Exited GD Mode for %s players"
 }

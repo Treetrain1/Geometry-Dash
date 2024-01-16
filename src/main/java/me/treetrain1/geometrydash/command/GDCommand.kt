@@ -43,9 +43,9 @@ object GDCommand {
         }
 
         if (players.size == 1) {
-            source.sendSuccess({ Component.translatable("commands.gd.toggle.success.single") }, true)
+            source.sendSuccess({ Component.translatable("commands.geometry_dash.toggle.success.single", players.first().displayName) }, true)
         } else {
-            source.sendSuccess({ Component.translatable("commands.gd.toggle.success.multiple") }, true)
+            source.sendSuccess({ Component.translatable("commands.geometry_dash.toggle.success.multiple", players.size) }, true)
         }
 
         return players.size
@@ -59,9 +59,9 @@ object GDCommand {
         }
 
         if (players.size == 1) {
-            source.sendSuccess({ Component.translatable("commands.gd.exit.success.single") }, true)
+            source.sendSuccess({ Component.translatable("commands.geometry_dash.exit.success.single", players.first().name) }, true)
         } else {
-            source.sendSuccess({ Component.translatable("commands.gd.exit.success.multiple") }, true)
+            source.sendSuccess({ Component.translatable("commands.geometry_dash.exit.success.multiple", players.size) }, true)
         }
 
         return players.size
