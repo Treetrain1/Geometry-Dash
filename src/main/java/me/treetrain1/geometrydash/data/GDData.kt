@@ -82,7 +82,9 @@ open class GDData @JvmOverloads constructor(
         this.mode = mode
         val modeDataSupplier = this.mode?.modeDataSupplier
         if (modeDataSupplier != null) {
-            this.gdModeData = modeDataSupplier()
+            val modeData = modeDataSupplier()
+            modeData.setGdData(this)
+            this.gdModeData = modeData
         }
     }
 
@@ -108,7 +110,11 @@ open class GDData @JvmOverloads constructor(
     // TODO: Use + Test
     fun save(compound: CompoundTag) {
         compound.putString("mode", this.mode?.name ?: "")
-        this.gdModeData?.save(compound)
+        if (this.gdModeData != null && this.mode != null) {
+            val modeDataTag = CompoundTag()
+            this.gdModeData?.save(compound)
+            compound.put(this.mode!!.name + "_data", modeDataTag)
+        }
         compound.putDouble("scale", this.scale)
         compound.putIntArray("checkpoints", this.checkpoints)
         compound.putBoolean("was_falling_before", this.wasFallingBefore)
@@ -120,7 +126,7 @@ open class GDData @JvmOverloads constructor(
         try {
             this.setMode(GDMode.valueOf(compound.getString("mode")))
             if (this.mode != null) {
-                val modeDataTag = compound.getCompound(this.mode!!.name)
+                val modeDataTag = compound.getCompound(this.mode!!.name + "_data")
                 this.gdModeData?.load(modeDataTag)
             }
         } catch (e: IllegalArgumentException) {
