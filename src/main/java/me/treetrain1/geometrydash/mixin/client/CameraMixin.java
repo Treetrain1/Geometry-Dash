@@ -32,7 +32,7 @@ public abstract class CameraMixin {
 	private void setupGD(BlockGetter level, Entity entity, boolean detached, boolean thirdPersonReverse, float partialTick, CallbackInfo ci) {
 		if (!(entity instanceof PlayerDuck duck) || !duck.geometryDash$getGDData().getPlayingGD()) return;
 
-		this.move(0D, -1.137D, -10D);
+		this.move(0, -1.137, -10);
 		this.setRotation(this.getYRot() + 270.0F, 0F);
 
 		ci.cancel();

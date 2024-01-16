@@ -82,7 +82,7 @@ open class GDData @JvmOverloads constructor(
         this.mode = mode
         val modeDataSupplier = this.mode?.modeDataSupplier
         if (modeDataSupplier != null) {
-            this.gdModeData = modeDataSupplier.get()
+            this.gdModeData = modeDataSupplier()
         }
     }
 
@@ -91,6 +91,9 @@ open class GDData @JvmOverloads constructor(
         this.mode = null
         this.scale = 1.0
         this.gdModeData = null
+        this.checkpoints.clear()
+        this.wasFallingBefore = false
+        this.isInJump = false
 
         if (alreadyExited) return
 
@@ -104,14 +107,8 @@ open class GDData @JvmOverloads constructor(
 
     // TODO: Use + Test
     fun save(compound: CompoundTag) {
-        // TODO: how do you write an enum i forgot
-        compound.putString("mode", this.mode?.name)
-        if (this.mode != null) {
-            val modeDataTag = CompoundTag()
-            this.gdModeData?.save(modeDataTag)
-            this.mode?.name?.let { compound.put(it, modeDataTag) }
-        }
-
+        compound.putString("mode", this.mode?.name ?: "")
+        this.gdModeData?.save(compound)
         compound.putDouble("scale", this.scale)
         compound.putIntArray("checkpoints", this.checkpoints)
         compound.putBoolean("was_falling_before", this.wasFallingBefore)

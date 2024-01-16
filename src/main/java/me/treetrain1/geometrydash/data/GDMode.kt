@@ -1,41 +1,28 @@
-package me.treetrain1.geometrydash.data;
+package me.treetrain1.geometrydash.data
 
-import me.treetrain1.geometrydash.data.mode.AbstractGDModeData;
-import me.treetrain1.geometrydash.data.mode.CubeModeData;
-import net.minecraft.util.StringRepresentable;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import java.util.function.Supplier;
+import me.treetrain1.geometrydash.data.mode.AbstractGDModeData
+import me.treetrain1.geometrydash.data.mode.CubeModeData
+import net.minecraft.util.StringRepresentable
+import org.jetbrains.annotations.Contract
+import java.util.function.Supplier
 
-public enum GDMode implements StringRepresentable {
-    CUBE(CubeModeData::new),
-    SHIP(CubeModeData::new),
-    BALL(CubeModeData::new),
-    UFO(CubeModeData::new),
-    WAVE(CubeModeData::new),
-    ROBOT(CubeModeData::new),
-    SPIDER(CubeModeData::new),
-    SWING(CubeModeData::new);
+enum class GDMode(val modeDataSupplier: () -> AbstractGDModeData) : StringRepresentable {
+    CUBE({ CubeModeData() }),
+    SHIP({ CubeModeData() }),
+    BALL({ CubeModeData() }),
+    UFO({ CubeModeData() }),
+    WAVE({ CubeModeData() }),
+    ROBOT({ CubeModeData() }),
+    SPIDER({ CubeModeData() }),
+    SWING({ CubeModeData() });
 
-	private final Supplier<? extends AbstractGDModeData> supplier;
+    @Contract(pure = true)
+    override fun toString(): String {
+        return this.name
+    }
 
-	GDMode(Supplier<? extends AbstractGDModeData> supplier) {
-		this.supplier = supplier;
-	}
-
-	public Supplier<? extends AbstractGDModeData> getModeDataSupplier() {
-		return this.supplier;
-	}
-
-	@Contract(pure = true)
-	@Override
-    public @NotNull String toString() {
-		return this.name();
-	}
-
-	@Contract(pure = true)
-	@Override
-	public @NotNull String getSerializedName() {
-		return this.name();
-	}
+    @Contract(pure = true)
+    override fun getSerializedName(): String {
+        return this.name
+    }
 }
