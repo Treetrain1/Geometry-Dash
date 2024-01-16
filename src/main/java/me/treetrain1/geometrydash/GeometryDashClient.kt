@@ -5,6 +5,7 @@ import me.treetrain1.geometrydash.entity.render.CheckpointRenderer;
 import me.treetrain1.geometrydash.entity.render.model.CubePlayerModel;
 import me.treetrain1.geometrydash.network.GDModeSyncPacket;
 import me.treetrain1.geometrydash.registry.RegisterEntities;
+import me.treetrain1.geometrydash.util.id
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -15,23 +16,22 @@ import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.resources.ResourceLocation;
 
 @Environment(EnvType.CLIENT)
-public class GeometryDashClient implements ClientModInitializer {
+object GeometryDashClient : ClientModInitializer {
 
-    public static final ModelLayerLocation CUBE_PLAYER = new ModelLayerLocation(new ResourceLocation("geometry_dash", "player"), "cube");
+    @JvmField
+    val CUBE_PLAYER: ModelLayerLocation = ModelLayerLocation(id("player"), "cube")
 
 	@Override
-    public void onInitializeClient() {
-		ClientPlayNetworking.registerGlobalReceiver(GDModeSyncPacket.PACKET_TYPE, ((packet, player, responseSender) -> {
-			if (player instanceof PlayerDuck playerDuck) {
-				playerDuck.geometryDash$getGDData().setGD(packet.mode, packet.scale);
-			}
-		}));
+    override fun onInitializeClient() {
+		ClientPlayNetworking.registerGlobalReceiver(GDModeSyncPacket.PACKET_TYPE) { packet, player, sender ->
+            (player as PlayerDuck).`geometryDash$getGDData`().setGD(packet.mode, packet.scale)
+        }
 
-        EntityRendererRegistry.register(RegisterEntities.CHECKPOINT, CheckpointRenderer::new);
+        EntityRendererRegistry.register(RegisterEntities.CHECKPOINT, ::CheckpointRenderer);
 
-        EntityModelLayerRegistry.registerModelLayer( //This throws an error in Kotlin. Kotlin sucks.
+        EntityModelLayerRegistry.registerModelLayer(
             CUBE_PLAYER,
-            CubePlayerModel::createBodyLayer
+            CubePlayerModel.Companion::createBodyLayer
         );
     }
 }
