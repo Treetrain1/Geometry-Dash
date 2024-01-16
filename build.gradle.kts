@@ -235,7 +235,7 @@ dependencies {
     api(project(":GravityChanger", configuration = "namedElements"))?.let { include(it) }
 
     // Immersive Portals
-    modApi(files("libs/immersive-portals-5.0.0.4-mc1.20.4-fabric.jar"))
+    modApi(files("libs/immersive-portals-5.1.3-mc1.20.4-fabric.jar"))
     modCompileOnlyApi("maven.modrinth:midnightlib:1.5.2-fabric")
 
     // Pehkui
