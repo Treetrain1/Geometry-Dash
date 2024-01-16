@@ -3,6 +3,7 @@ package me.treetrain1.geometrydash.data.mode
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.Mth
 
+// TODO: Rewrite rotation with air-time based rotation + rounding
 class CubeModeData : AbstractGDModeData() {
     private var targetCubeRotation = 0f
     private var cubeRotation = 0f
