@@ -18,9 +18,9 @@ open class GDData @JvmOverloads constructor(
     @JvmField val player: Player,
     @JvmField var mode: GDMode? = null,
     @JvmField var scale: Double = 1.0,
-    @JvmField var jumpRotation: Float = 0.0F,
-    @JvmField var previousJumpRotation: Float = 0.0F,
-    @JvmField var targetJumpRotation: Float = 0.0F,
+    @JvmField var cubeRotation: Float = 0.0F,
+    @JvmField var prevCubeRotation: Float = 0.0F,
+    @JvmField var targetCubeRotation: Float = 0.0F,
     @JvmField var checkpoints: MutableList<Int> = mutableListOf()
 ) {
 
@@ -127,16 +127,16 @@ open class GDData @JvmOverloads constructor(
         if (!isJumping)
             additionalRotation = 90F;
         //how do i do the bl ? 180 : 90 stuff help me
-        this.targetJumpRotation += additionalRotation
+        this.targetCubeRotation += additionalRotation
     }
 
     fun tick() {
-        this.previousJumpRotation = this.jumpRotation
-        this.jumpRotation += (this.targetJumpRotation - this.jumpRotation) * 0.25F
+        this.prevCubeRotation = this.cubeRotation
+        this.cubeRotation += (this.targetCubeRotation - this.cubeRotation) * 0.25F
     }
 
-    fun getJumpRotation(tickDelta: Float): Float {
-        return Mth.lerp(tickDelta, this.previousJumpRotation, this.jumpRotation)
+    fun getCubeRotation(tickDelta: Float): Float {
+        return Mth.lerp(tickDelta, this.prevCubeRotation, this.cubeRotation)
     }
 
 }
