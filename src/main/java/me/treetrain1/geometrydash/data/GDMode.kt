@@ -17,12 +17,8 @@ enum class GDMode(val modeDataSupplier: () -> AbstractGDModeData) : StringRepres
     SWING({ CubeModeData() });
 
     @Contract(pure = true)
-    override fun toString(): String {
-        return this.name
-    }
+    override fun toString(): String = this.name
 
     @Contract(pure = true)
-    override fun getSerializedName(): String {
-        return this.name
-    }
+    override fun getSerializedName(): String = this.name
 }

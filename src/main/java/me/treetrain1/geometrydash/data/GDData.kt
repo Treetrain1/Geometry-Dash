@@ -16,13 +16,23 @@ import net.minecraft.world.level.Level
 
 open class GDData @JvmOverloads constructor(
     @JvmField val player: Player,
-    @JvmField var mode: GDMode? = null,
     @JvmField var gdModeData: AbstractGDModeData? = null,
     @JvmField var scale: Double = 1.0,
     @JvmField var checkpoints: MutableList<Int> = mutableListOf(),
     @JvmField var wasFallingBefore: Boolean = false,
     @JvmField var isInJump: Boolean = false
 ) {
+
+    var mode: GDMode? = null
+        set(value) {
+            field = value
+            val modeDataSupplier = value?.modeDataSupplier
+            if (modeDataSupplier != null) {
+                val modeData = modeDataSupplier()
+                modeData.setGdData(this)
+                this.gdModeData = modeData
+            }
+        }
 
     inline val playingGD: Boolean
         get() = this.mode != null
@@ -68,23 +78,13 @@ open class GDData @JvmOverloads constructor(
 
     fun enterGD(mode: GDMode = GDMode.CUBE, scale: Double = 1.0) {
         val alreadyEntered: Boolean = this.playingGD
-        this.setMode(mode)
+        this.mode = mode
         this.scale = scale
 
         val player = this.player
         if (!alreadyEntered && player is ServerPlayer) {
             this.prevGameType = player.gameMode.gameModeForPlayer
             player.setGameMode(GameType.ADVENTURE)
-        }
-    }
-
-    fun setMode(mode: GDMode) { //Should be called EVERY time the mode is set. This will ensure Mode Data works properly.
-        this.mode = mode
-        val modeDataSupplier = this.mode?.modeDataSupplier
-        if (modeDataSupplier != null) {
-            val modeData = modeDataSupplier()
-            modeData.setGdData(this)
-            this.gdModeData = modeData
         }
     }
 
@@ -126,11 +126,9 @@ open class GDData @JvmOverloads constructor(
     // TODO: Use + Test
     fun save(compound: CompoundTag) {
         compound.putString("mode", this.mode?.name ?: "")
-        if (this.gdModeData != null && this.mode != null) {
-            val modeDataTag = CompoundTag()
-            this.gdModeData?.save(compound)
-            compound.put(this.mode!!.name + "_data", modeDataTag)
-        }
+        val dataTag = CompoundTag()
+        this.gdModeData?.save(dataTag)
+        compound.put("data", dataTag)
         compound.putDouble("scale", this.scale)
         compound.putIntArray("checkpoints", this.checkpoints)
         compound.putBoolean("was_falling_before", this.wasFallingBefore)
@@ -140,11 +138,10 @@ open class GDData @JvmOverloads constructor(
     // TODO: Use + Test
     fun load(compound: CompoundTag) {
         try {
-            this.setMode(GDMode.valueOf(compound.getString("mode")))
-            if (this.mode != null) {
-                val modeDataTag = compound.getCompound(this.mode!!.name + "_data")
-                this.gdModeData?.load(modeDataTag)
-            }
+            val newMode = GDMode.valueOf(compound.getString("mode"))
+            this.mode = newMode
+            val modeDataTag = compound.getCompound(newMode.name + "_data")
+            this.gdModeData?.load(modeDataTag)
         } catch (e: IllegalArgumentException) {
             this.mode = null
         }
