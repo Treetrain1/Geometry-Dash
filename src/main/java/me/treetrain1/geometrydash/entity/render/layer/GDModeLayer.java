@@ -28,7 +28,7 @@ public class GDModeLayer extends RenderLayer<AbstractClientPlayer, PlayerModel<A
 
 	@Override
 	public void render(PoseStack matrixStack, MultiBufferSource buffer, int packedLight, AbstractClientPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-		if (player instanceof PlayerDuck playerDuck && playerDuck.geometryDash$getGDData().mode == requiredMode) {
+		if (player instanceof PlayerDuck playerDuck && playerDuck.geometryDash$getGDData().getMode() == requiredMode) {
 			this.model.prepareMobModel(player, limbSwing, limbSwingAmount, partialTicks);
 			this.model.setupAnim(player, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
 			VertexConsumer vertexConsumer = buffer.getBuffer(RenderType.entityCutout(player.getSkin().texture()));
