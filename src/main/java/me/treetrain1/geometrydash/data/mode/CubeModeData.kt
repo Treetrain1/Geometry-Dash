@@ -1,56 +1,45 @@
-package me.treetrain1.geometrydash.data.mode;
+package me.treetrain1.geometrydash.data.mode
 
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.Mth;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.util.Mth
 
-public class CubeModeData extends AbstractGDModeData {
-	private float targetCubeRotation;
-	private float cubeRotation;
-	private float prevCubeRotation;
+class CubeModeData : AbstractGDModeData() {
+    private var targetCubeRotation = 0f
+    private var cubeRotation = 0f
+    private var prevCubeRotation = 0f
 
-	@Override
-	public void tick() {
-		this.prevCubeRotation = this.cubeRotation;
-		this.cubeRotation += (this.targetCubeRotation - this.cubeRotation) * 0.25F;
-		if (this.targetCubeRotation >= 360F) {
-			this.targetCubeRotation -= 360F;
-			this.cubeRotation -= 360F;
-			this.prevCubeRotation -= 360F;
-		}
-	}
+    override fun tick() {
+        this.prevCubeRotation = this.cubeRotation
+        this.cubeRotation += (this.targetCubeRotation - this.cubeRotation) * 0.25f
+        this.targetCubeRotation %= 360
+        this.cubeRotation %= 360
+        this.prevCubeRotation %= 360
+    }
 
-	@Override
-	public void onJump() {
-		this.targetCubeRotation += 180F;
-	}
+    override fun onJump() {
+        this.targetCubeRotation += 180f
+    }
 
-	@Override
-	public void onFall() {
-		if (!this.gdData.isInJump) this.targetCubeRotation += 90F;
-	}
+    override fun onFall() {
+        if (!gdData!!.isInJump) this.targetCubeRotation += 90f
+    }
 
-	@Override
-	public void onLand() {
+    override fun onLand() {
+    }
 
-	}
+    override fun getModelPitch(tickDelta: Float): Float {
+        return Mth.lerp(tickDelta, this.prevCubeRotation, this.cubeRotation)
+    }
 
-	@Override
-	public float getModelPitch(float tickDelta) {
-		return Mth.lerp(tickDelta, this.prevCubeRotation, this.cubeRotation);
-	}
+    override fun save(compound: CompoundTag) {
+        compound.putFloat("target_rotation", this.targetCubeRotation)
+        compound.putFloat("rotation", this.cubeRotation)
+        compound.putFloat("prev_rotation", this.prevCubeRotation)
+    }
 
-	@Override
-	public void save(@NotNull CompoundTag compound) {
-		compound.putFloat("target_rotation", this.targetCubeRotation);
-		compound.putFloat("rotation", this.cubeRotation);
-		compound.putFloat("prev_rotation", this.prevCubeRotation);
-	}
-
-	@Override
-	public void load(@NotNull CompoundTag compound) {
-		this.targetCubeRotation = compound.getFloat("target_rotation");
-		this.cubeRotation = compound.getFloat("rotation");
-		this.prevCubeRotation = compound.getFloat("prev_rotation");
-	}
+    override fun load(compound: CompoundTag) {
+        this.targetCubeRotation = compound.getFloat("target_rotation")
+        this.cubeRotation = compound.getFloat("rotation")
+        this.prevCubeRotation = compound.getFloat("prev_rotation")
+    }
 }
