@@ -1,12 +1,11 @@
 package me.treetrain1.geometrydash.data
 
-import me.treetrain1.geometrydash.data.mode.AbstractGDModeData
+import me.treetrain1.geometrydash.data.mode.GDModeData
 import me.treetrain1.geometrydash.data.mode.CubeModeData
 import net.minecraft.util.StringRepresentable
 import org.jetbrains.annotations.Contract
-import java.util.function.Supplier
 
-enum class GDMode(val modeDataSupplier: () -> AbstractGDModeData) : StringRepresentable {
+enum class GDMode(val modeDataSupplier: () -> GDModeData) : StringRepresentable {
     CUBE({ CubeModeData() }),
     SHIP({ CubeModeData() }),
     BALL({ CubeModeData() }),

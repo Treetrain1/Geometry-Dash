@@ -1,6 +1,6 @@
 package me.treetrain1.geometrydash.data
 
-import me.treetrain1.geometrydash.data.mode.AbstractGDModeData
+import me.treetrain1.geometrydash.data.mode.GDModeData
 import me.treetrain1.geometrydash.entity.Checkpoint
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
@@ -15,11 +15,9 @@ import net.minecraft.world.level.Level
 @Suppress("MemberVisibilityCanBePrivate")
 open class GDData @JvmOverloads constructor(
     @JvmField val player: Player,
-    @JvmField var gdModeData: AbstractGDModeData? = null,
+    @JvmField var gdModeData: GDModeData? = null,
     @JvmField var scale: Double = 1.0,
     @JvmField var checkpoints: MutableList<Int> = mutableListOf(),
-    @JvmField var wasFallingBefore: Boolean = false,
-    @JvmField var isInJump: Boolean = false
 ) {
 
     var mode: GDMode? = null
@@ -93,8 +91,6 @@ open class GDData @JvmOverloads constructor(
         this.scale = 1.0
         this.gdModeData = null
         this.checkpoints.clear()
-        this.wasFallingBefore = false
-        this.isInJump = false
 
         if (alreadyExited) return
 
@@ -107,18 +103,6 @@ open class GDData @JvmOverloads constructor(
     }
 
     fun tick() {
-        val isFalling = this.player.fallDistance > 0.0
-        val onGround = this.player.onGround()
-        if (this.wasFallingBefore != isFalling) {
-            if (!onGround) {
-                this.gdModeData?.onFall()
-                this.wasFallingBefore = isFalling
-            } else {
-                this.isInJump = false
-                this.wasFallingBefore = false
-            }
-        }
-        if (this.player.onGround()) this.isInJump = false
         this.gdModeData?.tick()
     }
 
@@ -130,8 +114,6 @@ open class GDData @JvmOverloads constructor(
         compound.put("mode_data", dataTag)
         compound.putDouble("scale", this.scale)
         compound.putIntArray("checkpoints", this.checkpoints)
-        compound.putBoolean("was_falling_before", this.wasFallingBefore)
-        compound.putBoolean("is_in_jump", this.isInJump)
     }
 
     // TODO: Use + Test
@@ -147,8 +129,6 @@ open class GDData @JvmOverloads constructor(
 
         this.scale = compound.getDouble("scale")
         this.checkpoints = compound.getIntArray("checkpoints").toMutableList()
-        this.wasFallingBefore = compound.getBoolean("was_falling_before")
-        this.isInJump = compound.getBoolean("is_in_jump")
     }
 
     fun syncS2C() {

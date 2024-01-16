@@ -28,11 +28,4 @@ public abstract class PlayerMixin implements PlayerDuck {
 		this.gdData.tick();
 	}
 
-	@Inject(method = "jumpFromGround", at = @At("TAIL"))
-	public void gd$jumpFromGround(CallbackInfo ci) {
-		this.gdData.isInJump = true;
-        if (this.gdData.gdModeData != null)
-			this.gdData.gdModeData.onJump();
-	}
-
 }

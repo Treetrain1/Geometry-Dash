@@ -1,48 +1,32 @@
 package me.treetrain1.geometrydash.data.mode
 
+import net.minecraft.client.player.Input
 import net.minecraft.nbt.CompoundTag
-import net.minecraft.util.Mth
 
-// TODO: Rewrite rotation with air-time based rotation + rounding
-class CubeModeData : AbstractGDModeData() {
-    private var targetCubeRotation = 0f
-    private var cubeRotation = 0f
-    private var prevCubeRotation = 0f
+class CubeModeData : GDModeData() {
+    private var cubeRot: Float = 0f
 
-    override fun tick() {
-        this.prevCubeRotation = this.cubeRotation
-        this.cubeRotation += (this.targetCubeRotation - this.cubeRotation) * 0.25f
-        if (this.targetCubeRotation >= 360F) {
-            this.targetCubeRotation -= 360F;
-            this.cubeRotation -= 360F;
-            this.prevCubeRotation -= 360F;
+    override fun tick() {}
+
+    override fun tickInput(input: Input) {
+        this.gdData?.run {
+            if (this.player.onGround()) {
+                this@CubeModeData.cubeRot = Math.round(this@CubeModeData.cubeRot / 90f) * 90f
+            } else {
+                this@CubeModeData.cubeRot += 20
+            }
         }
     }
 
-    override fun onJump() {
-        this.targetCubeRotation += 180f
-    }
-
-    override fun onFall() {
-        if (gdData?.isInJump == false) this.targetCubeRotation += 90f
-    }
-
-    override fun onLand() {
-    }
-
     override fun getModelPitch(tickDelta: Float): Float {
-        return Mth.lerp(tickDelta, this.prevCubeRotation, this.cubeRotation)
+        return this.cubeRot
     }
 
     override fun save(compound: CompoundTag) {
-        compound.putFloat("target_rotation", this.targetCubeRotation)
-        compound.putFloat("rotation", this.cubeRotation)
-        compound.putFloat("prev_rotation", this.prevCubeRotation)
+        compound.putFloat("rotation", this.cubeRot)
     }
 
     override fun load(compound: CompoundTag) {
-        this.targetCubeRotation = compound.getFloat("target_rotation")
-        this.cubeRotation = compound.getFloat("rotation")
-        this.prevCubeRotation = compound.getFloat("prev_rotation")
+        this.cubeRot = compound.getFloat("rotation")
     }
 }

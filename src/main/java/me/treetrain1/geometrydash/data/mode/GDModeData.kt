@@ -1,19 +1,19 @@
 package me.treetrain1.geometrydash.data.mode
 
 import me.treetrain1.geometrydash.data.GDData
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
+import net.minecraft.client.player.Input
 import net.minecraft.nbt.CompoundTag
 
-abstract class AbstractGDModeData {
+abstract class GDModeData {
     @JvmField
     var gdData: GDData? = null
 
     abstract fun tick()
 
-    abstract fun onJump()
-
-    abstract fun onFall()
-
-    abstract fun onLand()
+    @Environment(EnvType.CLIENT)
+    abstract fun tickInput(input: Input)
 
     abstract fun getModelPitch(tickDelta: Float): Float
 
