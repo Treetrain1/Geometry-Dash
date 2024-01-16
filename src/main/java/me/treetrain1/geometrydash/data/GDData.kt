@@ -134,9 +134,9 @@ open class GDData @JvmOverloads constructor(
         this.prevCubeRotation = this.cubeRotation
         this.cubeRotation += (this.targetCubeRotation - this.cubeRotation) * 0.25F
 
-        this.prevCubeRotation %= 360F
-        this.cubeRotation %= 360F
-        this.targetCubeRotation %= 360F
+        this.prevCubeRotation %= 720F
+        this.cubeRotation %= 720F
+        this.targetCubeRotation %= 720F
     }
 
     fun getCubeRotation(tickDelta: Float): Float {
