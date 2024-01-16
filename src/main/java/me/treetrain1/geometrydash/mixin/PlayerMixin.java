@@ -14,10 +14,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class PlayerMixin implements PlayerDuck {
 
 	@Unique
-	private GDData gdData = new GDData(Player.class.cast(this));
+	private final GDData gdData = new GDData(Player.class.cast(this));
 
 	@Unique
 	private boolean wasFallingBefore = false;
+
+	@Unique
+	private boolean isInJump = false;
 
 	@Unique
 	@Override
@@ -30,15 +33,24 @@ public abstract class PlayerMixin implements PlayerDuck {
 	public void gd$tick(CallbackInfo ci) {
 		this.gdData.tick();
 		Player player = Player.class.cast(this);
-		boolean isFalling = player.fallDistance > 0D && !player.jumping;
-		if (!this.wasFallingBefore && isFalling)
-			this.gdData.incrementCubeRotation(false);
-		this.wasFallingBefore = isFalling;
+		boolean isFalling = player.fallDistance > 0D;
+		boolean onGround = player.onGround();
+		if (this.wasFallingBefore != isFalling) {
+			if (!onGround) {
+				if (!this.isInJump) this.gdData.incrementCubeRotation(this.isInJump); //Made it this way since it looks weird while jumping at the moment
+				this.wasFallingBefore = isFalling;
+			} else {
+				this.isInJump = false;
+				this.wasFallingBefore = false;
+			}
+		}
+		if (player.onGround()) this.isInJump = false;
 	}
 
 	@Inject(method = "jumpFromGround", at = @At("TAIL"))
 	public void gd$jumpFromGround(CallbackInfo ci) {
-		this.gdData.incrementCubeRotation(true);
+		this.isInJump = true;
+		this.gdData.incrementCubeRotation(this.isInJump);
 	}
 
 }

@@ -123,6 +123,7 @@ open class GDData @JvmOverloads constructor(
     }
 
     fun incrementCubeRotation(isJumping: Boolean = true) {
+        if (this.mode != GDMode.CUBE) return
         var additionalRotation = 180F
         if (!isJumping)
             additionalRotation = 90F;
@@ -131,13 +132,14 @@ open class GDData @JvmOverloads constructor(
     }
 
     fun tick() {
-        this.prevCubeRotation = this.cubeRotation
-        this.cubeRotation += (this.targetCubeRotation - this.cubeRotation) * 0.25F
-
-        if (this.targetCubeRotation >= 360F) {
-            this.targetCubeRotation -= 360F
-            this.cubeRotation -= 360F
-            this.prevCubeRotation -= 360F
+        if (this.mode == GDMode.CUBE) {
+            this.prevCubeRotation = this.cubeRotation
+            this.cubeRotation += (this.targetCubeRotation - this.cubeRotation) * 0.25F
+            if (this.targetCubeRotation >= 360F) {
+                this.targetCubeRotation -= 360F
+                this.cubeRotation -= 360F
+                this.prevCubeRotation -= 360F
+            }
         }
     }
 
