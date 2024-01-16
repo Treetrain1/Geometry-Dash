@@ -53,8 +53,8 @@ public class CubePlayerModel<T extends AbstractClientPlayer> extends Hierarchica
 	@Override
 	public void renderToBuffer(@NotNull PoseStack poseStack, @NotNull VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
 		poseStack.pushPose();
-		poseStack.translate(0D, 1.3D, 0D);
-		poseStack.mulPose(Axis.ZP.rotation(this.cubeRotation));
+		poseStack.translate(0D, 1.3D + 0.2375D, 0D);
+		poseStack.mulPose(Axis.XP.rotation(this.cubeRotation));
 		this.root().render(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY, red, green, blue, alpha);
 		poseStack.popPose();
 	}
