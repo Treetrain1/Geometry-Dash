@@ -1,12 +1,12 @@
 package me.treetrain1.geometrydash.data
 
+import me.treetrain1.geometrydash.data.mode.AbstractGDModeData
 import me.treetrain1.geometrydash.entity.Checkpoint
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.minecraft.core.BlockPos
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.server.level.ServerPlayer
-import net.minecraft.util.Mth
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.GameType
@@ -17,11 +17,11 @@ import net.minecraft.world.level.Level
 open class GDData @JvmOverloads constructor(
     @JvmField val player: Player,
     @JvmField var mode: GDMode? = null,
+    @JvmField var gdModeData: AbstractGDModeData? = null,
     @JvmField var scale: Double = 1.0,
-    @JvmField var cubeRotation: Float = 0.0F,
-    @JvmField var prevCubeRotation: Float = 0.0F,
-    @JvmField var targetCubeRotation: Float = 0.0F,
-    @JvmField var checkpoints: MutableList<Int> = mutableListOf()
+    @JvmField var checkpoints: MutableList<Int> = mutableListOf(),
+    @JvmField var wasFallingBefore: Boolean = false,
+    @JvmField var isInJump: Boolean = false
 ) {
 
     inline val playingGD: Boolean
@@ -68,7 +68,7 @@ open class GDData @JvmOverloads constructor(
 
     fun enterGD(mode: GDMode = GDMode.CUBE, scale: Double = 1.0) {
         val alreadyEntered: Boolean = this.playingGD
-        this.mode = mode
+        this.setMode(mode)
         this.scale = scale
 
         val player = this.player
@@ -78,10 +78,19 @@ open class GDData @JvmOverloads constructor(
         }
     }
 
+    fun setMode(mode: GDMode) { //Should be called EVERY time the mode is set. This will ensure Mode Data works properly.
+        this.mode = mode
+        val modeDataSupplier = this.mode?.modeDataSupplier
+        if (modeDataSupplier != null) {
+            this.gdModeData = modeDataSupplier.get()
+        }
+    }
+
     fun exitGD() {
         val alreadyExited: Boolean = !this.playingGD
         this.mode = null
         this.scale = 1.0
+        this.gdModeData = null
 
         if (alreadyExited) return
 
@@ -97,20 +106,34 @@ open class GDData @JvmOverloads constructor(
     fun save(compound: CompoundTag) {
         // TODO: how do you write an enum i forgot
         compound.putString("mode", this.mode?.name)
+        if (this.mode != null) {
+            val modeDataTag = CompoundTag()
+            this.gdModeData?.save(modeDataTag)
+            this.mode?.name?.let { compound.put(it, modeDataTag) }
+        }
+
         compound.putDouble("scale", this.scale)
         compound.putIntArray("checkpoints", this.checkpoints)
+        compound.putBoolean("was_falling_before", this.wasFallingBefore)
+        compound.putBoolean("is_in_jump", this.isInJump)
     }
 
     // TODO: Use + Test
     fun load(compound: CompoundTag) {
         try {
-            this.mode = GDMode.valueOf(compound.getString("mode"))
+            this.setMode(GDMode.valueOf(compound.getString("mode")))
+            if (this.mode != null) {
+                val modeDataTag = compound.getCompound(this.mode!!.name)
+                this.gdModeData?.load(modeDataTag)
+            }
         } catch (e: IllegalArgumentException) {
             this.mode = null
         }
 
         this.scale = compound.getDouble("scale")
         this.checkpoints = compound.getIntArray("checkpoints").toMutableList()
+        this.wasFallingBefore = compound.getBoolean("was_falling_before")
+        this.isInJump = compound.getBoolean("is_in_jump")
     }
 
     fun syncS2C() {
@@ -122,29 +145,19 @@ open class GDData @JvmOverloads constructor(
         // TODO: add packet
     }
 
-    fun incrementCubeRotation(isJumping: Boolean = true) {
-        if (this.mode != GDMode.CUBE) return
-        var additionalRotation = 180F
-        if (!isJumping)
-            additionalRotation = 90F;
-        //how do i do the bl ? 180 : 90 stuff help me
-        this.targetCubeRotation += additionalRotation
-    }
-
     fun tick() {
-        if (this.mode == GDMode.CUBE) {
-            this.prevCubeRotation = this.cubeRotation
-            this.cubeRotation += (this.targetCubeRotation - this.cubeRotation) * 0.25F
-            if (this.targetCubeRotation >= 360F) {
-                this.targetCubeRotation -= 360F
-                this.cubeRotation -= 360F
-                this.prevCubeRotation -= 360F
+        val isFalling = this.player.fallDistance > 0.0
+        val onGround = this.player.onGround()
+        if (this.wasFallingBefore != isFalling) {
+            if (!onGround) {
+                this.gdModeData?.onFall()
+                this.wasFallingBefore = isFalling
+            } else {
+                this.isInJump = false
+                this.wasFallingBefore = false
             }
         }
-    }
-
-    fun getCubeRotation(tickDelta: Float): Float {
-        return Mth.lerp(tickDelta, this.prevCubeRotation, this.cubeRotation)
+        if (this.player.onGround()) this.isInJump = false
     }
 
 }

@@ -41,7 +41,7 @@ public class CubePlayerModel<T extends AbstractClientPlayer> extends Hierarchica
 	public void prepareMobModel(@NotNull T player, float limbSwing, float limbSwingAmount, float partialTick) {
 		this.root().getAllParts().forEach(ModelPart::resetPose);
 		if (player instanceof PlayerDuck playerDuck) {
-			this.cubeRotation = (playerDuck.geometryDash$getGDData().getCubeRotation(partialTick) % 360F) * Mth.DEG_TO_RAD;
+			this.cubeRotation = (playerDuck.geometryDash$getGDData().gdModeData.getModelPitch(partialTick) % 360F) * Mth.DEG_TO_RAD;
 		}
 	}
 

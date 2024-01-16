@@ -17,12 +17,6 @@ public abstract class PlayerMixin implements PlayerDuck {
 	private final GDData gdData = new GDData(Player.class.cast(this));
 
 	@Unique
-	private boolean wasFallingBefore = false;
-
-	@Unique
-	private boolean isInJump = false;
-
-	@Unique
 	@Override
 	@NotNull
 	public GDData geometryDash$getGDData() {
@@ -32,25 +26,13 @@ public abstract class PlayerMixin implements PlayerDuck {
 	@Inject(method = "tick", at = @At("TAIL"))
 	public void gd$tick(CallbackInfo ci) {
 		this.gdData.tick();
-		Player player = Player.class.cast(this);
-		boolean isFalling = player.fallDistance > 0D;
-		boolean onGround = player.onGround();
-		if (this.wasFallingBefore != isFalling) {
-			if (!onGround) {
-				if (!this.isInJump) this.gdData.incrementCubeRotation(this.isInJump); //Made it this way since it looks weird while jumping at the moment
-				this.wasFallingBefore = isFalling;
-			} else {
-				this.isInJump = false;
-				this.wasFallingBefore = false;
-			}
-		}
-		if (player.onGround()) this.isInJump = false;
 	}
 
 	@Inject(method = "jumpFromGround", at = @At("TAIL"))
 	public void gd$jumpFromGround(CallbackInfo ci) {
-		this.isInJump = true;
-		this.gdData.incrementCubeRotation(this.isInJump);
+		this.gdData.isInJump = true;
+        if (this.gdData.gdModeData != null)
+			this.gdData.gdModeData.onJump();
 	}
 
 }
