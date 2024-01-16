@@ -11,9 +11,11 @@ class CubeModeData : AbstractGDModeData() {
     override fun tick() {
         this.prevCubeRotation = this.cubeRotation
         this.cubeRotation += (this.targetCubeRotation - this.cubeRotation) * 0.25f
-        this.targetCubeRotation %= 360
-        this.cubeRotation %= 360
-        this.prevCubeRotation %= 360
+        if (this.targetCubeRotation >= 360F) {
+            this.targetCubeRotation -= 360F;
+            this.cubeRotation -= 360F;
+            this.prevCubeRotation -= 360F;
+        }
     }
 
     override fun onJump() {
