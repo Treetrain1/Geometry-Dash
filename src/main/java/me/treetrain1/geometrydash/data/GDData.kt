@@ -128,7 +128,7 @@ open class GDData @JvmOverloads constructor(
         compound.putString("mode", this.mode?.name ?: "")
         val dataTag = CompoundTag()
         this.gdModeData?.save(dataTag)
-        compound.put("data", dataTag)
+        compound.put("mode_data", dataTag)
         compound.putDouble("scale", this.scale)
         compound.putIntArray("checkpoints", this.checkpoints)
         compound.putBoolean("was_falling_before", this.wasFallingBefore)
