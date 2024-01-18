@@ -58,12 +58,12 @@ public abstract class PlayerMixin implements PlayerDuck {
 	private void addGDData(CompoundTag compound, CallbackInfo ci) {
 		CompoundTag gdCompound = new CompoundTag();
 		this.gdData.save(gdCompound);
-		compound.put("gdData", gdCompound);
+		compound.put("gd_data", gdCompound);
 	}
 
 	@Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
 	private void readGDData(CompoundTag compound, CallbackInfo ci) {
-		CompoundTag gdCompound = compound.getCompound("gdData");
+		CompoundTag gdCompound = compound.getCompound("gd_data");
 		this.gdData.load(gdCompound);
 	}
 }
