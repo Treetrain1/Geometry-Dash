@@ -73,15 +73,17 @@ open class GDData @JvmOverloads constructor(
         toggleGD()
     }
 
-    fun setGD(mode: GDMode?, scale: Double? = 1.0) {
+    fun setGD(mode: GDMode?, scale: Double? = 1.0): Boolean {
         if (mode == null) {
-            this.exitGD()
-        } else {
-            this.enterGD(mode, scale)
+            return this.exitGD()
         }
+        return this.enterGD(mode, scale)
     }
 
-    fun enterGD(mode: GDMode = GDMode.CUBE, scale: Double? = 1.0) {
+    /**
+     * @return if not already in GD mode
+     */
+    fun enterGD(mode: GDMode = GDMode.CUBE, scale: Double? = 1.0): Boolean {
         val alreadyEntered: Boolean = this.playingGD
         this.mode = mode
         if (scale != null) {
@@ -89,20 +91,23 @@ open class GDData @JvmOverloads constructor(
         }
 
         val player = this.player
-        if (!alreadyEntered && player is ServerPlayer) {
-            this.prevGameType = player.gameMode.gameModeForPlayer
-            player.setGameMode(GameType.ADVENTURE)
-        }
+        if (alreadyEntered || player !is ServerPlayer) return false
+
+        this.prevGameType = player.gameMode.gameModeForPlayer
+        player.setGameMode(GameType.ADVENTURE)
+        return true
     }
 
-    fun exitGD() {
-        val alreadyExited: Boolean = !this.playingGD
+    /**
+     * @return if not already exited
+     */
+    fun exitGD(): Boolean {
+        if (!this.playingGD) return false
+
         this.mode = null
         this.scale = 1.0
         this.gdModeData = null
         this.checkpoints.clear()
-
-        if (alreadyExited) return
 
         val player = this.player
         val prevType = this.prevGameType
@@ -112,6 +117,7 @@ open class GDData @JvmOverloads constructor(
         }
         player.pose = Pose.STANDING
         player.refreshDimensions()
+        return true
     }
 
     fun tick() {

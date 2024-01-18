@@ -5,6 +5,7 @@ import me.treetrain1.geometrydash.data.GDData
 import me.treetrain1.geometrydash.data.GDMode
 import me.treetrain1.geometrydash.duck.PlayerDuck
 import me.treetrain1.geometrydash.network.GDModeSyncPacket
+import me.treetrain1.geometrydash.util.log
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.Commands
@@ -12,6 +13,7 @@ import net.minecraft.commands.arguments.EntityArgument
 import net.minecraft.commands.arguments.StringRepresentableArgument
 import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.level.GameRules
 
 
 object GDCommand {
@@ -66,21 +68,32 @@ object GDCommand {
     }
 
     private fun set(source: CommandSourceStack, mode: GDMode, players: Collection<ServerPlayer>): Int {
+        var successful: Int = 0
         for (player in players) {
             val duck = player as PlayerDuck
             val dat: GDData = duck.`geometryDash$getGDData`()
-            dat.setGD(mode)
-            val packet = GDModeSyncPacket(dat)
-            ServerPlayNetworking.send(player, packet)
+            if (dat.setGD(mode)) {
+                logSet(source, mode, player)
+                val packet = GDModeSyncPacket(dat)
+                ServerPlayNetworking.send(player, packet)
+                successful++
+            }
         }
 
-        if (players.size == 1) {
-            source.sendSuccess({ Component.translatable("commands.gd.set.success.single", players.first().displayName) }, true)
+        return successful
+    }
+
+    private fun logSet(source: CommandSourceStack, mode: GDMode, player: ServerPlayer) {
+        val modeComponent = Component.literal(mode.title)
+        if (source.entity === player) {
+            source.sendSuccess({ Component.translatable("commands.gd.set.success.self", modeComponent) }, true)
         } else {
-            source.sendSuccess({ Component.translatable("commands.gd.set.success.multiple", players.size) }, true)
-        }
+            if (source.level.gameRules.getBoolean(GameRules.RULE_SENDCOMMANDFEEDBACK)) {
+                player.sendSystemMessage(Component.translatable("gdMode.changed", modeComponent))
+            }
 
-        return players.size
+            source.sendSuccess({ Component.translatable("commands.gd.set.success.other", player.displayName, modeComponent) }, true)
+        }
     }
 
     private fun exit(source: CommandSourceStack, players: Collection<ServerPlayer>): Int {

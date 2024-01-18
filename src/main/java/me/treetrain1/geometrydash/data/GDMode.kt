@@ -6,16 +6,16 @@ import me.treetrain1.geometrydash.data.mode.CubeModeData
 import net.minecraft.util.StringRepresentable
 import org.jetbrains.annotations.Contract
 
-enum class GDMode(val modeDataSupplier: () -> GDModeData) : StringRepresentable {
-    CUBE({ CubeModeData() }),
-    SHIP({ CubeModeData() }),
-    BALL({ CubeModeData() }),
-    UFO({ CubeModeData() }),
-    WAVE({ CubeModeData() }),
-    ROBOT({ CubeModeData() }),
-    SPIDER({ CubeModeData() }),
-    SWING({ CubeModeData() }),
-    CUBE_3D({ Cube3DModeData() });
+enum class GDMode(val title: String, val modeDataSupplier: () -> GDModeData) : StringRepresentable {
+    CUBE("Cube", { CubeModeData() }),
+    SHIP("Ship", { CubeModeData() }),
+    BALL("Ball", { CubeModeData() }),
+    UFO("UFO", { CubeModeData() }),
+    WAVE("Wave", { CubeModeData() }),
+    ROBOT("Robot", { CubeModeData() }),
+    SPIDER("Spider", { CubeModeData() }),
+    SWING("Swing", { CubeModeData() }),
+    CUBE_3D("Cube 3D", { Cube3DModeData() });
 
     @Contract(pure = true)
     override fun toString(): String = this.name

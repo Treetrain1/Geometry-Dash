@@ -8,6 +8,8 @@
 
   "commands.gd.toggle.success.single": "Toggled GD Mode for %s",
   "commands.gd.toggle.success.multiple": "Toggled GD Mode for %s players",
+  "commands.gd.set.success.other": "Set %s's GD Mode to %s",
+  "commands.gd.set.success.self": "Set own GD Mode to %s",
   "commands.gd.exit.success.single": "Exited GD Mode for %s",
   "commands.gd.exit.success.multiple": "Exited GD Mode for %s players"
 }
