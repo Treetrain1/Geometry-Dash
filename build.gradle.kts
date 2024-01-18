@@ -225,12 +225,12 @@ dependencies {
     modImplementation("net.fabricmc:fabric-language-kotlin:${fabric_kotlin_version}")
 
     // FrozenLib
-/*    if (local_frozenlib)
-        api(project(":FrozenLib", configuration = "namedElements"))?.let { include(it) }
-    else
+    //if (local_frozenlib)
+        //api(project(":FrozenLib", configuration = "namedElements"))?.let { include(it) }
+    //else
         //modApi(files("libs/frozenlib.jar"))?.apply { include(this) }
         modApi("maven.modrinth:frozenlib:$frozenlib_version")?.let { include(it) }
-*/
+
     // Gravity Changer
     api(project(":GravityChanger", configuration = "namedElements"))?.let { include(it) }
 

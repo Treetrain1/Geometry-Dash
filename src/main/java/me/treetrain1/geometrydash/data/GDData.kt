@@ -66,7 +66,7 @@ open class GDData @JvmOverloads constructor(
         toggleGD()
     }
 
-    fun setGD(mode: GDMode?, scale: Double = 1.0) {
+    fun setGD(mode: GDMode?, scale: Double? = 1.0) {
         if (mode == null) {
             this.exitGD()
         } else {
@@ -74,10 +74,12 @@ open class GDData @JvmOverloads constructor(
         }
     }
 
-    fun enterGD(mode: GDMode = GDMode.CUBE, scale: Double = 1.0) {
+    fun enterGD(mode: GDMode = GDMode.CUBE, scale: Double? = 1.0) {
         val alreadyEntered: Boolean = this.playingGD
         this.mode = mode
-        this.scale = scale
+        if (scale != null) {
+            this.scale = scale
+        }
 
         val player = this.player
         if (!alreadyEntered && player is ServerPlayer) {
