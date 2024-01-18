@@ -69,7 +69,9 @@ object GDCommand {
         for (player in players) {
             val duck = player as PlayerDuck
             val dat: GDData = duck.`geometryDash$getGDData`()
-            dat.setGD(mode, null)
+            dat.setGD(mode)
+            val packet = GDModeSyncPacket(dat)
+            ServerPlayNetworking.send(player, packet)
         }
 
         if (players.size == 1) {
