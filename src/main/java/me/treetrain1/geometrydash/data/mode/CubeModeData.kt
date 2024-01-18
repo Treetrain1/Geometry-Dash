@@ -1,8 +1,11 @@
 package me.treetrain1.geometrydash.data.mode
 
+import me.treetrain1.geometrydash.entity.pose.GDPoses
 import net.minecraft.client.player.Input
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.Mth
+import net.minecraft.world.entity.EntityDimensions
+import net.minecraft.world.entity.Pose
 
 class CubeModeData : GDModeData() {
     private var targetCubeRot: Float = 0F
@@ -22,6 +25,18 @@ class CubeModeData : GDModeData() {
                 this@CubeModeData.targetCubeRot += 20F
             }
         }
+    }
+
+    override fun getPose(): Pose {
+        return GDPoses.CUBE
+    }
+
+    override fun getEntityDimensions(): EntityDimensions {
+        return EntityDimensions.scalable(0.85F, 0.85F)
+    }
+
+    override fun getEyeHeight(): Float {
+        return 0.5F
     }
 
     override fun getModelPitch(tickDelta: Float): Float {

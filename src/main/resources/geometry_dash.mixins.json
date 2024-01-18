@@ -8,6 +8,7 @@
     "FoodDataMixin",
     "PlayerListMixin",
     "PlayerMixin",
+    "PoseMixin",
     "ServerPlayerMixin",
     "gravity.GravityComponentMixin"
   ],

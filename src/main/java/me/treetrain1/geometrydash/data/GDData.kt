@@ -8,6 +8,7 @@ import net.minecraft.core.BlockPos
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.Pose
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.GameType
 import net.minecraft.world.level.Level
@@ -100,10 +101,16 @@ open class GDData @JvmOverloads constructor(
             player.setGameMode(prevType)
             this.prevGameType = null
         }
+        player.pose = Pose.STANDING
+        player.refreshDimensions()
     }
 
     fun tick() {
         this.gdModeData?.tick()
+        if (this.gdModeData != null) {
+            player.pose = this.gdModeData!!.getPose()
+        }
+        player.refreshDimensions()
     }
 
     // TODO: Use + Test

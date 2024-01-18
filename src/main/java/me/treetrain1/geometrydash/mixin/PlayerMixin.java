@@ -2,6 +2,8 @@ package me.treetrain1.geometrydash.mixin;
 
 import me.treetrain1.geometrydash.data.GDData;
 import me.treetrain1.geometrydash.duck.PlayerDuck;
+import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
@@ -33,6 +35,20 @@ public abstract class PlayerMixin implements PlayerDuck {
 	public void gd$isSwimming(CallbackInfoReturnable<Boolean> cir) {
 		if (this.gdData.getPlayingGD()) {
 			cir.setReturnValue(false);
+		}
+	}
+
+	@Inject(method = "getDimensions", at = @At("HEAD"), cancellable = true)
+	public void gd$getDimensions(Pose pose, CallbackInfoReturnable<EntityDimensions> cir) {
+		if (this.gdData.getPlayingGD() && this.gdData.gdModeData != null) {
+			cir.setReturnValue(this.gdData.gdModeData.getEntityDimensions());
+		}
+	}
+
+	@Inject(method = "getStandingEyeHeight", at = @At("HEAD"), cancellable = true)
+	public void gd$getStandingEyeHeight(Pose pose, EntityDimensions dimensions, CallbackInfoReturnable<Float> cir) {
+		if (this.gdData.getPlayingGD() && this.gdData.gdModeData != null) {
+			cir.setReturnValue(this.gdData.gdModeData.getEyeHeight());
 		}
 	}
 }

@@ -5,6 +5,8 @@ import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.minecraft.client.player.Input
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.world.entity.EntityDimensions
+import net.minecraft.world.entity.Pose
 
 abstract class GDModeData {
     @JvmField
@@ -14,6 +16,12 @@ abstract class GDModeData {
 
     @Environment(EnvType.CLIENT)
     abstract fun tickInput(input: Input)
+
+    abstract fun getPose(): Pose
+
+    abstract fun getEntityDimensions(): EntityDimensions
+
+    abstract fun getEyeHeight(): Float
 
     abstract fun getModelPitch(tickDelta: Float): Float
 
