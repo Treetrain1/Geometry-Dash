@@ -28,7 +28,7 @@ class CubeModeData : GDModeData() {
     }
 
     override fun getPose(): Pose {
-        return GDPoses.CUBE
+        return GDPoses.CUBE!!
     }
 
     override fun getEntityDimensions(): EntityDimensions {
