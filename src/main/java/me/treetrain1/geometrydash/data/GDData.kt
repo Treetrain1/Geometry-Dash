@@ -127,7 +127,7 @@ open class GDData @JvmOverloads constructor(
         player.refreshDimensions()
     }
 
-    // TODO: Use + Test
+    // TODO: Fix
     fun save(compound: CompoundTag) {
         compound.putString("mode", this.mode?.name ?: "")
         val dataTag = CompoundTag()
@@ -137,7 +137,7 @@ open class GDData @JvmOverloads constructor(
         compound.putIntArray("checkpoints", this.checkpoints)
     }
 
-    // TODO: Use + Test
+    // TODO: Fix
     fun load(compound: CompoundTag) {
         try {
             val newMode = GDMode.valueOf(compound.getString("mode"))
