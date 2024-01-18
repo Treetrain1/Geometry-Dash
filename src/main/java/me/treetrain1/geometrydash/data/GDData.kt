@@ -1,7 +1,6 @@
 package me.treetrain1.geometrydash.data
 
 import it.unimi.dsi.fastutil.ints.IntArrayList
-import it.unimi.dsi.fastutil.ints.IntList
 import me.treetrain1.geometrydash.data.mode.GDModeData
 import me.treetrain1.geometrydash.entity.Checkpoint
 import me.treetrain1.geometrydash.network.GDModeSyncPacket
@@ -84,14 +83,14 @@ open class GDData @JvmOverloads constructor(
      * @return if not already in GD mode
      */
     fun enterGD(mode: GDMode = GDMode.CUBE, scale: Double? = 1.0): Boolean {
-        val alreadyEntered: Boolean = this.playingGD
+        val noChange: Boolean = this.playingGD && this.mode == mode
         this.mode = mode
         if (scale != null) {
             this.scale = scale
         }
 
         val player = this.player
-        if (alreadyEntered || player !is ServerPlayer) return false
+        if (noChange || player !is ServerPlayer) return false
 
         this.prevGameType = player.gameMode.gameModeForPlayer
         player.setGameMode(GameType.ADVENTURE)
