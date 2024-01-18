@@ -47,7 +47,7 @@ class Cube3DModeData : GDModeData() {
         return false
     }
 
-    override fun lockForwardsMovement(): Boolean {
+    override fun lockCamera(): Boolean {
         return false
     }
 

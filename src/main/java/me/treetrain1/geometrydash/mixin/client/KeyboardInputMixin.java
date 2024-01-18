@@ -1,5 +1,6 @@
 package me.treetrain1.geometrydash.mixin.client;
 
+import me.treetrain1.geometrydash.data.mode.GDModeData;
 import me.treetrain1.geometrydash.duck.PlayerDuck;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.KeyboardInput;
@@ -18,10 +19,14 @@ public class KeyboardInputMixin {
 		if (Minecraft.getInstance().player instanceof PlayerDuck duck
 			&& duck.geometryDash$getGDData().getPlayingGD()
 			&& duck.geometryDash$getGDData().gdModeData != null
-			&& duck.geometryDash$getGDData().gdModeData.lockForwardsMovement()
 		) {
-			input.forwardImpulse = 1.0F;
-			input.leftImpulse = 0.0F;
+			GDModeData gdModeData = duck.geometryDash$getGDData().gdModeData;
+			if (gdModeData.lockForwardsMovement()) {
+				input.forwardImpulse = 1F;
+			}
+			if (!gdModeData.allowSidewaysMovement()) {
+				input.leftImpulse = 0F;
+			}
 		}
 	}
 }

@@ -29,8 +29,16 @@ abstract class GDModeData {
         return true
     }
 
+    open fun lockCamera(): Boolean {
+        return true
+    }
+
     open fun lockForwardsMovement(): Boolean {
         return true
+    }
+
+    open fun allowSidewaysMovement(): Boolean {
+        return false
     }
 
     abstract fun getModelPitch(tickDelta: Float): Float

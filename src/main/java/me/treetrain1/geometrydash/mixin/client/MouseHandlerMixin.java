@@ -5,7 +5,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
-import net.minecraft.client.player.LocalPlayer;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -26,7 +25,9 @@ public class MouseHandlerMixin {
 		if (this.minecraft.player instanceof PlayerDuck duck
 			&& duck.geometryDash$getGDData().getPlayingGD()
 			&& duck.geometryDash$getGDData().gdModeData != null
-			&& duck.geometryDash$getGDData().gdModeData.lockForwardsMovement())
+			&& duck.geometryDash$getGDData().gdModeData.lockCamera()
+		) {
 			ci.cancel();
+		}
 	}
 }
