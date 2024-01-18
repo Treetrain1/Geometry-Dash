@@ -1,5 +1,6 @@
 package me.treetrain1.geometrydash.network
 
+import it.unimi.dsi.fastutil.ints.IntList
 import me.treetrain1.geometrydash.data.GDData
 import me.treetrain1.geometrydash.data.GDMode
 import me.treetrain1.geometrydash.duck.PlayerDuck
@@ -14,7 +15,7 @@ import net.minecraft.client.Minecraft
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.server.level.ServerPlayer
 
-data class GDModeSyncPacket(@JvmField val mode: GDMode?, @JvmField val scale: Double) : FabricPacket {
+data class GDModeSyncPacket(@JvmField val mode: GDMode?, @JvmField val scale: Double, @JvmField val checkpoints: IntList = IntList.of()) : FabricPacket {
     companion object {
         @JvmField
         val PACKET_TYPE: PacketType<GDModeSyncPacket> = PacketType.create(id("gd_mode_sync"), ::GDModeSyncPacket)
@@ -36,14 +37,15 @@ data class GDModeSyncPacket(@JvmField val mode: GDMode?, @JvmField val scale: Do
         inline fun sendS2C(players: Iterable<ServerPlayer>) = players.forEach { sendS2C(it) }
     }
 
-    constructor(dat: GDData) : this(dat.mode, dat.scale)
+    constructor(dat: GDData) : this(dat.mode, dat.scale, dat.checkpoints)
 
-    constructor(buf: FriendlyByteBuf) : this(buf.readNullable { buf1 -> buf1.readInt() }?.let { GDMode.entries[it] }, buf.readDouble())
+    constructor(buf: FriendlyByteBuf) : this(buf.readNullable { buf1 -> buf1.readInt() }?.let { GDMode.entries[it] }, buf.readDouble(), buf.readIntIdList())
 
     override fun write(buf: FriendlyByteBuf) {
         buf.writeNullable(this.mode?.ordinal) { buf1, ord -> buf1.writeInt(ord) }
 
-        buf.writeDouble(this.scale) // TODO: do this properly
+        buf.writeDouble(this.scale)
+        buf.writeIntIdList(this.checkpoints)
     }
 
     override fun getType(): PacketType<*> = PACKET_TYPE

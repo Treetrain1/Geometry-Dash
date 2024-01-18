@@ -1,7 +1,10 @@
 package me.treetrain1.geometrydash.data
 
+import it.unimi.dsi.fastutil.ints.IntArrayList
+import it.unimi.dsi.fastutil.ints.IntList
 import me.treetrain1.geometrydash.data.mode.GDModeData
 import me.treetrain1.geometrydash.entity.Checkpoint
+import me.treetrain1.geometrydash.network.GDModeSyncPacket
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.minecraft.core.BlockPos
@@ -18,8 +21,12 @@ open class GDData @JvmOverloads constructor(
     @JvmField val player: Player,
     @JvmField var gdModeData: GDModeData? = null,
     @JvmField var scale: Double = 1.0,
-    @JvmField var checkpoints: MutableList<Int> = mutableListOf(),
+    @JvmField var checkpoints: IntArrayList = IntArrayList(),
 ) {
+
+    companion object {
+        private fun List<Int>.toMutableIntList(): IntArrayList = IntArrayList().apply { this.addAll(this@toMutableIntList) }
+    }
 
     var mode: GDMode? = null
         set(value) {
@@ -137,16 +144,16 @@ open class GDData @JvmOverloads constructor(
         }
 
         this.scale = compound.getDouble("scale")
-        this.checkpoints = compound.getIntArray("checkpoints").toMutableList()
+        this.checkpoints = compound.getIntArray("checkpoints").toList().toMutableIntList()
     }
 
-    fun syncS2C() {
-        // TODO: add packet
+    fun syncS2C(players: Collection<ServerPlayer>) {
+        GDModeSyncPacket.sendS2C(players)
     }
 
     @Environment(EnvType.CLIENT)
     fun syncC2S() {
-        // TODO: add packet
+        GDModeSyncPacket.sendC2S()
     }
 
 }
