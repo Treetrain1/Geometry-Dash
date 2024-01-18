@@ -6,6 +6,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import java.util.Set;
 
 @Mixin(ServerPlayer.class)
 public class ServerPlayerMixin {
@@ -14,5 +17,16 @@ public class ServerPlayerMixin {
 	private BlockPos spawnAtCheckpoint(BlockPos original) {
 		BlockPos lastCheckpoint = ((PlayerDuck) this).geometryDash$getGDData().getLastValidCheckpoint();
 		return lastCheckpoint == null ? original : lastCheckpoint;
+	}
+
+	@Inject(method = "restoreFrom", at = @At("TAIL"))
+	private void restoreGD(ServerPlayer that, boolean keepEverything, CallbackInfo ci) {
+		var thisDuck = (PlayerDuck) this;
+		var thisData = thisDuck.geometryDash$getGDData();
+		var thatDuck = (PlayerDuck) that;
+		var thatData = thatDuck.geometryDash$getGDData();
+
+		thisData.copyFrom(thatData);
+		thisData.syncS2C(Set.of(ServerPlayer.class.cast(this)));
 	}
 }

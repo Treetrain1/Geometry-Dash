@@ -2,6 +2,7 @@ package me.treetrain1.geometrydash.mixin;
 
 import me.treetrain1.geometrydash.data.GDData;
 import me.treetrain1.geometrydash.duck.PlayerDuck;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.Pose;
@@ -53,9 +54,16 @@ public abstract class PlayerMixin implements PlayerDuck {
 		}
 	}
 
-	@Inject(method = "remove", at = @At("TAIL"))
-	private void resetGD(Entity.RemovalReason reason, CallbackInfo ci) {
-		// TODO: remove this at some point in favor of transferring gd data across player entities
-		this.gdData.exitGD();
+	@Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
+	private void addGDData(CompoundTag compound, CallbackInfo ci) {
+		CompoundTag gdCompound = new CompoundTag();
+		this.gdData.save(gdCompound);
+		compound.put("gdData", gdCompound);
+	}
+
+	@Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
+	private void readGDData(CompoundTag compound, CallbackInfo ci) {
+		CompoundTag gdCompound = compound.getCompound("gdData");
+		this.gdData.load(gdCompound);
 	}
 }

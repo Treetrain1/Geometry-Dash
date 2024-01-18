@@ -42,7 +42,7 @@ open class GDData @JvmOverloads constructor(
     inline val playingGD: Boolean
         get() = this.mode != null
 
-    private var prevGameType: GameType? = null
+    protected var prevGameType: GameType? = null
 
     @PublishedApi
     internal inline val level: Level get() = this.player.level()
@@ -151,6 +151,14 @@ open class GDData @JvmOverloads constructor(
 
         this.scale = compound.getDouble("scale")
         this.checkpoints = compound.getIntArray("checkpoints").toList().toMutableIntList()
+    }
+
+    fun copyFrom(otherData: GDData) {
+        this.mode = otherData.mode
+        this.gdModeData = otherData.gdModeData
+        this.scale = otherData.scale
+        this.checkpoints = otherData.checkpoints
+        this.prevGameType = otherData.prevGameType
     }
 
     fun syncS2C(players: Collection<ServerPlayer>) {
