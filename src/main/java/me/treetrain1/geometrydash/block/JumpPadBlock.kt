@@ -2,8 +2,10 @@
 
 package me.treetrain1.geometrydash.block
 import com.mojang.serialization.MapCodec
+import gravity_changer.api.GravityChangerAPI
 import gravity_changer.command.LocalDirection
 import me.treetrain1.geometrydash.block.entity.JumpPadBlockEntity
+import me.treetrain1.geometrydash.duck.GravityDuck
 import me.treetrain1.geometrydash.util.isCollidingWithPad
 import me.treetrain1.geometrydash.util.setRelative
 import me.treetrain1.geometrydash.util.vertTeleport
@@ -74,8 +76,9 @@ open class JumpPadBlock(val type: JumpPadType, props: Properties) : MultifaceBlo
             return if (voxelShape.isEmpty) Shapes.block() else voxelShape
         }
 
-        private fun Entity.applyDelta(type: JumpPadType) {
+        fun LivingEntity.applyDelta(type: JumpPadType) {
             val delta = this.deltaMovement
+            this.setJumping(true)
             this.setDeltaMovement(delta.x, type.jumpPower, delta.z)
         }
     }
@@ -117,12 +120,15 @@ open class JumpPadBlock(val type: JumpPadType, props: Properties) : MultifaceBlo
         val blockEntity = this.blockEntity(level, pos) ?: return
         if (blockEntity.colliding.contains(entity.id)) return
 
-        if (type.shouldJump) {
-            entity.setJumping(true)
-            entity.applyDelta(type)
-        }
         if (type.shouldFlipGravity) {
             entity.setRelative(LocalDirection.UP)
+        }
+        if (type.shouldJump) {
+            if (type.shouldFlipGravity) {
+                (GravityChangerAPI.getGravityComponent(entity) as GravityDuck).`geometryDash$queueJump`(type)
+            } else {
+                entity.applyDelta(type)
+            }
         }
         if (type.shouldTeleport) {
             entity.vertTeleport(level)
@@ -195,7 +201,7 @@ open class JumpPadBlock(val type: JumpPadType, props: Properties) : MultifaceBlo
         LOW(jumpPower = 0.5),
         NORMAL,
         HIGH(jumpPower = 1.5),
-        REVERSE_GRAVITY(shouldFlipGravity = true),
+        REVERSE_GRAVITY(shouldFlipGravity = true, jumpPower = -1.0),
         TELEPORT(shouldJump = false, shouldFlipGravity = true, shouldTeleport = true); // Spider vertical teleporting
     }
 }
