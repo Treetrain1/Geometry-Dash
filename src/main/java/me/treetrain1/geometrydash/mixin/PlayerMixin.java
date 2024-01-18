@@ -27,5 +27,4 @@ public abstract class PlayerMixin implements PlayerDuck {
 	public void gd$tick(CallbackInfo ci) {
 		this.gdData.tick();
 	}
-
 }

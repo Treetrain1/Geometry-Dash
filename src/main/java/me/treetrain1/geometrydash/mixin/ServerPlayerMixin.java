@@ -1,7 +1,6 @@
 package me.treetrain1.geometrydash.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import me.treetrain1.geometrydash.data.GDData;
 import me.treetrain1.geometrydash.duck.PlayerDuck;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
@@ -13,9 +12,7 @@ public class ServerPlayerMixin {
 
 	@ModifyReturnValue(method = "getRespawnPosition", at = @At("RETURN"))
 	private BlockPos spawnAtCheckpoint(BlockPos original) {
-		GDData data = ((PlayerDuck) this).geometryDash$getGDData();
-		BlockPos lastCheckpoint = data.getLastValidCheckpoint();
-		if (lastCheckpoint == null) return original;
-		return lastCheckpoint;
+		BlockPos lastCheckpoint = ((PlayerDuck) this).geometryDash$getGDData().getLastValidCheckpoint();
+		return lastCheckpoint == null ? original : lastCheckpoint;
 	}
 }
