@@ -40,7 +40,7 @@ class CubeModeData : GDModeData() {
     }
 
     override fun getCameraYOffset(): Float {
-        return (2F * -(this.gdData?.player?.deltaMovement?.y()!!)).toFloat()
+        return 0F
     }
 
     override fun getModelPitch(tickDelta: Float): Float {
