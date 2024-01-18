@@ -1,12 +1,13 @@
-package me.treetrain1.geometrydash.entity.pose;
+package me.treetrain1.geometrydash.entity.pose
 
-import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.Pose
 
-public class GDPoses {
-	public static Pose CUBE;
+object GDPoses {
+    @JvmField
+	var CUBE: Pose? = null
 
-	//CREDIT TO nyuppo/fabric-boat-example ON GITHUB
-	static {
-		Pose.values();
-	}
+    //CREDIT TO nyuppo/fabric-boat-example ON GITHUB
+    init {
+        Pose.entries.toTypedArray()
+    }
 }
