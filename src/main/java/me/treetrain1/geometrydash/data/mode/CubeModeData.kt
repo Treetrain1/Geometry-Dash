@@ -39,6 +39,10 @@ class CubeModeData : GDModeData() {
         return 0.5F
     }
 
+    override fun getCameraYOffset(): Float {
+        return 0.25F
+    }
+
     override fun getModelPitch(tickDelta: Float): Float {
         return Mth.lerp(tickDelta, this.prevCubeRot, this.cubeRot)
     }

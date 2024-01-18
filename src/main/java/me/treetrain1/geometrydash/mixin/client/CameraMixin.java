@@ -4,6 +4,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
+import com.llamalad7.mixinextras.sugar.ref.LocalFloatRef;
 import me.treetrain1.geometrydash.duck.PlayerDuck;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -23,6 +24,9 @@ public abstract class CameraMixin {
 	@Shadow
 	protected abstract void move(double distanceOffset, double verticalOffset, double horizontalOffset);
 
+	@Shadow
+	protected abstract void setRotation(float yRot, float xRot);
+
 	@WrapOperation(
 		method = "setup",
 		at = @At(
@@ -34,10 +38,10 @@ public abstract class CameraMixin {
 	private void gd$setupRotation(
 		Camera instance, float yRot, float xRot, Operation<Void> original,
 		BlockGetter level, Entity entity, boolean detached, boolean thirdPersonReverse, float partialTick,
-		@Share("gd$isGD") LocalBooleanRef isGD
+		@Share("gd$isGD") LocalBooleanRef isGD, @Share("gd$yRot") LocalFloatRef gdYRot
 	) {
 		if (entity instanceof PlayerDuck duck && duck.geometryDash$getGDData().getPlayingGD()) {
-			yRot += 270F;
+			gdYRot.set(yRot);
 			xRot = 0;
 			isGD.set(true);
 		}
@@ -56,12 +60,13 @@ public abstract class CameraMixin {
 	private void gd$setupPosition(
 		Camera instance, double x, double y, double z, Operation<Void> original,
 		BlockGetter level, Entity entity, boolean detached, boolean thirdPersonReverse, float partialTick,
-		@Share("gd$isGD") LocalBooleanRef isGD
+		@Share("gd$isGD") LocalBooleanRef isGD, @Share("gd$yRot") LocalFloatRef gdYRot
 	) {
 		original.call(instance, x, y, z);
 		if (!isGD.get()) return;
 
-		this.move(0D, -1.137D, -10D);
+		this.move(0D, 0D, -10D);
+		this.setRotation(gdYRot.get() + 270F, 0F);
 	}
 
 	@Inject(
@@ -79,5 +84,20 @@ public abstract class CameraMixin {
 		@Share("gd$isGD") LocalBooleanRef isGD
 	) {
 		if (isGD.get()) ci.cancel();
+	}
+
+	@WrapOperation(
+		method = "tick",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/entity/Entity;getEyeHeight()F"
+		)
+	)
+	public float gd$tick(Entity instance, Operation<Float> original) {
+		float value = original.call(instance);
+		if (instance instanceof PlayerDuck duck && duck.geometryDash$getGDData().getPlayingGD() && duck.geometryDash$getGDData().gdModeData != null) {
+			value += duck.geometryDash$getGDData().gdModeData.getCameraYOffset();
+		}
+		return value;
 	}
 }

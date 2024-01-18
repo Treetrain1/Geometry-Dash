@@ -23,6 +23,8 @@ abstract class GDModeData {
 
     abstract fun getEyeHeight(): Float
 
+    abstract fun getCameraYOffset(): Float
+
     abstract fun getModelPitch(tickDelta: Float): Float
 
     abstract fun save(compound: CompoundTag)
