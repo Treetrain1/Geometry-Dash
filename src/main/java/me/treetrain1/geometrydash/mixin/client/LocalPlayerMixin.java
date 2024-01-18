@@ -12,6 +12,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Environment(EnvType.CLIENT)
 @Mixin(LocalPlayer.class)
@@ -24,6 +25,12 @@ public class LocalPlayerMixin {
 	private void forceGDSprint(CallbackInfo ci) {
 		if (((PlayerDuck) this).geometryDash$getGDData().getPlayingGD())
 			((LocalPlayer) (Object) this).setSprinting(true);
+	}
+
+	@Inject(method = "hasEnoughFoodToStartSprinting", at = @At("HEAD"), cancellable = true)
+	private void gd$hasEnoughFoodToStartSprinting(CallbackInfoReturnable<Boolean> cir) {
+		if (((PlayerDuck) this).geometryDash$getGDData().getPlayingGD())
+			cir.setReturnValue(true);
 	}
 
 	@Inject(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/tutorial/Tutorial;onInput(Lnet/minecraft/client/player/Input;)V", shift = At.Shift.AFTER))
