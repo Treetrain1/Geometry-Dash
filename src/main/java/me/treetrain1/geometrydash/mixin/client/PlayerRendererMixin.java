@@ -40,6 +40,11 @@ public abstract class PlayerRendererMixin extends LivingEntityRenderer<AbstractC
 			new CubePlayerModel<>(context.bakeLayer(GeometryDashClient.CUBE_PLAYER)),
 			GDMode.CUBE
 		));
+		this.addLayer(new GDModeLayer(
+			PlayerRenderer.class.cast(this),
+			new CubePlayerModel<>(context.bakeLayer(GeometryDashClient.CUBE_PLAYER)),
+			GDMode.CUBE_3D
+		));
 	}
 
 	@Inject(method = "setModelProperties", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/AbstractClientPlayer;isSpectator()Z"), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)

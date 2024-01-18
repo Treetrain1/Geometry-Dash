@@ -38,12 +38,16 @@ public abstract class CameraMixin {
 	private void gd$setupRotation(
 		Camera instance, float yRot, float xRot, Operation<Void> original,
 		BlockGetter level, Entity entity, boolean detached, boolean thirdPersonReverse, float partialTick,
-		@Share("gd$isGD") LocalBooleanRef isGD, @Share("gd$yRot") LocalFloatRef gdYRot
+		@Share("gd$useGDCamera") LocalBooleanRef useGDCamera, @Share("gd$yRot") LocalFloatRef gdYRot
 	) {
-		if (entity instanceof PlayerDuck duck && duck.geometryDash$getGDData().getPlayingGD()) {
+		if (entity instanceof PlayerDuck duck
+			&& duck.geometryDash$getGDData().getPlayingGD()
+			&& duck.geometryDash$getGDData().gdModeData != null
+			&& duck.geometryDash$getGDData().gdModeData.useGDCamera()
+		) {
 			gdYRot.set(yRot);
 			xRot = 0;
-			isGD.set(true);
+			useGDCamera.set(true);
 		}
 
 		original.call(instance, yRot, xRot);
@@ -60,10 +64,10 @@ public abstract class CameraMixin {
 	private void gd$setupPosition(
 		Camera instance, double x, double y, double z, Operation<Void> original,
 		BlockGetter level, Entity entity, boolean detached, boolean thirdPersonReverse, float partialTick,
-		@Share("gd$isGD") LocalBooleanRef isGD, @Share("gd$yRot") LocalFloatRef gdYRot
+		@Share("gd$useGDCamera") LocalBooleanRef useGDCamera, @Share("gd$yRot") LocalFloatRef gdYRot
 	) {
 		original.call(instance, x, y, z);
-		if (!isGD.get()) return;
+		if (!useGDCamera.get()) return;
 
 		this.move(0D, 0D, -10D);
 		this.setRotation(gdYRot.get() + 270F, 0F);
@@ -81,9 +85,9 @@ public abstract class CameraMixin {
 	)
 	private void gd$cancelThirdPerson(
 		BlockGetter level, Entity entity, boolean detached, boolean thirdPersonReverse, float partialTick, CallbackInfo ci,
-		@Share("gd$isGD") LocalBooleanRef isGD
+		@Share("gd$useGDCamera") LocalBooleanRef useGDCamera
 	) {
-		if (isGD.get()) ci.cancel();
+		if (useGDCamera.get()) ci.cancel();
 	}
 
 	@WrapOperation(

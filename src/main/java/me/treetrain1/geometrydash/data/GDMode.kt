@@ -1,5 +1,6 @@
 package me.treetrain1.geometrydash.data
 
+import me.treetrain1.geometrydash.data.mode.Cube3DModeData
 import me.treetrain1.geometrydash.data.mode.GDModeData
 import me.treetrain1.geometrydash.data.mode.CubeModeData
 import net.minecraft.util.StringRepresentable
@@ -13,7 +14,8 @@ enum class GDMode(val modeDataSupplier: () -> GDModeData) : StringRepresentable 
     WAVE({ CubeModeData() }),
     ROBOT({ CubeModeData() }),
     SPIDER({ CubeModeData() }),
-    SWING({ CubeModeData() });
+    SWING({ CubeModeData() }),
+    CUBE_3D({ Cube3DModeData() });
 
     @Contract(pure = true)
     override fun toString(): String = this.name

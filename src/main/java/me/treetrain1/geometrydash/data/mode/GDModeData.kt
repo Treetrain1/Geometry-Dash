@@ -25,6 +25,14 @@ abstract class GDModeData {
 
     abstract fun getCameraYOffset(): Float
 
+    open fun useGDCamera(): Boolean {
+        return true
+    }
+
+    open fun lockForwardsMovement(): Boolean {
+        return true
+    }
+
     abstract fun getModelPitch(tickDelta: Float): Float
 
     abstract fun save(compound: CompoundTag)
