@@ -12,6 +12,7 @@ import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -31,6 +32,9 @@ public abstract class EntityMixin {
 	@Shadow
 	public abstract DamageSources damageSources();
 
+	@Shadow
+	public abstract boolean isAlive();
+
 	@WrapWithCondition(
 		method = "checkFallDamage",
 		at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/Block;fallOn(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/entity/Entity;F)V")
@@ -47,10 +51,11 @@ public abstract class EntityMixin {
 
 	@Inject(method = "move", at = @At("TAIL"))
 	private void gdCheck(MoverType type, Vec3 pos, CallbackInfo ci) {
-		if (this instanceof PlayerDuck duck) {
+		Entity entity = Entity.class.cast(this);
+		if (this instanceof PlayerDuck duck && entity instanceof Player player) {
 			GDData data = duck.geometryDash$getGDData();
-			if (data.getPlayingGD() && this.horizontalCollision) {
-				LivingEntity.class.cast(this).die(this.damageSources().genericKill());
+			if (!player.isDeadOrDying() && data.getPlayingGD() && this.horizontalCollision) {
+				player.setHealth(0);
 			}
 		}
 	}
