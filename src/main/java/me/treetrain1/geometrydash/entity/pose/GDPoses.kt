@@ -8,6 +8,6 @@ object GDPoses {
 
     //CREDIT TO nyuppo/fabric-boat-example ON GITHUB
     init {
-        Pose.entries.toTypedArray()
+        Pose.entries
     }
 }
