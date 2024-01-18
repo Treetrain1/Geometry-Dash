@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Player.class)
 public abstract class PlayerMixin implements PlayerDuck {
@@ -26,5 +27,12 @@ public abstract class PlayerMixin implements PlayerDuck {
 	@Inject(method = "tick", at = @At("TAIL"))
 	public void gd$tick(CallbackInfo ci) {
 		this.gdData.tick();
+	}
+
+	@Inject(method = "isSwimming", at = @At("HEAD"), cancellable = true)
+	public void gd$isSwimming(CallbackInfoReturnable<Boolean> cir) {
+		if (this.gdData.getPlayingGD()) {
+			cir.setReturnValue(false);
+		}
 	}
 }
