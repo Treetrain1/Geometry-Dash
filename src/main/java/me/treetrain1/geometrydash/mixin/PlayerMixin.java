@@ -2,6 +2,7 @@ package me.treetrain1.geometrydash.mixin;
 
 import me.treetrain1.geometrydash.data.GDData;
 import me.treetrain1.geometrydash.duck.PlayerDuck;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
@@ -50,5 +51,11 @@ public abstract class PlayerMixin implements PlayerDuck {
 		if (this.gdData != null && this.gdData.getPlayingGD() && this.gdData.gdModeData != null) {
 			cir.setReturnValue(this.gdData.gdModeData.getEyeHeight());
 		}
+	}
+
+	@Inject(method = "remove", at = @At("TAIL"))
+	private void resetGD(Entity.RemovalReason reason, CallbackInfo ci) {
+		// TODO: remove this at some point in favor of transferring gd data across player entities
+		this.gdData.exitGD();
 	}
 }
