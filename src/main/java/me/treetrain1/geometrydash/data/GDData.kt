@@ -165,9 +165,12 @@ open class GDData @JvmOverloads constructor(
             this.mode = GDMode.valueOf(compound.getString("Mode"))
             if (compound.contains("ModeData", Tag.TAG_COMPOUND.toInt())) {
                 this.gdModeData?.load(compound.getCompound("ModeData"))
+            } else {
+                this.gdModeData = null
             }
         } catch (e: IllegalArgumentException) {
             this.mode = null
+            this.gdModeData = null
         }
 
         this.scale = compound.getDouble("Scale")
