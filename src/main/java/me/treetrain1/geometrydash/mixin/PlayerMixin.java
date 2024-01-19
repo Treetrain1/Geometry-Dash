@@ -68,7 +68,7 @@ public class PlayerMixin implements PlayerDuck {
 	@Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
 	private void readGDData(CompoundTag compound, CallbackInfo ci) {
 		if (compound.contains("GDData", 10)) {
-			CompoundTag gdCompound = compound.getCompound("gd_data");
+			CompoundTag gdCompound = compound.getCompound("GDData");
 			this.gdData.load(gdCompound);
 			Player.class.cast(this).getEntityData().define(GDData.Companion.getGD_DATA(), gdCompound);
 		}
