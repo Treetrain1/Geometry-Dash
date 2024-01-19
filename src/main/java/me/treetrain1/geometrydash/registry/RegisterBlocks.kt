@@ -7,6 +7,7 @@ import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.Blocks.always
 import net.minecraft.world.level.block.Blocks.never
+import net.minecraft.world.level.block.state.BlockBehaviour
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties
 import net.minecraft.world.level.material.MapColor
 import net.minecraft.world.level.material.PushReaction
@@ -19,6 +20,7 @@ object RegisterBlocks {
         SpikeBlock(
             Properties.ofFullCopy(Blocks.POINTED_DRIPSTONE)
                 .mapColor(MapColor.TERRACOTTA_BLACK)
+                .offsetType(BlockBehaviour.OffsetType.NONE)
                 .pushReaction(PushReaction.NORMAL)
         )
     )
