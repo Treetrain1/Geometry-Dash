@@ -1,6 +1,9 @@
 package me.treetrain1.geometrydash.block
 
+import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.Fallable
 import net.minecraft.world.level.block.SimpleWaterloggedBlock
@@ -33,5 +36,10 @@ class SpikeBlock(props: Properties) : Block(props), Fallable, SimpleWaterloggedB
 
     override fun createBlockStateDefinition(builder: StateDefinition.Builder<Block, BlockState>) {
         builder.add(TIP_DIRECTION, THICKNESS, WATERLOGGED)
+    }
+
+    override fun stepOn(level: Level, pos: BlockPos, state: BlockState, entity: Entity) {
+        super.stepOn(level, pos, state, entity)
+        entity.kill()
     }
 }
