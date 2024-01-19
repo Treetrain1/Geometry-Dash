@@ -25,6 +25,18 @@ abstract class GDModeData {
 
     abstract fun getCameraYOffset(): Float
 
+    open fun preventDrowning(): Boolean {
+        return true
+    }
+
+    open fun destroyWhenTouchingWater(): Boolean {
+        return false
+    }
+
+    open fun destroyWhenTouchingWLava(): Boolean {
+        return true
+    }
+
     open fun useGDCamera(): Boolean {
         return true
     }

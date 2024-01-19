@@ -62,8 +62,6 @@ class Cube3DModeData : GDModeData() {
 
     override fun load(compound: CompoundTag): CompoundTag {
         this.targetCubeRot = compound.getFloat("TargetRotation")
-        this.prevCubeRot = this.targetCubeRot
-        this.cubeRot = this.targetCubeRot
         return compound
     }
 }
