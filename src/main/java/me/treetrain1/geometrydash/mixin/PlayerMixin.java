@@ -3,7 +3,6 @@ package me.treetrain1.geometrydash.mixin;
 import me.treetrain1.geometrydash.data.GDData;
 import me.treetrain1.geometrydash.duck.PlayerDuck;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
@@ -16,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Player.class)
-public abstract class PlayerMixin implements PlayerDuck {
+public class PlayerMixin implements PlayerDuck {
 
 	@Unique
 	private final GDData gdData = new GDData(Player.class.cast(this));
@@ -26,6 +25,11 @@ public abstract class PlayerMixin implements PlayerDuck {
 	@NotNull
 	public GDData geometryDash$getGDData() {
 		return this.gdData;
+	}
+
+	@Inject(method = "defineSynchedData", at = @At("TAIL"))
+	protected void gd$defineSynchedData(CallbackInfo ci) {
+		Player.class.cast(this).getEntityData().define(GDData.Companion.getGD_DATA(), new CompoundTag());
 	}
 
 	@Inject(method = "tick", at = @At("TAIL"))
@@ -58,12 +62,20 @@ public abstract class PlayerMixin implements PlayerDuck {
 	private void addGDData(CompoundTag compound, CallbackInfo ci) {
 		CompoundTag gdCompound = new CompoundTag();
 		this.gdData.save(gdCompound);
-		compound.put("gd_data", gdCompound);
+		compound.put("GDData", gdCompound);
 	}
 
 	@Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
 	private void readGDData(CompoundTag compound, CallbackInfo ci) {
-		CompoundTag gdCompound = compound.getCompound("gd_data");
-		this.gdData.load(gdCompound);
+		if (compound.contains("GDData", 10)) {
+			CompoundTag gdCompound = compound.getCompound("gd_data");
+			this.gdData.load(gdCompound);
+			Player.class.cast(this).getEntityData().define(GDData.Companion.getGD_DATA(), gdCompound);
+		}
+	}
+
+	@Override
+	public void geometryDash$updateSyncedGDData() {
+		Player.class.cast(this).getEntityData().set(GDData.Companion.getGD_DATA(), this.gdData.save(new CompoundTag()));
 	}
 }

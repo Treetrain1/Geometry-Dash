@@ -2,12 +2,16 @@ package me.treetrain1.geometrydash.data
 
 import it.unimi.dsi.fastutil.ints.IntArrayList
 import me.treetrain1.geometrydash.data.mode.GDModeData
+import me.treetrain1.geometrydash.duck.PlayerDuck
 import me.treetrain1.geometrydash.entity.Checkpoint
 import me.treetrain1.geometrydash.network.GDModeSyncPacket
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.minecraft.core.BlockPos
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.network.syncher.EntityDataAccessor
+import net.minecraft.network.syncher.EntityDataSerializers
+import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.Pose
@@ -21,9 +25,14 @@ open class GDData @JvmOverloads constructor(
     @JvmField var gdModeData: GDModeData? = null,
     @JvmField var scale: Double = 1.0,
     @JvmField var checkpoints: IntArrayList = IntArrayList(),
+    @JvmField var dirty: Boolean? = true
 ) {
 
     companion object {
+        var GD_DATA: EntityDataAccessor<in CompoundTag> = SynchedEntityData.defineId(
+            Player::class.java, EntityDataSerializers.COMPOUND_TAG
+        )
+
         private fun List<Int>.toMutableIntList(): IntArrayList = IntArrayList().apply { this.addAll(this@toMutableIntList) }
     }
 
@@ -94,6 +103,7 @@ open class GDData @JvmOverloads constructor(
 
         this.prevGameType = player.gameMode.gameModeForPlayer
         player.setGameMode(GameType.ADVENTURE)
+        this.markDirty()
         return true
     }
 
@@ -116,25 +126,36 @@ open class GDData @JvmOverloads constructor(
         }
         player.pose = Pose.STANDING
         player.refreshDimensions()
+        this.markDirty()
         return true
     }
 
     fun tick() {
+        if (this.dirty == true) {
+            (this.player as PlayerDuck).`geometryDash$updateSyncedGDData`()
+            this.dirty = false
+        }
         this.gdModeData?.tick()
         if (this.gdModeData != null) {
             player.pose = this.gdModeData!!.getPose()
         }
         player.refreshDimensions()
+        this.markDirty()
+    }
+
+    fun markDirty() {
+        this.dirty = true
     }
 
     // TODO: Fix
-    fun save(compound: CompoundTag) {
+    fun save(compound: CompoundTag): CompoundTag {
         compound.putString("mode", this.mode?.name ?: "")
         val dataTag = CompoundTag()
         this.gdModeData?.save(dataTag)
         compound.put("mode_data", dataTag)
         compound.putDouble("scale", this.scale)
         compound.putIntArray("checkpoints", this.checkpoints)
+        return compound
     }
 
     // TODO: Fix
