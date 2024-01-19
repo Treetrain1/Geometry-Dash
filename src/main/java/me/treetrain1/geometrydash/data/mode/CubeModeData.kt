@@ -13,15 +13,17 @@ class CubeModeData : GDModeData() {
     private var prevCubeRot: Float = 0F
 
     override fun tick() {
-        this.prevCubeRot = this.cubeRot
-        this.gdData?.run {
-            if (this.player.onGround()) {
-                this@CubeModeData.targetCubeRot = Math.round(this@CubeModeData.targetCubeRot / 90F) * 90F
-            } else {
-                this@CubeModeData.targetCubeRot += 20F
+        if (this.gdData?.player?.level()?.isClientSide == true) {
+            this.prevCubeRot = this.cubeRot
+            this.gdData?.run {
+                if (this.player.onGround()) {
+                    this@CubeModeData.targetCubeRot = Math.round(this@CubeModeData.targetCubeRot / 90F) * 90F
+                } else {
+                    this@CubeModeData.targetCubeRot += 20F
+                }
             }
+            this.cubeRot += (this.targetCubeRot - this.cubeRot) * 0.395F // both 0.395F and 0.45F seem alright, up to you tree
         }
-        this.cubeRot += (this.targetCubeRot - this.cubeRot) * 0.395F // both 0.395F and 0.45F seem alright, up to you tree
     }
 
     override fun tickInput(input: Input) {
@@ -48,12 +50,10 @@ class CubeModeData : GDModeData() {
     }
 
     override fun save(compound: CompoundTag): CompoundTag {
-        compound.putFloat("TargetRotation", this.targetCubeRot)
         return compound
     }
 
     override fun load(compound: CompoundTag): CompoundTag {
-        this.targetCubeRot = compound.getFloat("TargetRotation")
         return compound
     }
 }
