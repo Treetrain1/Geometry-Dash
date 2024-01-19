@@ -45,6 +45,13 @@ public class PlayerMixin implements PlayerDuck {
 		}
 	}
 
+	@Inject(method = "causeFoodExhaustion", at = @At("HEAD"), cancellable = true)
+	public void gd$causeFoodExhaustion(float exhaustion, CallbackInfo ci) {
+		if (this.gdData.getPlayingGD()) {
+			ci.cancel();
+		}
+	}
+
 	@Inject(method = "getDimensions", at = @At("HEAD"), cancellable = true)
 	public void gd$getDimensions(Pose pose, CallbackInfoReturnable<EntityDimensions> cir) {
 		if (this.gdData != null && this.gdData.getPlayingGD() && this.gdData.gdModeData != null) {
