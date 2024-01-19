@@ -7,7 +7,7 @@ import net.minecraft.util.Mth
 import net.minecraft.world.entity.EntityDimensions
 import net.minecraft.world.entity.Pose
 
-class CubeModeData : GDModeData() {
+open class CubeModeData : GDModeData() {
     private var targetCubeRot: Float = 0F
     private var cubeRot: Float = 0F
     private var prevCubeRot: Float = 0F
