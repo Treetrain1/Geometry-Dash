@@ -149,28 +149,28 @@ open class GDData @JvmOverloads constructor(
 
     // TODO: Fix
     fun save(compound: CompoundTag): CompoundTag {
-        compound.putString("mode", this.mode?.name ?: "")
+        compound.putString("Mode", this.mode?.name ?: "")
         val dataTag = CompoundTag()
         this.gdModeData?.save(dataTag)
-        compound.put("mode_data", dataTag)
-        compound.putDouble("scale", this.scale)
-        compound.putIntArray("checkpoints", this.checkpoints)
+        compound.put("ModeData", dataTag)
+        compound.putDouble("Scale", this.scale)
+        compound.putIntArray("Checkpoints", this.checkpoints)
         return compound
     }
 
     // TODO: Fix
     fun load(compound: CompoundTag) {
         try {
-            val newMode = GDMode.valueOf(compound.getString("mode"))
+            val newMode = GDMode.valueOf(compound.getString("Mode"))
             this.mode = newMode
-            val modeDataTag = compound.getCompound(newMode.name + "_data")
+            val modeDataTag = compound.getCompound("ModeData")
             this.gdModeData?.load(modeDataTag)
         } catch (e: IllegalArgumentException) {
             this.mode = null
         }
 
-        this.scale = compound.getDouble("scale")
-        this.checkpoints = compound.getIntArray("checkpoints").toList().toMutableIntList()
+        this.scale = compound.getDouble("Scale")
+        this.checkpoints = compound.getIntArray("Checkpoints").toList().toMutableIntList()
     }
 
     fun copyFrom(otherData: GDData) {
