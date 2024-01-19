@@ -32,6 +32,7 @@ object GeometryDash : ModInitializer {
             .title(Component.literal("Geometry Dash"))
             .icon { ItemStack(Items.DIAMOND) }
             .displayItems { params, entries ->
+                entries.accept(RegisterBlocks.SPIKE)
                 entries.accept(RegisterBlocks.LOW_JUMP_PAD)
                 entries.accept(RegisterBlocks.JUMP_PAD)
                 entries.accept(RegisterBlocks.HIGH_JUMP_PAD)
