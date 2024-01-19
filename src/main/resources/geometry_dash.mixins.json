@@ -17,6 +17,7 @@
     "client.CameraMixin",
     "client.CameraTypeMixin",
     "client.GameRendererMixin",
+    "client.GuiMixin",
     "client.KeyboardInputMixin",
     "client.LevelRendererMixin",
     "client.LocalPlayerMixin",

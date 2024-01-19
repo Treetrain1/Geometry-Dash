@@ -25,7 +25,7 @@ public abstract class CameraMixin {
 	protected abstract void move(double distanceOffset, double verticalOffset, double horizontalOffset);
 
 	@Shadow
-	protected abstract void setRotation(float yRot, float xRot);
+	public abstract void setRotation(float yRot, float xRot);
 
 	@WrapOperation(
 		method = "setup",
