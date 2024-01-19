@@ -50,6 +50,7 @@ public abstract class EntityMixin {
 
 	@Inject(method = "move", at = @At("TAIL"))
 	private void gdCheck(MoverType type, Vec3 pos, CallbackInfo ci) {
+		/*
 		Entity entity = Entity.class.cast(this);
 		if (this instanceof PlayerDuck duck && entity instanceof Player player) {
 			GDData data = duck.geometryDash$getGDData();
@@ -57,5 +58,6 @@ public abstract class EntityMixin {
 				player.setHealth(0);
 			}
 		}
+		 */
 	}
 }
