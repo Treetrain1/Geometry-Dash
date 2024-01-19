@@ -102,7 +102,8 @@ open class GDData @JvmOverloads constructor(
         val player = this.player
         if (noChange || player !is ServerPlayer) return false
 
-        this.prevGameType = player.gameMode.gameModeForPlayer
+        if (this.prevGameType == null)
+            this.prevGameType = player.gameMode.gameModeForPlayer
         player.setGameMode(GameType.ADVENTURE)
         this.markDirty()
         return true
