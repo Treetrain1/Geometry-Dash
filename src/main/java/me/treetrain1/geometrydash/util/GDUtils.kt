@@ -3,6 +3,7 @@ package me.treetrain1.geometrydash.util
 import gravity_changer.api.GravityChangerAPI
 import gravity_changer.command.LocalDirection
 import gravity_changer.util.RotationUtil
+import me.treetrain1.geometrydash.duck.PlayerDuck
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.fabricmc.loader.api.FabricLoader
@@ -12,6 +13,7 @@ import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.ClipContext
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.BlockHitResult
@@ -87,6 +89,8 @@ fun Entity.isCollidingWithPad(level: Level, pos: BlockPos): Boolean {
 
 @Environment(EnvType.CLIENT)
 fun input(): Input? = Minecraft.getInstance().player?.input
+
+inline val Player.gdData get() = (this as PlayerDuck).`geometryDash$getGDData`()
 
 // Kotlin stuff
 

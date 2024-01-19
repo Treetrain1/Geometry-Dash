@@ -3,6 +3,7 @@ package me.treetrain1.geometrydash.mixin;
 import me.treetrain1.geometrydash.data.GDData;
 import me.treetrain1.geometrydash.duck.PlayerDuck;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
@@ -67,7 +68,7 @@ public class PlayerMixin implements PlayerDuck {
 
 	@Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
 	private void readGDData(CompoundTag compound, CallbackInfo ci) {
-		if (compound.contains("GDData", 10)) {
+		if (compound.contains("GDData", Tag.TAG_COMPOUND)) {
 			CompoundTag gdCompound = compound.getCompound("GDData");
 			this.gdData.load(gdCompound);
 			Player.class.cast(this).getEntityData().define(GDData.Companion.getGD_DATA(), gdCompound);
