@@ -33,7 +33,7 @@ abstract class GDModeData {
         return false
     }
 
-    open fun destroyWhenTouchingWLava(): Boolean {
+    open fun destroyWhenTouchingLava(): Boolean {
         return true
     }
 
