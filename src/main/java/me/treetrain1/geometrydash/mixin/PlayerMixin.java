@@ -71,7 +71,7 @@ public class PlayerMixin implements PlayerDuck {
 		if (compound.contains("GDData", Tag.TAG_COMPOUND)) {
 			CompoundTag gdCompound = compound.getCompound("GDData");
 			this.gdData.load(gdCompound);
-			Player.class.cast(this).getEntityData().define(GDData.Companion.getGD_DATA(), gdCompound);
+			Player.class.cast(this).getEntityData().set(GDData.Companion.getGD_DATA(), gdCompound);
 		}
 	}
 
