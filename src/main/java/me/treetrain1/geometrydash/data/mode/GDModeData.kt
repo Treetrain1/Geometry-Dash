@@ -43,7 +43,7 @@ abstract class GDModeData {
 
     abstract fun getModelPitch(tickDelta: Float): Float
 
-    abstract fun save(compound: CompoundTag)
+    abstract fun save(compound: CompoundTag): CompoundTag
 
-    abstract fun load(compound: CompoundTag)
+    abstract fun load(compound: CompoundTag): CompoundTag
 }

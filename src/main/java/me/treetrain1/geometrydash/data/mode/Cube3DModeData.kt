@@ -55,13 +55,15 @@ class Cube3DModeData : GDModeData() {
         return Mth.lerp(tickDelta, this.prevCubeRot, this.cubeRot)
     }
 
-    override fun save(compound: CompoundTag) {
+    override fun save(compound: CompoundTag): CompoundTag {
         compound.putFloat("TargetRotation", this.targetCubeRot)
+        return compound
     }
 
-    override fun load(compound: CompoundTag) {
+    override fun load(compound: CompoundTag): CompoundTag {
         this.targetCubeRot = compound.getFloat("TargetRotation")
         this.prevCubeRot = this.targetCubeRot
         this.cubeRot = this.targetCubeRot
+        return compound
     }
 }
