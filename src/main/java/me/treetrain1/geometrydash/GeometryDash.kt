@@ -38,6 +38,7 @@ object GeometryDash : ModInitializer {
                 entries.accept(RegisterBlocks.HIGH_JUMP_PAD)
                 entries.accept(RegisterBlocks.REVERSE_GRAVITY_JUMP_PAD)
                 entries.accept(RegisterBlocks.TELEPORT_PAD)
+                entries.accept(RegisterItems.PORTAL_GUN)
             }
             .build()
     ).key!!
@@ -47,6 +48,7 @@ object GeometryDash : ModInitializer {
             RegisterBlocks
             RegisterBlockEntities
             RegisterEntities
+            RegisterItems
 
             ArgumentTypeInfos.register(
                 BuiltInRegistries.COMMAND_ARGUMENT_TYPE,
