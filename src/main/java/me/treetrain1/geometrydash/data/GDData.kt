@@ -156,6 +156,7 @@ open class GDData @JvmOverloads constructor(
         }
         compound.putDouble("Scale", this.scale)
         compound.putIntArray("Checkpoints", this.checkpoints)
+        compound.putInt("PrevGameType", this.prevGameType?.id ?: -1)
         return compound
     }
 
@@ -175,6 +176,7 @@ open class GDData @JvmOverloads constructor(
 
         this.scale = compound.getDouble("Scale")
         this.checkpoints = compound.getIntArray("Checkpoints").toList().toMutableIntList()
+        this.prevGameType = GameType.byNullableId(compound.getInt("PrevGameType"))
         return compound
     }
 
