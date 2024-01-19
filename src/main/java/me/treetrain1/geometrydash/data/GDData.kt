@@ -9,6 +9,7 @@ import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.minecraft.core.BlockPos
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.Tag
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
@@ -162,7 +163,7 @@ open class GDData @JvmOverloads constructor(
     fun load(compound: CompoundTag): CompoundTag {
         try {
             this.mode = GDMode.valueOf(compound.getString("Mode"))
-            if (compound.contains("ModeData", 10)) {
+            if (compound.contains("ModeData", Tag.TAG_COMPOUND.toInt())) {
                 this.gdModeData?.load(compound.getCompound("ModeData"))
             }
         } catch (e: IllegalArgumentException) {
