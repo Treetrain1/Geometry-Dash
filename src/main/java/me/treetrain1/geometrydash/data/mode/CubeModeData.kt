@@ -48,12 +48,12 @@ class CubeModeData : GDModeData() {
     }
 
     override fun save(compound: CompoundTag): CompoundTag {
-        compound.putFloat("target_rotation", this.targetCubeRot)
+        compound.putFloat("TargetRotation", this.targetCubeRot)
         return compound
     }
 
     override fun load(compound: CompoundTag): CompoundTag {
-        this.targetCubeRot = compound.getFloat("target_rotation")
+        this.targetCubeRot = compound.getFloat("TargetRotation")
         return compound
     }
 }
