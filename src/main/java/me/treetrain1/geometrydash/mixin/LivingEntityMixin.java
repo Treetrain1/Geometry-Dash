@@ -16,19 +16,25 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class LivingEntityMixin {
 
 	@Inject(method = "onSyncedDataUpdated", at = @At("TAIL"))
-	protected void gd$onSyncedDataUpdated(EntityDataAccessor<?> key, CallbackInfo ci) {
+	private void gd$onSyncedDataUpdated(EntityDataAccessor<?> key, CallbackInfo ci) {
 		if (LivingEntity.class.cast(this) instanceof PlayerDuck player && GDData.GD_DATA.equals(key)) {
 			player.geometryDash$getGDData().load((CompoundTag) LivingEntity.class.cast(this).getEntityData().get(key));
 		}
 	}
 
 	@Inject(method = "canBreatheUnderwater", at = @At("HEAD"), cancellable = true)
-	public final void gd$canBreatheUnderwater(CallbackInfoReturnable<Boolean> cir) {
+	private void gd$canBreatheUnderwater(CallbackInfoReturnable<Boolean> cir) {
 		if (LivingEntity.class.cast(this) instanceof PlayerDuck player && player.geometryDash$getGDData().getPlayingGD()) {
 			GDModeData gdModeData = player.geometryDash$getGDData().gdModeData;
 			if (gdModeData != null) {
 				cir.setReturnValue(gdModeData.preventDrowning());
 			}
 		}
+	}
+
+	@Inject(method = "jumpFromGround", at = @At("HEAD"), cancellable = true)
+	private void useGDLogic(CallbackInfo ci) {
+		if (this instanceof PlayerDuck player && player.geometryDash$getGDData().getPlayingGD())
+			ci.cancel();
 	}
 }

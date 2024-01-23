@@ -1,12 +1,15 @@
 package me.treetrain1.geometrydash.mixin.client;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import me.treetrain1.geometrydash.data.GDData;
 import me.treetrain1.geometrydash.data.mode.GDModeData;
 import me.treetrain1.geometrydash.duck.PlayerDuck;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
+import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -37,8 +40,11 @@ public class LocalPlayerMixin {
 	private void gdInputTick(CallbackInfo ci) {
 		GDData gdData = ((PlayerDuck) this).geometryDash$getGDData();
 		GDModeData gdModeData = gdData.gdModeData;
-		// TODO: Add additional button support
-		boolean jumping = this.input.jumping;
+		long window = Minecraft.getInstance().getWindow().getWindow();
+		boolean jumping = InputConstants.isKeyDown(window, InputConstants.KEY_SPACE)
+			|| InputConstants.isKeyDown(window, InputConstants.KEY_W)
+			|| InputConstants.isKeyDown(window, InputConstants.KEY_UP)
+			|| GLFW.glfwGetMouseButton(window, InputConstants.MOUSE_BUTTON_LEFT) == 1;
 		gdData.inputBuffer = jumping;
 		if (gdModeData != null) {
 			// TODO: bounce from rings
