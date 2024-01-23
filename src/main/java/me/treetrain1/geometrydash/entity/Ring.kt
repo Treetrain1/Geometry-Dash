@@ -29,7 +29,8 @@ open class Ring(
     @JvmField
     var type: RingType = RingType.BOUNCE
 
-    open fun onJump(player: Player, data: GDData) {
+    open fun onApply(player: Player, dat: GDData) {
+        dat.ringLocked = true
         val type = this.type
         if (type.shouldBounce) {
             player.bounce(type.bounceStrength)
@@ -39,6 +40,23 @@ open class Ring(
         }
         if (type.shouldTeleport) {
             player.teleport()
+        }
+    }
+
+    override fun tick() {
+        if (this.level().isClientSide)
+            this.applyToPlayers()
+    }
+
+    protected open fun applyToPlayers() {
+        val list = this.level().getEntitiesOfClass(Player::class.java, this.boundingBox)
+        for (player in list) {
+            val gdData = player.gdData
+            if (!gdData.playingGD) continue
+
+            val gdModeData = gdData.gdModeData ?: continue
+            if (!gdData.ignoreInput && !gdData.ringLocked && gdData.inputBuffer)
+                this.onApply(player, gdData)
         }
     }
 
