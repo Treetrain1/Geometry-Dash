@@ -16,11 +16,19 @@ abstract class GDModeData {
 
     /**
      * Whether or not the mode locks the buffer after a successful input
+     */
+    @Environment(EnvType.CLIENT)
+    open fun lockOnSuccess(): Boolean {
+        return true
+    }
+
+    /**
+     * Whether or not the buffer lock should be cleared after an input release
      * <p>
      * Useful for modes like UFO
      */
     @Environment(EnvType.CLIENT)
-    open fun lockOnSuccess(): Boolean {
+    open fun unlockOnRelease(): Boolean {
         return true
     }
 
