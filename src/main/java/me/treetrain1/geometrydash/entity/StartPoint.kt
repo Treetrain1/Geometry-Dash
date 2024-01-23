@@ -4,6 +4,8 @@ import me.treetrain1.geometrydash.data.GDData
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.level.Level
 
+// TODO: Replace with NBT
+@Deprecated
 open class StartPoint(
     type: EntityType<out StartPoint>,
     level: Level
