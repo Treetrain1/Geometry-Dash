@@ -3,6 +3,8 @@ package me.treetrain1.geometrydash
 import me.treetrain1.geometrydash.command.GDCommand
 import me.treetrain1.geometrydash.command.GDModeArgument
 import me.treetrain1.geometrydash.duck.PlayerDuck
+import me.treetrain1.geometrydash.entity.Checkpoint
+import me.treetrain1.geometrydash.entity.Ring
 import me.treetrain1.geometrydash.network.GDModeSyncPacket
 import me.treetrain1.geometrydash.registry.*
 import me.treetrain1.geometrydash.util.id
@@ -17,6 +19,7 @@ import net.minecraft.commands.synchronization.SingletonArgumentInfo
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.chat.Component
+import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.resources.ResourceKey
 import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.ItemStack
@@ -65,6 +68,9 @@ object GeometryDash : ModInitializer {
                 (player as PlayerDuck).`geometryDash$getGDData`().setGD(packet.mode, packet.scale)
             }
         }
+
+        EntityDataSerializers.registerSerializer(Checkpoint.CheckpointType.SERIALIZER)
+        EntityDataSerializers.registerSerializer(Ring.RingType.SERIALIZER)
 
         log("Geometry Dash took $time nanoseconds")
     }

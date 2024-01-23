@@ -1,7 +1,7 @@
 package me.treetrain1.geometrydash.block.entity
 
 import me.treetrain1.geometrydash.registry.RegisterBlockEntities
-import me.treetrain1.geometrydash.util.isCollidingWithPad
+import me.treetrain1.geometrydash.util.isCollidingWithBlock
 import net.minecraft.core.BlockPos
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.entity.BlockEntity
@@ -18,7 +18,7 @@ open class JumpPadBlockEntity(pos: BlockPos, blockState: BlockState) : BlockEnti
     fun tick(level: Level, pos: BlockPos, state: BlockState) {
         colliding.removeAll { entityId ->
             val entity = level.getEntity(entityId) ?: return@removeAll true
-            return@removeAll !entity.isCollidingWithPad(level, pos)
+            return@removeAll !entity.isCollidingWithBlock(level, pos)
         }
     }
 }

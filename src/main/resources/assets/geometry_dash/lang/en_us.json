@@ -11,5 +11,8 @@
   "commands.gd.set.success.other": "Set %s's GD Mode to %s",
   "commands.gd.set.success.self": "Set own GD Mode to %s",
   "commands.gd.exit.success.single": "Exited GD Mode for %s",
-  "commands.gd.exit.success.multiple": "Exited GD Mode for %s players"
+  "commands.gd.exit.success.multiple": "Exited GD Mode for %s players",
+
+  "entity.geometry_dash.checkpoint": "Checkpoint",
+  "entity.geometry_dash.ring": "Ring"
 }

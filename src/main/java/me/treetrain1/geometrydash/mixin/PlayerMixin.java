@@ -30,7 +30,7 @@ public class PlayerMixin implements PlayerDuck {
 
 	@Inject(method = "defineSynchedData", at = @At("TAIL"))
 	protected void gd$defineSynchedData(CallbackInfo ci) {
-		Player.class.cast(this).getEntityData().define(GDData.Companion.GD_DATA, new CompoundTag());
+		Player.class.cast(this).getEntityData().define(GDData.GD_DATA, new CompoundTag());
 	}
 
 	@Inject(method = "tick", at = @At("TAIL"))
@@ -78,12 +78,12 @@ public class PlayerMixin implements PlayerDuck {
 		if (compound.contains("GDData", Tag.TAG_COMPOUND)) {
 			CompoundTag gdCompound = compound.getCompound("GDData");
 			this.gdData.load(gdCompound);
-			Player.class.cast(this).getEntityData().set(GDData.Companion.GD_DATA, gdCompound);
+			Player.class.cast(this).getEntityData().set(GDData.GD_DATA, gdCompound);
 		}
 	}
 
 	@Override
 	public void geometryDash$updateSyncedGDData() {
-		Player.class.cast(this).getEntityData().set(GDData.Companion.GD_DATA, this.gdData.save(new CompoundTag()));
+		Player.class.cast(this).getEntityData().set(GDData.GD_DATA, this.gdData.save(new CompoundTag()));
 	}
 }

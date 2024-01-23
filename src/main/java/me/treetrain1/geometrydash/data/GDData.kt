@@ -35,6 +35,7 @@ open class GDData @JvmOverloads constructor(
         private const val SCALE_TAG = "Scale"
         private const val CHECKPOINTS_TAG = "Checkpoints"
         private const val PREV_GAME_TYPE_TAG = "PrevGameType"
+
         @JvmField
         val GD_DATA: EntityDataAccessor<in CompoundTag> = SynchedEntityData.defineId(
             Player::class.java, EntityDataSerializers.COMPOUND_TAG
