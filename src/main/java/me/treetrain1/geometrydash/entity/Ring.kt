@@ -6,17 +6,21 @@ import net.minecraft.world.entity.EntityType
 import net.minecraft.world.level.Level
 
 // Usually called Orbs but in the files I believe it's called Rings
-abstract class Ring(
+open class Ring(
     type: EntityType<out Ring>,
     level: Level
 ) : StaticEntity(type, level) {
 
     companion object {
         protected fun Entity.flipGravity() {
-            // TODO: implement
+            // TODO: implement or just use the thing from jump pads
         }
 
         protected fun Entity.bounce(strength: Double) {
+            // TODO: implement
+        }
+
+        protected fun Entity.teleport() {
             // TODO: implement
         }
     }
@@ -24,7 +28,18 @@ abstract class Ring(
     @JvmField
     var type: RingType = RingType.BOUNCE
 
-    open fun onJump(player: Player, data: GDData)
+    open fun onJump(player: Player, data: GDData) {
+        val type = this.type
+        if (type.shouldBounce) {
+            player.bounce(type.bounceStrength)
+        }
+        if (type.shouldFlipGravity) {
+            player.flipGravity()
+        }
+        if (type.shouldTeleport) {
+            player.teleport()
+        }
+    }
 
     // TODO: double check the names
     enum class RingType(
