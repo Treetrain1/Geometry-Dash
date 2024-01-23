@@ -163,6 +163,10 @@ open class GDData @JvmOverloads constructor(
         this.scale = 1.0
         this.gdModeData = null
         this.checkpoints.clear()
+        this.ignoreInput = false
+        this.inputBuffer = false
+        this.bufferLocked = false
+        this.ringLocked = false
 
         val player = this.player
         val prevType = this.prevGameType
