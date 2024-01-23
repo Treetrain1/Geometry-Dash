@@ -17,7 +17,7 @@ public class LivingEntityMixin {
 
 	@Inject(method = "onSyncedDataUpdated", at = @At("TAIL"))
 	protected void gd$onSyncedDataUpdated(EntityDataAccessor<?> key, CallbackInfo ci) {
-		if (LivingEntity.class.cast(this) instanceof PlayerDuck player && GDData.Companion.getGD_DATA().equals(key)) {
+		if (LivingEntity.class.cast(this) instanceof PlayerDuck player && GDData.Companion.GD_DATA.equals(key)) {
 			player.geometryDash$getGDData().load((CompoundTag) LivingEntity.class.cast(this).getEntityData().get(key));
 		}
 	}

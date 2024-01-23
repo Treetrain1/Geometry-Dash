@@ -1,5 +1,6 @@
 package me.treetrain1.geometrydash.block
 
+import me.treetrain1.geometrydash.util.isCollidingWithBlock
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.world.entity.Entity
@@ -181,8 +182,10 @@ class SpikeBlock(props: Properties) : Block(props), Fallable, SimpleWaterloggedB
         return voxelShape.move(vec3.x, 0.0, vec3.z)
     }
 
-    override fun stepOn(level: Level, pos: BlockPos, state: BlockState, entity: Entity) {
-        super.stepOn(level, pos, state, entity)
+    override fun entityInside(state: BlockState, level: Level, pos: BlockPos, entity: Entity) {
+        super.entityInside(state, level, pos, entity)
+        if (entity !is LivingEntity || !entity.isCollidingWithBlock(level, pos)) return
+
         entity.kill()
     }
 }

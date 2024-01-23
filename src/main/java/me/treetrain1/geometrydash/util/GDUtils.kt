@@ -74,9 +74,9 @@ fun Entity.vertTeleport(level: Level) {
 }
 
 /**
- * @return if colliding with a jump pad block
+ * @return if colliding with a specific block
  */
-fun Entity.isCollidingWithPad(level: Level, pos: BlockPos): Boolean {
+fun Entity.isCollidingWithBlock(level: Level, pos: BlockPos): Boolean {
     if (this.isRemoved) return false
 
     val state = level.getBlockState(pos)

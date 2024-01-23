@@ -30,7 +30,13 @@ open class GDData @JvmOverloads constructor(
 ) {
 
     companion object {
-        var GD_DATA: EntityDataAccessor<in CompoundTag> = SynchedEntityData.defineId(
+        private const val MODE_TAG = "Mode"
+        private const val MODE_DATA_TAG = "ModeData"
+        private const val SCALE_TAG = "Scale"
+        private const val CHECKPOINTS_TAG = "Checkpoints"
+        private const val PREV_GAME_TYPE_TAG = "PrevGameType"
+        @JvmField
+        val GD_DATA: EntityDataAccessor<in CompoundTag> = SynchedEntityData.defineId(
             Player::class.java, EntityDataSerializers.COMPOUND_TAG
         )
 
@@ -149,24 +155,22 @@ open class GDData @JvmOverloads constructor(
         this.dirty = true
     }
 
-    // TODO: Fix
     fun save(compound: CompoundTag): CompoundTag {
-        compound.putString("Mode", this.mode?.name ?: "")
+        compound.putString(MODE_TAG, this.mode?.name ?: "")
         if (this.gdModeData != null) {
-            this.gdModeData?.save(CompoundTag())?.let { compound.put("ModeData", it) }
+            this.gdModeData?.save(CompoundTag())?.let { compound.put(MODE_DATA_TAG, it) }
         }
-        compound.putDouble("Scale", this.scale)
-        compound.putIntArray("Checkpoints", this.checkpoints)
-        compound.putInt("PrevGameType", this.prevGameType?.id ?: -1)
+        compound.putDouble(SCALE_TAG, this.scale)
+        compound.putIntArray(CHECKPOINTS_TAG, this.checkpoints)
+        compound.putInt(PREV_GAME_TYPE_TAG, this.prevGameType?.id ?: -1)
         return compound
     }
 
-    // TODO: Fix
     fun load(compound: CompoundTag): CompoundTag {
         try {
-            this.mode = GDMode.valueOf(compound.getString("Mode"))
-            if (compound.contains("ModeData", Tag.TAG_COMPOUND.toInt())) {
-                this.gdModeData?.load(compound.getCompound("ModeData"))
+            this.mode = GDMode.valueOf(compound.getString(MODE_TAG))
+            if (compound.contains(MODE_DATA_TAG, Tag.TAG_COMPOUND.toInt())) {
+                this.gdModeData?.load(compound.getCompound(MODE_DATA_TAG))
             } else {
                 this.gdModeData = null
             }
@@ -175,9 +179,9 @@ open class GDData @JvmOverloads constructor(
             this.gdModeData = null
         }
 
-        this.scale = compound.getDouble("Scale")
-        this.checkpoints = compound.getIntArray("Checkpoints").toList().toMutableIntList()
-        this.prevGameType = GameType.byNullableId(compound.getInt("PrevGameType"))
+        this.scale = compound.getDouble(SCALE_TAG)
+        this.checkpoints = compound.getIntArray(CHECKPOINTS_TAG).toList().toMutableIntList()
+        this.prevGameType = GameType.byNullableId(compound.getInt(PREV_GAME_TYPE_TAG))
         return compound
     }
 
