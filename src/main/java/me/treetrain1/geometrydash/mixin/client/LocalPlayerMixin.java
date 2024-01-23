@@ -37,7 +37,15 @@ public class LocalPlayerMixin {
 	private void gdInputTick(CallbackInfo ci) {
 		GDData gdData = ((PlayerDuck) this).geometryDash$getGDData();
 		GDModeData gdModeData = gdData.gdModeData;
-		if (gdModeData != null)
-			gdModeData.tickInput(this.input);
+		// TODO: Add additional button support
+		gdData.inputBuffer = this.input.jumping
+		if (gdModeData != null) {
+			// TODO: bounce from rings
+
+			if (gdModeData.tickInput(this.input)) {
+				gdData.ringLocked = true
+				if (gdModeData.lockOnSuccess()) gdData.bufferLocked = true
+			}
+		}
 	}
 }

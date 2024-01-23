@@ -57,10 +57,48 @@ open class GDData @JvmOverloads constructor(
     inline val playingGD: Boolean
         get() = this.mode != null
 
+    @JvmField
     protected var prevGameType: GameType? = null
+
+    /**
+     * Whether or not player input is ignored
+     * <p>
+     * May be useful in Auto levels
+     */
+    @Environment(EnvType.CLIENT)
+    @JvmField
+    var ignoreInput: Boolean = false
+
+    /**
+     * Whether or not the jump button is being held
+     */
+    @Environment(EnvType.CLIENT)
+    @JvmField
+    var inputBuffer: Boolean = false
+
+    /**
+     * Whether or not an input release is required for the next input
+     */
+    @Environment(EnvType.CLIENT)
+    @JvmField
+    var bufferLocked: Boolean = false
+
+    /**
+     * Whether or not an input released is required for Ring interaction
+     */
+    @Environment(EnvType.CLIENT)
+    @JvmField
+    var ringLocked: Boolean = false
 
     @PublishedApi
     internal inline val level: Level get() = this.player.level()
+
+    inline val canProcessInput: Boolean get() {
+        if (ignoreInput || bufferLocked) return false
+        return inputBuffer
+    }
+
+    inline val canBounceFromRing: Boolean get() = !(ignoreInput || ringLocked)
 
     inline val lastValidCheckpoint: BlockPos? get() {
         val level = this.level

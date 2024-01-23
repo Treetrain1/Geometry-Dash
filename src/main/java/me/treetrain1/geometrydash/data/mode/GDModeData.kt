@@ -14,8 +14,21 @@ abstract class GDModeData {
 
     abstract fun tick()
 
+    /**
+     * Whether or not the mode locks the buffer after a successful input
+     * <p>
+     * Useful for modes like UFO
+     */
     @Environment(EnvType.CLIENT)
-    abstract fun tickInput(input: Input)
+    open fun lockOnSuccess(): Boolean {
+        return true
+    }
+
+    /**
+     * @return if the input was successful
+     */
+    @Environment(EnvType.CLIENT)
+    abstract fun tickInput(input: Input): Boolean
 
     abstract fun getPose(): Pose
 

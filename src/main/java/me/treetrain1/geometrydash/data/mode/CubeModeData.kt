@@ -26,7 +26,8 @@ open class CubeModeData : GDModeData() {
         }
     }
 
-    override fun tickInput(input: Input) {
+    override fun tickInput(input: Input): Boolean {
+        // TODO: Move vanilla jump behavior here
     }
 
     override fun getPose(): Pose {
