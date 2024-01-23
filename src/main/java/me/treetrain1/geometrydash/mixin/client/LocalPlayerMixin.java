@@ -38,13 +38,20 @@ public class LocalPlayerMixin {
 		GDData gdData = ((PlayerDuck) this).geometryDash$getGDData();
 		GDModeData gdModeData = gdData.gdModeData;
 		// TODO: Add additional button support
-		gdData.inputBuffer = this.input.jumping
+		boolean jumping = this.input.jumping;
+		gdData.inputBuffer = jumping;
 		if (gdModeData != null) {
 			// TODO: bounce from rings
 
-			if (gdModeData.tickInput(this.input)) {
-				gdData.ringLocked = true
-				if (gdModeData.lockOnSuccess()) gdData.bufferLocked = true
+			if (jumping) {
+				if (gdModeData.tickInput(this.input)) {
+					gdData.ringLocked = true;
+					if (gdModeData.lockOnSuccess()) gdData.bufferLocked = true;
+				}
+			} else {
+				gdData.ringLocked = false;
+				if (gdModeData.unlockOnRelease())
+					gdData.bufferLocked = false;
 			}
 		}
 	}

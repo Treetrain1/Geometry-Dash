@@ -25,6 +25,7 @@ open class Ring(
         }
     }
 
+    // TODO: Convert to entity data accessor
     @JvmField
     var type: RingType = RingType.BOUNCE
 
