@@ -36,13 +36,13 @@ class SpikeBlock(props: Properties) : Block(props), Fallable, SimpleWaterloggedB
         internal val WATERLOGGED = BlockStateProperties.WATERLOGGED
 
         @JvmField
-        val SMALL_SHAPE = box(2.0, 0.0, 2.0, 14.0, 16.0, 14.0);
+        val SMALL_SHAPE = box(2.0, 0.0, 2.0, 14.0, 15.9, 14.0);
 
         @JvmField
-        val MIDDLE_SHAPE = box(3.0, 0.0, 3.0, 13.0, 16.0, 13.0);
+        val MIDDLE_SHAPE = box(3.0, 0.0, 3.0, 13.0, 15.9, 13.0);
 
         @JvmField
-        val LARGE_SHAPE = box(4.0, 0.0, 4.0, 12.0, 16.0, 12.0);
+        val LARGE_SHAPE = box(4.0, 0.0, 4.0, 12.0, 15.9, 12.0);
     }
 
     init {
@@ -111,7 +111,7 @@ class SpikeBlock(props: Properties) : Block(props), Fallable, SimpleWaterloggedB
 
     override fun entityInside(state: BlockState, level: Level, pos: BlockPos, entity: Entity) {
         super.entityInside(state, level, pos, entity)
-        if (entity !is LivingEntity) return
+        if (entity !is LivingEntity || entity.isDeadOrDying) return
 
         entity.kill()
     }
