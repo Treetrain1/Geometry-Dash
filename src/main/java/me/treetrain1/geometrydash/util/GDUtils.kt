@@ -5,6 +5,7 @@ package me.treetrain1.geometrydash.util
 import gravity_changer.api.GravityChangerAPI
 import gravity_changer.command.LocalDirection
 import gravity_changer.util.RotationUtil
+import me.treetrain1.geometrydash.GeometryDash
 import me.treetrain1.geometrydash.duck.PlayerDuck
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
@@ -16,6 +17,7 @@ import net.minecraft.core.Direction
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.Mth
 import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.ClipContext
 import net.minecraft.world.level.Level
@@ -43,7 +45,7 @@ fun Entity.setRelative(direction: LocalDirection) {
  * Teleports the entity downward
  * WIP
  */
-fun Entity.vertTeleport(level: Level) {
+fun LivingEntity.vertTeleport(level: Level) {
     /*
         TODO: make a raycast thing going down relative to the entity gravity
         (not up bc gravity is already flipped)
@@ -65,7 +67,7 @@ fun Entity.vertTeleport(level: Level) {
 
     if (raycast.type == HitResult.Type.MISS) {
         this.teleportTo(this.x, 1000.0, this.z)
-        this.kill()
+        this.hurt(level.damageSources().source(GeometryDash.LEVEL_FAIL), Float.MAX_VALUE)
     } else {
         val rayPos = raycast.location
         this.teleportToWithTicket(rayPos.x, rayPos.y, rayPos.z)

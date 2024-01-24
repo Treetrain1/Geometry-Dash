@@ -5,7 +5,7 @@ import me.treetrain1.geometrydash.command.GDModeArgument
 import me.treetrain1.geometrydash.duck.PlayerDuck
 import me.treetrain1.geometrydash.entity.Checkpoint
 import me.treetrain1.geometrydash.entity.Ring
-import me.treetrain1.geometrydash.network.C2SKillPacket
+import me.treetrain1.geometrydash.network.C2SFailPacket
 import me.treetrain1.geometrydash.network.GDModeSyncPacket
 import me.treetrain1.geometrydash.registry.*
 import me.treetrain1.geometrydash.util.id
@@ -17,11 +17,12 @@ import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.minecraft.commands.synchronization.ArgumentTypeInfos
 import net.minecraft.commands.synchronization.SingletonArgumentInfo
-import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.core.registries.Registries
 import net.minecraft.network.chat.Component
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.resources.ResourceKey
+import net.minecraft.world.damagesource.DamageType
 import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
@@ -47,6 +48,9 @@ object GeometryDash : ModInitializer {
             .build()
     ).key!!
 
+    @JvmField
+    val LEVEL_FAIL: ResourceKey<DamageType> = ResourceKey.create(Registries.DAMAGE_TYPE, id("level_fail"))
+
     override fun onInitialize() {
         val time = measureNanoTime {
             RegisterBlocks
@@ -69,8 +73,8 @@ object GeometryDash : ModInitializer {
                 (player as PlayerDuck).`geometryDash$getGDData`().setGD(packet.mode, packet.scale)
             }
 
-            ServerPlayNetworking.registerGlobalReceiver(C2SKillPacket.TYPE) { packet, player, _ ->
-                player.kill()
+            ServerPlayNetworking.registerGlobalReceiver(C2SFailPacket.TYPE) { packet, player, _ ->
+                player.hurt(player.damageSources().source(LEVEL_FAIL), Float.MAX_VALUE)
             }
 
             EntityDataSerializers.registerSerializer(Checkpoint.CheckpointType.SERIALIZER)

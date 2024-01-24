@@ -5,10 +5,10 @@ import net.fabricmc.fabric.api.networking.v1.FabricPacket
 import net.fabricmc.fabric.api.networking.v1.PacketType
 import net.minecraft.network.FriendlyByteBuf
 
-class C2SKillPacket() : FabricPacket {
+class C2SFailPacket() : FabricPacket {
     companion object {
         @JvmField
-        val TYPE: PacketType<C2SKillPacket> = PacketType.create(id("kill"), ::C2SKillPacket)
+        val TYPE: PacketType<C2SFailPacket> = PacketType.create(id("kill"), ::C2SFailPacket)
     }
 
     constructor(buf: FriendlyByteBuf) : this()

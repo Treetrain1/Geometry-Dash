@@ -1,5 +1,6 @@
 package me.treetrain1.geometrydash.block
 
+import me.treetrain1.geometrydash.GeometryDash
 import me.treetrain1.geometrydash.util.isCollidingWithBlockShape
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
@@ -114,6 +115,6 @@ class SpikeBlock(props: Properties) : Block(props), Fallable, SimpleWaterloggedB
         super.entityInside(state, level, pos, entity)
         if (entity !is LivingEntity || entity.isDeadOrDying || !entity.isCollidingWithBlockShape(level, pos)) return
 
-        entity.kill()
+        entity.hurt(level.damageSources().source(GeometryDash.LEVEL_FAIL), Float.MAX_VALUE)
     }
 }
