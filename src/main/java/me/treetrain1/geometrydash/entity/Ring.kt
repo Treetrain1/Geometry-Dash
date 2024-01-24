@@ -1,6 +1,5 @@
 package me.treetrain1.geometrydash.entity
 
-import gravity_changer.command.LocalDirection
 import me.treetrain1.geometrydash.data.GDData
 import me.treetrain1.geometrydash.util.gdData
 import me.treetrain1.geometrydash.util.launch
@@ -10,7 +9,6 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializer
 import net.minecraft.network.syncher.SynchedEntityData
-import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
@@ -43,7 +41,7 @@ open class Ring(
             player.launch(type.bounceStrength)
         }
         if (type.shouldFlipGravity) {
-            player.setRelative(LocalDirection.UP)
+            player.setRelative(true)
         }
         if (type.shouldTeleport) {
             player.vertTeleport(this.level())

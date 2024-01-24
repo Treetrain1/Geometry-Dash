@@ -2,7 +2,6 @@
 
 package me.treetrain1.geometrydash.util
 
-import gravity_changer.command.LocalDirection
 import me.treetrain1.geometrydash.GeometryDash
 import me.treetrain1.geometrydash.duck.EntityDuck
 import me.treetrain1.geometrydash.duck.PlayerDuck
@@ -26,14 +25,11 @@ import net.minecraft.world.phys.shapes.CollisionContext
 
 // GRAVITY
 
-fun Entity.setRelative(direction: LocalDirection) {
+fun Entity.setRelative(flip: Boolean) {
     if (this.gravity == null) this.gravity = 1.0
 
-    when (direction) {
-        LocalDirection.DOWN -> this.gravity = 1.0
-        LocalDirection.UP -> this.gravity = this.gravity!! * -1
-        else -> {}
-    }
+    if (flip)
+        this.gravity = this.gravity!! * -1
     /*val gravityDirection = GravityChangerAPI.getGravityDirection(this)
     val combinedRelativeDirection = when (direction) {
         LocalDirection.DOWN -> Direction.DOWN

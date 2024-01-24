@@ -2,7 +2,6 @@
 
 package me.treetrain1.geometrydash.block
 import com.mojang.serialization.MapCodec
-import gravity_changer.command.LocalDirection
 import me.treetrain1.geometrydash.block.entity.JumpPadBlockEntity
 import me.treetrain1.geometrydash.util.gravity
 import me.treetrain1.geometrydash.util.isCollidingWithBlockShape
@@ -121,7 +120,7 @@ open class JumpPadBlock(val type: JumpPadType, props: Properties) : MultifaceBlo
         if (blockEntity.colliding.contains(entity.id)) return
 
         if (type.shouldFlipGravity) {
-            entity.setRelative(LocalDirection.UP)
+            entity.setRelative(true)
         }
         if (type.shouldJump) {
             entity.applyDelta(type)

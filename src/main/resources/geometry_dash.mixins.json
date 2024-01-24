@@ -10,8 +10,7 @@
     "PlayerListMixin",
     "PlayerMixin",
     "PoseMixin",
-    "ServerPlayerMixin",
-    "gravity.GravityComponentMixin"
+    "ServerPlayerMixin"
   ],
   "client": [
     "client.CameraMixin",

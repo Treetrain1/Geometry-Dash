@@ -1,15 +1,12 @@
 package me.treetrain1.geometrydash.data.mode
 
-import gravity_changer.command.LocalDirection
 import me.treetrain1.geometrydash.entity.pose.GDPoses
-import me.treetrain1.geometrydash.util.launch
 import me.treetrain1.geometrydash.util.setRelative
 import net.minecraft.client.player.Input
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.Mth
 import net.minecraft.world.entity.EntityDimensions
 import net.minecraft.world.entity.Pose
-import net.minecraft.world.phys.Vec3
 
 open class BallModeData : GDModeData() {
     private var targetCubeRot: Float = 0F
@@ -34,7 +31,7 @@ open class BallModeData : GDModeData() {
         val data = this.gdData!!
         val player = data.player
         if (data.canProcessInput && player.onGround()) {
-            player.setRelative(LocalDirection.UP)
+            player.setRelative(true)
             return true
         }
         return false
