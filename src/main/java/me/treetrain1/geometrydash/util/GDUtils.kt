@@ -14,7 +14,10 @@ import net.minecraft.client.player.Input
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.server.level.ServerPlayer
 import net.minecraft.util.Mth
+import net.minecraft.world.effect.MobEffectInstance
+import net.minecraft.world.effect.MobEffects
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.ClipContext
@@ -22,9 +25,7 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec3
-import net.minecraft.world.phys.shapes.BooleanOp
 import net.minecraft.world.phys.shapes.CollisionContext
-import net.minecraft.world.phys.shapes.Shapes
 
 // GRAVITY
 
@@ -82,9 +83,15 @@ fun Entity.isCollidingWithBlock(level: Level, pos: BlockPos): Boolean {
     if (this.isRemoved) return false
 
     val state = level.getBlockState(pos)
-    val shape = state.getShape(level, pos, CollisionContext.of(this))
-    val shape2 = shape.move(pos.x.toDouble(), pos.y.toDouble(), pos.z.toDouble())
-    return Shapes.joinIsNotEmpty(shape2, Shapes.create(this.boundingBox), BooleanOp.AND)
+    val blockShape = state.getShape(level, pos, CollisionContext.of(this))
+    val movedBlockShape = blockShape.move(pos.x.toDouble(), pos.y.toDouble(), pos.z.toDouble()).toAabbs()
+    val expandedPlayerBoundingBox = this.boundingBox.inflate(0.075)
+
+   for (aabb in movedBlockShape) {
+       if (expandedPlayerBoundingBox.intersects(aabb)) return true
+   }
+
+    return false
 }
 
 // 0.42 is the player jump power
