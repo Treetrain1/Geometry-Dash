@@ -77,9 +77,9 @@ fun Entity.vertTeleport(level: Level) {
 }
 
 /**
- * @return if colliding with a specific block
+ * @return if colliding with a specific block's shape
  */
-fun Entity.isCollidingWithBlock(level: Level, pos: BlockPos): Boolean {
+fun Entity.isCollidingWithBlockShape(level: Level, pos: BlockPos): Boolean {
     if (this.isRemoved) return false
 
     val state = level.getBlockState(pos)

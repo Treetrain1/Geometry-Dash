@@ -6,7 +6,7 @@ import gravity_changer.api.GravityChangerAPI
 import gravity_changer.command.LocalDirection
 import me.treetrain1.geometrydash.block.entity.JumpPadBlockEntity
 import me.treetrain1.geometrydash.duck.GravityDuck
-import me.treetrain1.geometrydash.util.isCollidingWithBlock
+import me.treetrain1.geometrydash.util.isCollidingWithBlockShape
 import me.treetrain1.geometrydash.util.setRelative
 import me.treetrain1.geometrydash.util.vertTeleport
 import net.minecraft.core.BlockPos
@@ -116,7 +116,7 @@ open class JumpPadBlock(val type: JumpPadType, props: Properties) : MultifaceBlo
 
     override fun entityInside(state: BlockState, level: Level, pos: BlockPos, entity: Entity) {
         super.entityInside(state, level, pos, entity)
-        if (entity !is LivingEntity || !entity.isCollidingWithBlock(level, pos)) return
+        if (entity !is LivingEntity || !entity.isCollidingWithBlockShape(level, pos)) return
 
         val blockEntity = this.blockEntity(level, pos) ?: return
         if (blockEntity.colliding.contains(entity.id)) return

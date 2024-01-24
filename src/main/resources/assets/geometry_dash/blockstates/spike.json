@@ -6,11 +6,23 @@
     "thickness=base,vertical_direction=up": {
       "model": "minecraft:block/pointed_dripstone_up_base"
     },
+    "size=3,vertical_direction=down": {
+      "model": "minecraft:block/pointed_dripstone_down_frustum"
+    },
+    "size=3,vertical_direction=up": {
+      "model": "minecraft:block/pointed_dripstone_up_frustum"
+    },
     "thickness=frustum,vertical_direction=down": {
       "model": "minecraft:block/pointed_dripstone_down_frustum"
     },
     "thickness=frustum,vertical_direction=up": {
       "model": "minecraft:block/pointed_dripstone_up_frustum"
+    },
+    "size=2,vertical_direction=down": {
+      "model": "minecraft:block/pointed_dripstone_down_middle"
+    },
+    "size=2,vertical_direction=up": {
+      "model": "minecraft:block/pointed_dripstone_up_middle"
     },
     "thickness=middle,vertical_direction=down": {
       "model": "minecraft:block/pointed_dripstone_down_middle"
