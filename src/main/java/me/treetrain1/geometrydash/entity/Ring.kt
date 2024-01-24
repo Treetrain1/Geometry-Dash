@@ -88,7 +88,7 @@ open class Ring(
     ) {
         SMALL_BOUNCE(bounceStrength = 0.5), // purple/pink
         BOUNCE, // yellow
-        BIG_BOUNCE(bounceStrength = 1.5), // red
+        BIG_BOUNCE(bounceStrength = 2.0), // red
         SWING(shouldBounce = false, shouldFlipGravity = true), // green
         REVERSE_GRAVITY(shouldFlipGravity = true), // blue
         TELEPORT(shouldBounce = false, shouldFlipGravity = true, shouldTeleport = true); // pink with arrows
