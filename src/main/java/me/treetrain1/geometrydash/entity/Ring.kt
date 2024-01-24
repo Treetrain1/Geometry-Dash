@@ -91,6 +91,7 @@ open class Ring(
         BIG_BOUNCE(bounceStrength = 2.0), // red
         SWING(shouldBounce = false, shouldFlipGravity = true), // green
         REVERSE_GRAVITY(shouldFlipGravity = true), // blue
+        FORCE_DOWN(bounceStrength = -3.0), // black
         TELEPORT(shouldBounce = false, shouldFlipGravity = true, shouldTeleport = true); // pink with arrows
 
         companion object {

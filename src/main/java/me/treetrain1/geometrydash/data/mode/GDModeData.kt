@@ -32,6 +32,8 @@ abstract class GDModeData {
         return true
     }
 
+    open fun onRingUnlock() {}
+
     /**
      * @return if the input was successful
      */
