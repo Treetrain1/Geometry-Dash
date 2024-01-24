@@ -38,17 +38,7 @@ public abstract class PlayerRendererMixin extends LivingEntityRenderer<AbstractC
 		this.addLayer(new GDModeLayer(
 			PlayerRenderer.class.cast(this),
 			new CubePlayerModel<>(context.bakeLayer(GeometryDashClient.CUBE_PLAYER)),
-			GDMode.CUBE
-		));
-		this.addLayer(new GDModeLayer(
-			PlayerRenderer.class.cast(this),
-			new CubePlayerModel<>(context.bakeLayer(GeometryDashClient.CUBE_PLAYER)),
-			GDMode.CUBE_3D
-		));
-		this.addLayer(new GDModeLayer(
-			PlayerRenderer.class.cast(this),
-			new CubePlayerModel<>(context.bakeLayer(GeometryDashClient.CUBE_PLAYER)),
-			GDMode.UFO
+			GDMode.CUBE, GDMode.CUBE_3D, GDMode.UFO
 		));
 	}
 

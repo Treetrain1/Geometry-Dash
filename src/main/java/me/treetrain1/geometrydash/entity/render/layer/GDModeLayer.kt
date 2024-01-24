@@ -18,7 +18,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture
 open class GDModeLayer(
     renderer: RenderLayerParent<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>>,
     private val model: EntityModel<AbstractClientPlayer>,
-    private val requiredMode: GDMode
+    private vararg val requiredModes: GDMode
 ) : RenderLayer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>>(renderer) {
     override fun render(
         matrixStack: PoseStack,
@@ -32,7 +32,7 @@ open class GDModeLayer(
         netHeadYaw: Float,
         headPitch: Float
     ) {
-        if (player is PlayerDuck && player.`geometryDash$getGDData`().mode == requiredMode) {
+        if (player is PlayerDuck && requiredModes.contains(player.`geometryDash$getGDData`().mode)) {
             model.prepareMobModel(player, limbSwing, limbSwingAmount, partialTicks)
             model.setupAnim(player, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch)
             val vertexConsumer = buffer.getBuffer(RenderType.entityCutout(player.skin.texture()))
