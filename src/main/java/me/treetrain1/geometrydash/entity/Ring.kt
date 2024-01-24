@@ -2,6 +2,8 @@ package me.treetrain1.geometrydash.entity
 
 import me.treetrain1.geometrydash.data.GDData
 import me.treetrain1.geometrydash.util.gdData
+import me.treetrain1.geometrydash.util.launch
+import me.treetrain1.geometrydash.util.vertTeleport
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializer
@@ -26,10 +28,6 @@ open class Ring(
             // TODO: implement or just use the thing from jump pads
         }
 
-        protected fun Entity.bounce(strength: Double) {
-            // TODO: implement
-        }
-
         protected fun Entity.teleport() {
             // TODO: implement
         }
@@ -48,13 +46,13 @@ open class Ring(
 
         val type = this.type
         if (type.shouldBounce) {
-            player.bounce(type.bounceStrength)
+            player.launch(type.bounceStrength)
         }
         if (type.shouldFlipGravity) {
             player.flipGravity()
         }
         if (type.shouldTeleport) {
-            player.teleport()
+            player.vertTeleport(this.level())
         }
     }
 

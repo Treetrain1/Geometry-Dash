@@ -1,5 +1,6 @@
 accessWidener v2 named
 accessible field net/minecraft/world/entity/LivingEntity jumping Z
+accessible method net/minecraft/world/entity/LivingEntity getJumpPower ()F
 accessible field net/minecraft/world/level/block/PointedDripstoneBlock TIP_MERGE_SHAPE Lnet/minecraft/world/phys/shapes/VoxelShape;
 accessible field net/minecraft/world/level/block/PointedDripstoneBlock TIP_SHAPE_UP Lnet/minecraft/world/phys/shapes/VoxelShape;
 accessible field net/minecraft/world/level/block/PointedDripstoneBlock TIP_SHAPE_DOWN Lnet/minecraft/world/phys/shapes/VoxelShape;

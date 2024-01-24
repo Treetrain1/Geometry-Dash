@@ -12,6 +12,7 @@ import net.minecraft.client.player.Input
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.util.Mth
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.ClipContext
@@ -63,11 +64,10 @@ fun Entity.vertTeleport(level: Level) {
     ) ?: return
 
     if (raycast.type == HitResult.Type.MISS) {
-        // TODO: kill entity
+        this.teleportTo(this.x, 1000.0, this.z)
+        this.kill()
     } else {
         val rayPos = raycast.location
-        val endOffset = RotationUtil.vecPlayerToWorld(0.0, -0.00001, 0.0, gravDir)
-        //val end = rayPos.add(endOffset)
         this.teleportToWithTicket(rayPos.x, rayPos.y, rayPos.z)
         this.setOnGround(true)
     }
@@ -83,6 +83,20 @@ fun Entity.isCollidingWithBlock(level: Level, pos: BlockPos): Boolean {
     val shape = state.getShape(level, pos, CollisionContext.of(this))
     val shape2 = shape.move(pos.x.toDouble(), pos.y.toDouble(), pos.z.toDouble())
     return Shapes.joinIsNotEmpty(shape2, Shapes.create(this.boundingBox), BooleanOp.AND)
+}
+
+// 0.42 is the player jump power
+private const val defaultLaunch = 0.42 * 1.5
+
+fun Player.launch(multiplier: Double) {
+    val vec3: Vec3 = this.deltaMovement
+    this.setDeltaMovement(vec3.x, defaultLaunch * multiplier, vec3.z)
+    if (this.isSprinting) {
+        val rot: Float = this.yRot * (Math.PI / 180.0).toFloat()
+        this.deltaMovement = this.deltaMovement.add((-Mth.sin(rot) * 0.2f).toDouble(), 0.0, (Mth.cos(rot) * 0.2f).toDouble())
+    }
+
+    this.hasImpulse = true
 }
 
 // Minecraft accessors

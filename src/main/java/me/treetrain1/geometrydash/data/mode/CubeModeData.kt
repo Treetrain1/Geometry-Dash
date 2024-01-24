@@ -1,11 +1,13 @@
 package me.treetrain1.geometrydash.data.mode
 
 import me.treetrain1.geometrydash.entity.pose.GDPoses
+import me.treetrain1.geometrydash.util.launch
 import net.minecraft.client.player.Input
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.Mth
 import net.minecraft.world.entity.EntityDimensions
 import net.minecraft.world.entity.Pose
+import net.minecraft.world.phys.Vec3
 
 open class CubeModeData : GDModeData() {
     private var targetCubeRot: Float = 0F
@@ -27,8 +29,13 @@ open class CubeModeData : GDModeData() {
     }
 
     override fun tickInput(input: Input): Boolean {
-        // TODO: Move vanilla jump behavior here
-        return true
+        val data = this.gdData!!
+        val player = data.player
+        if (data.inputBuffer && player.onGround()) {
+            player.launch(1.0)
+            return true
+        }
+        return false
     }
 
     override fun getPose(): Pose {
