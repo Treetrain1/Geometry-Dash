@@ -21,7 +21,7 @@ open class CubeModeData : GDModeData() {
                 if (this.player.onGround()) {
                     this@CubeModeData.targetCubeRot = Math.round(this@CubeModeData.targetCubeRot / 90F) * 90F
                 } else {
-                    this@CubeModeData.targetCubeRot += 20F
+                    this@CubeModeData.targetCubeRot += 10F
                 }
             }
             this.cubeRot += (this.targetCubeRot - this.cubeRot) * 0.395F // both 0.395F and 0.45F seem alright, up to you tree
