@@ -36,13 +36,13 @@ class SpikeBlock(props: Properties) : Block(props), Fallable, SimpleWaterloggedB
         internal val WATERLOGGED = BlockStateProperties.WATERLOGGED
 
         @JvmField
-        val SMALL_SHAPE = box(2.0, 0.1, 2.0, 14.0, 15.9, 14.0);
+        val SMALL_SHAPE = box(4.0, 0.1, 4.0, 14.0, 15.9, 12.0);
 
         @JvmField
         val MIDDLE_SHAPE = box(3.0, 0.1, 3.0, 13.0, 15.9, 13.0);
 
         @JvmField
-        val LARGE_SHAPE = box(4.0, 0.1, 4.0, 12.0, 15.9, 12.0);
+        val LARGE_SHAPE = box(2.0, 0.1, 2.0, 14.0, 15.9, 14.0);
     }
 
     init {
