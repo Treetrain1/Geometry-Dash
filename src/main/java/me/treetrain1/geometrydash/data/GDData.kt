@@ -35,6 +35,7 @@ open class GDData @JvmOverloads constructor(
         private const val SCALE_TAG = "Scale"
         private const val CHECKPOINTS_TAG = "Checkpoints"
         private const val PREV_GAME_TYPE_TAG = "PrevGameType"
+        private const val DASH_RING_TAG = "DashRingID"
 
         @JvmField
         val GD_DATA: EntityDataAccessor<in CompoundTag> = SynchedEntityData.defineId(
@@ -91,6 +92,11 @@ open class GDData @JvmOverloads constructor(
     @JvmField
     var ringLocked: Boolean = false
 
+    @JvmField
+    var dashRingID: String? = null
+
+    inline val isDashing: Boolean get() = dashRingID != null
+
     @PublishedApi
     internal inline val level: Level get() = this.player.level()
 
@@ -99,7 +105,7 @@ open class GDData @JvmOverloads constructor(
         return inputBuffer
     }
 
-    inline val canBounceFromRing: Boolean get() = !(ignoreInput || ringLocked)
+    inline val canBounceFromRing: Boolean get() = !(ignoreInput || ringLocked || isDashing) && inputBuffer
 
     inline val lastValidCheckpoint: BlockPos? get() {
         val level = this.level
@@ -168,6 +174,7 @@ open class GDData @JvmOverloads constructor(
         this.inputBuffer = false
         this.bufferLocked = false
         this.ringLocked = false
+        this.dashRingID = null
 
         val player = this.player
         val prevType = this.prevGameType
@@ -206,6 +213,7 @@ open class GDData @JvmOverloads constructor(
         compound.putDouble(SCALE_TAG, this.scale)
         compound.putIntArray(CHECKPOINTS_TAG, this.checkpoints)
         compound.putInt(PREV_GAME_TYPE_TAG, this.prevGameType?.id ?: -1)
+        compound.putString(DASH_RING_TAG, this.dashRingID)
         return compound
     }
 

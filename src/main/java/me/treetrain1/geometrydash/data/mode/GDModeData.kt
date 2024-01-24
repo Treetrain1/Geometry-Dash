@@ -14,6 +14,10 @@ abstract class GDModeData {
 
     abstract fun tick()
 
+    open fun flying(): Boolean {
+        return false
+    }
+
     /**
      * Whether or not the mode locks the buffer after a successful input
      */

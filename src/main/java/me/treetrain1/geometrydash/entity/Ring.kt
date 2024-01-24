@@ -62,7 +62,7 @@ open class Ring(
             if (!gdData.playingGD) continue
 
             val gdModeData = gdData.gdModeData ?: continue
-            if (!gdData.ignoreInput && !gdData.ringLocked && gdData.inputBuffer)
+            if (gdData.canBounceFromRing)
                 this.onApply(player, gdData)
         }
     }
