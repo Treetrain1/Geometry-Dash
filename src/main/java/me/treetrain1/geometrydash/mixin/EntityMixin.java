@@ -5,9 +5,12 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import me.treetrain1.geometrydash.data.GDData;
 import me.treetrain1.geometrydash.duck.PlayerDuck;
+import me.treetrain1.geometrydash.network.C2SKillPacket;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.MoverType;
@@ -15,12 +18,16 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
+import java.util.List;
 
 @Mixin(Entity.class)
 public abstract class EntityMixin {
@@ -48,16 +55,15 @@ public abstract class EntityMixin {
 		original.call(instance, particleOptions, x, y, z, xSpeed, ySpeed, zSpeed);
 	}
 
-	@Inject(method = "move", at = @At("TAIL"))
-	private void gdCheck(MoverType type, Vec3 pos, CallbackInfo ci) {
-		/*
+	@Inject(method = "tick", at = @At("TAIL"), locals = LocalCapture.CAPTURE_FAILHARD)
+	private void gdCheck(CallbackInfo ci) {
 		Entity entity = Entity.class.cast(this);
-		if (this instanceof PlayerDuck duck && entity instanceof Player player) {
+		if (entity.level().isClientSide && this instanceof PlayerDuck duck && entity instanceof Player player) {
 			GDData data = duck.geometryDash$getGDData();
 			if (!player.isDeadOrDying() && data.getPlayingGD() && this.horizontalCollision) {
 				player.setHealth(0);
+				ClientPlayNetworking.send(new C2SKillPacket());
 			}
 		}
-		 */
 	}
 }

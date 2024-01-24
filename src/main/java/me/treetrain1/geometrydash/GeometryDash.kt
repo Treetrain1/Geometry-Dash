@@ -5,6 +5,7 @@ import me.treetrain1.geometrydash.command.GDModeArgument
 import me.treetrain1.geometrydash.duck.PlayerDuck
 import me.treetrain1.geometrydash.entity.Checkpoint
 import me.treetrain1.geometrydash.entity.Ring
+import me.treetrain1.geometrydash.network.C2SKillPacket
 import me.treetrain1.geometrydash.network.GDModeSyncPacket
 import me.treetrain1.geometrydash.registry.*
 import me.treetrain1.geometrydash.util.id
@@ -67,10 +68,14 @@ object GeometryDash : ModInitializer {
             ServerPlayNetworking.registerGlobalReceiver(GDModeSyncPacket.PACKET_TYPE) { packet, player, _ ->
                 (player as PlayerDuck).`geometryDash$getGDData`().setGD(packet.mode, packet.scale)
             }
-        }
 
-        EntityDataSerializers.registerSerializer(Checkpoint.CheckpointType.SERIALIZER)
-        EntityDataSerializers.registerSerializer(Ring.RingType.SERIALIZER)
+            ServerPlayNetworking.registerGlobalReceiver(C2SKillPacket.TYPE) { packet, player, _ ->
+                player.kill()
+            }
+
+            EntityDataSerializers.registerSerializer(Checkpoint.CheckpointType.SERIALIZER)
+            EntityDataSerializers.registerSerializer(Ring.RingType.SERIALIZER)
+        }
 
         log("Geometry Dash took $time nanoseconds")
     }
