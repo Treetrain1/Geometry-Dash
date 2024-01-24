@@ -1,8 +1,10 @@
 package me.treetrain1.geometrydash.entity
 
+import gravity_changer.command.LocalDirection
 import me.treetrain1.geometrydash.data.GDData
 import me.treetrain1.geometrydash.util.gdData
 import me.treetrain1.geometrydash.util.launch
+import me.treetrain1.geometrydash.util.setRelative
 import me.treetrain1.geometrydash.util.vertTeleport
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.syncher.EntityDataAccessor
@@ -23,14 +25,6 @@ open class Ring(
         @PublishedApi
         @JvmField
         internal val TYPE: EntityDataAccessor<RingType> = SynchedEntityData.defineId(Ring::class.java, RingType.SERIALIZER)
-
-        protected fun Entity.flipGravity() {
-            // TODO: implement or just use the thing from jump pads
-        }
-
-        protected fun Entity.teleport() {
-            // TODO: implement
-        }
     }
 
     inline var type: RingType
@@ -49,7 +43,7 @@ open class Ring(
             player.launch(type.bounceStrength)
         }
         if (type.shouldFlipGravity) {
-            player.flipGravity()
+            player.setRelative(LocalDirection.UP)
         }
         if (type.shouldTeleport) {
             player.vertTeleport(this.level())
