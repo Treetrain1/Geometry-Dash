@@ -92,6 +92,8 @@ open class Ring(
         SWING(shouldBounce = false, shouldFlipGravity = true), // green
         REVERSE_GRAVITY(shouldFlipGravity = true), // blue
         FORCE_DOWN(bounceStrength = -3.0), // black
+        DASH(bounceStrength = 0.0), // green dash
+        DASH_REVERSE_GRAVITY(bounceStrength = 0.0, shouldFlipGravity = true), // pink dash
         TELEPORT(shouldBounce = false, shouldFlipGravity = true, shouldTeleport = true); // pink with arrows
 
         companion object {
