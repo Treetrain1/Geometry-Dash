@@ -12,7 +12,7 @@ enum class GDMode(val title: String, val modeDataSupplier: () -> GDModeData) : S
     UFO("UFO", { UFOModeData() }),
     WAVE("Wave", { WaveModeData() }),
     ROBOT("Robot", { CubeModeData() }),
-    SPIDER("Spider", { CubeModeData() }),
+    SPIDER("Spider", { SpiderModeData() }),
     SWING("Swing", { CubeModeData() }),
     CUBE_3D("Cube 3D", { Cube3DModeData() });
 
