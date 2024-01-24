@@ -47,7 +47,7 @@ open class StaticEntity(
 
     override fun isPushable(): Boolean = false
 
-    override fun isPickable(): Boolean = false
+    override fun isPickable(): Boolean = true
 
     override fun processFlappingMovement() {}
 
