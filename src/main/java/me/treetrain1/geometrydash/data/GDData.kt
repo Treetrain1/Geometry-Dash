@@ -85,7 +85,7 @@ open class GDData @JvmOverloads constructor(
     var bufferLocked: Boolean = false
 
     /**
-     * Whether or not an input released is required for Ring interaction
+     * Whether or not an input release is required for Ring interaction
      */
     @Environment(EnvType.CLIENT)
     @JvmField

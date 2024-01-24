@@ -16,7 +16,7 @@ open class RingRenderer(ctx: Context) : StaticEntityRenderer<Ring>(ctx) {
     override val scale: Float = 1F
     override val width: Float = 1F
     override val height: Float = 1F
-    override val yOffset: Float = 0F
+    override val yOffset: Float = 0.44F
 
     override fun getTextureLocation(entity: Ring): ResourceLocation {
         return TEXTURE

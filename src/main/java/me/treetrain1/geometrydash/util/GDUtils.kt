@@ -1,3 +1,5 @@
+@file:Suppress("NOTHING_TO_INLINE")
+
 package me.treetrain1.geometrydash.util
 
 import gravity_changer.api.GravityChangerAPI
