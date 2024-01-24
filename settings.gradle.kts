@@ -27,8 +27,8 @@ pluginManagement {
 
 rootProject.name = "Geometry Dash"
 
-//localRepository("FrozenLib", "maven.modrinth:frozenlib", true)
-localRepository("GravityChanger", null, false)
+localRepository("FrozenLib", "maven.modrinth:frozenlib", true)
+//localRepository("GravityChanger", null, false)
 localRepository("ImmersivePortalsMod", null, false)
 
 

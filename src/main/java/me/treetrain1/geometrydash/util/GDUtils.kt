@@ -57,7 +57,8 @@ fun LivingEntity.vertTeleport(level: Level) {
         teleport when it hits
         if it misses, tp to y 1000 & kill the entity
     */
-    val gravity = this.gravity ?: return
+    if (this.gravity == null) this.gravity = 1.0
+    val gravity = this.gravity!!
     val up: Boolean = gravity >= 0
     val rayOffset = Vec3(0.0, if (up) 100.0 else -100.0, 0.0)
     val rayEnd: Vec3 = this.position().add(rayOffset)
@@ -104,7 +105,10 @@ private const val defaultLaunch = 0.42 * 1.5
 
 fun Player.launch(multiplier: Double) {
     val vec3: Vec3 = this.deltaMovement
-    this.setDeltaMovement(vec3.x, defaultLaunch * multiplier, vec3.z)
+    if (this.gravity == null) this.gravity = 1.0
+    val gravity = this.gravity!!
+    val up = gravity > 0
+    this.setDeltaMovement(vec3.x, defaultLaunch * multiplier * if (up) 1.0 else -1.0, vec3.z)
     if (this.isSprinting) {
         val rot: Float = this.yRot * (Math.PI / 180.0).toFloat()
         this.deltaMovement = this.deltaMovement.add((-Mth.sin(rot) * 0.2f).toDouble(), 0.0, (Mth.cos(rot) * 0.2f).toDouble())

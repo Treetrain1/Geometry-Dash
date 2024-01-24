@@ -225,14 +225,13 @@ dependencies {
     modImplementation("net.fabricmc:fabric-language-kotlin:${fabric_kotlin_version}")
 
     // FrozenLib
-    //if (local_frozenlib)
-        //api(project(":FrozenLib", configuration = "namedElements"))?.let { include(it) }
-    //else
-        //modApi(files("libs/frozenlib.jar"))?.apply { include(this) }
+    if (local_frozenlib)
+        api(project(":FrozenLib", configuration = "namedElements"))?.let { include(it) }
+    else
         modApi("maven.modrinth:frozenlib:$frozenlib_version")?.let { include(it) }
 
     // Gravity Changer
-    api(project(":GravityChanger", configuration = "namedElements"))?.let { include(it) }
+    //api(project(":GravityChanger", configuration = "namedElements"))?.let { include(it) }
 
     // Immersive Portals
     modApi(files("libs/immersive-portals-5.1.3-mc1.20.4-fabric.jar"))
