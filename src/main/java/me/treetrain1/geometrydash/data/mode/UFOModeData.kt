@@ -9,7 +9,7 @@ import net.minecraft.world.entity.EntityDimensions
 import net.minecraft.world.entity.Pose
 import net.minecraft.world.phys.Vec3
 
-open class CubeModeData : GDModeData() {
+open class UFOModeData : GDModeData() {
     private var targetCubeRot: Float = 0F
     private var cubeRot: Float = 0F
     private var prevCubeRot: Float = 0F
@@ -19,9 +19,9 @@ open class CubeModeData : GDModeData() {
             this.prevCubeRot = this.cubeRot
             this.gdData?.run {
                 if (this.player.onGround()) {
-                    this@CubeModeData.targetCubeRot = Math.round(this@CubeModeData.targetCubeRot / 90F) * 90F
+                    this@UFOModeData.targetCubeRot = Math.round(this@UFOModeData.targetCubeRot / 90F) * 90F
                 } else {
-                    this@CubeModeData.targetCubeRot += 20F
+                    this@UFOModeData.targetCubeRot += 20F
                 }
             }
             this.cubeRot += (this.targetCubeRot - this.cubeRot) * 0.395F // both 0.395F and 0.45F seem alright, up to you tree
@@ -31,14 +31,10 @@ open class CubeModeData : GDModeData() {
     override fun tickInput(input: Input): Boolean {
         val data = this.gdData!!
         val player = data.player
-        if (data.canProcessInput && player.onGround()) {
+        if (data.canProcessInput) {
             player.launch(1.0)
             return true
         }
-        return false
-    }
-
-    override fun lockOnSuccess(): Boolean {
         return false
     }
 
