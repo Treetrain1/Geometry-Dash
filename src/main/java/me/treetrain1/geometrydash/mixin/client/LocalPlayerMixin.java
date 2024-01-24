@@ -48,16 +48,14 @@ public class LocalPlayerMixin {
 		gdData.inputBuffer = jumping;
 		if (gdModeData != null) {
 			// TODO: bounce from rings
-
-			if (jumping) {
-				if (gdModeData.tickInput(this.input)) {
-					gdData.ringLocked = true;
-					if (gdModeData.lockOnSuccess()) gdData.bufferLocked = true;
-				}
-			} else {
+			if (!jumping) {
 				gdData.ringLocked = false;
 				if (gdModeData.unlockOnRelease())
 					gdData.bufferLocked = false;
+			}
+			if (gdModeData.tickInput(this.input)) {
+				gdData.ringLocked = true;
+				if (gdModeData.lockOnSuccess()) gdData.bufferLocked = true;
 			}
 		}
 	}
