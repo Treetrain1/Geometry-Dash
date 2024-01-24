@@ -2,10 +2,9 @@
 
 package me.treetrain1.geometrydash.util
 
-import gravity_changer.api.GravityChangerAPI
 import gravity_changer.command.LocalDirection
-import gravity_changer.util.RotationUtil
 import me.treetrain1.geometrydash.GeometryDash
+import me.treetrain1.geometrydash.duck.EntityDuck
 import me.treetrain1.geometrydash.duck.PlayerDuck
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
@@ -13,7 +12,6 @@ import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.client.Minecraft
 import net.minecraft.client.player.Input
 import net.minecraft.core.BlockPos
-import net.minecraft.core.Direction
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.Mth
 import net.minecraft.world.entity.Entity
@@ -29,7 +27,14 @@ import net.minecraft.world.phys.shapes.CollisionContext
 // GRAVITY
 
 fun Entity.setRelative(direction: LocalDirection) {
-    val gravityDirection = GravityChangerAPI.getGravityDirection(this)
+    if (this.gravity == null) this.gravity = 1.0
+
+    when (direction) {
+        LocalDirection.DOWN -> this.gravity = 1.0
+        LocalDirection.UP -> this.gravity = this.gravity!! * -1
+        else -> {}
+    }
+    /*val gravityDirection = GravityChangerAPI.getGravityDirection(this)
     val combinedRelativeDirection = when (direction) {
         LocalDirection.DOWN -> Direction.DOWN
         LocalDirection.UP -> Direction.UP
@@ -38,7 +43,7 @@ fun Entity.setRelative(direction: LocalDirection) {
         )
     }
     val newGravityDirection = RotationUtil.dirPlayerToWorld(combinedRelativeDirection, gravityDirection)
-    GravityChangerAPI.setBaseGravityDirection(this, newGravityDirection)
+    GravityChangerAPI.setBaseGravityDirection(this, newGravityDirection)*/
 }
 
 /**
@@ -52,8 +57,9 @@ fun LivingEntity.vertTeleport(level: Level) {
         teleport when it hits
         if it misses, tp to y 1000 & kill the entity
     */
-    val gravDir = GravityChangerAPI.getGravityDirection(this)
-    val rayOffset: Vec3 = RotationUtil.vecPlayerToWorld(0.0, 100.0, 0.0, gravDir)
+    val gravity = this.gravity ?: return
+    val up: Boolean = gravity >= 0
+    val rayOffset = Vec3(0.0, if (up) 100.0 else -100.0, 0.0)
     val rayEnd: Vec3 = this.position().add(rayOffset)
     val raycast: BlockHitResult = level.clip(
         ClipContext(
@@ -113,6 +119,10 @@ fun Player.launch(multiplier: Double) {
 fun input(): Input? = Minecraft.getInstance().player?.input
 
 inline val Player.gdData get() = (this as PlayerDuck).`geometryDash$getGDData`()
+
+inline var Entity.gravity: Double?
+    get() = (this as EntityDuck).`geometryDash$getGravity`()
+    set(value) = (this as EntityDuck).`geometryDash$setGravity`(value)
 
 // Kotlin stuff
 

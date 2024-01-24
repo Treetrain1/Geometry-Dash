@@ -2,10 +2,9 @@
 
 package me.treetrain1.geometrydash.block
 import com.mojang.serialization.MapCodec
-import gravity_changer.api.GravityChangerAPI
 import gravity_changer.command.LocalDirection
 import me.treetrain1.geometrydash.block.entity.JumpPadBlockEntity
-import me.treetrain1.geometrydash.duck.GravityDuck
+import me.treetrain1.geometrydash.util.gravity
 import me.treetrain1.geometrydash.util.isCollidingWithBlockShape
 import me.treetrain1.geometrydash.util.setRelative
 import me.treetrain1.geometrydash.util.vertTeleport
@@ -79,7 +78,7 @@ open class JumpPadBlock(val type: JumpPadType, props: Properties) : MultifaceBlo
         fun LivingEntity.applyDelta(type: JumpPadType) {
             val delta = this.deltaMovement
             this.setJumping(true)
-            this.setDeltaMovement(delta.x, type.jumpPower, delta.z)
+            this.setDeltaMovement(delta.x, type.jumpPower * (this.gravity ?: 1.0), delta.z)
             this.hasImpulse = true
         }
     }
@@ -125,11 +124,7 @@ open class JumpPadBlock(val type: JumpPadType, props: Properties) : MultifaceBlo
             entity.setRelative(LocalDirection.UP)
         }
         if (type.shouldJump) {
-            if (type.shouldFlipGravity) {
-                (GravityChangerAPI.getGravityComponent(entity) as GravityDuck).`geometryDash$queueJump`(type)
-            } else {
-                entity.applyDelta(type)
-            }
+            entity.applyDelta(type)
         }
         if (type.shouldTeleport) {
             entity.vertTeleport(level)

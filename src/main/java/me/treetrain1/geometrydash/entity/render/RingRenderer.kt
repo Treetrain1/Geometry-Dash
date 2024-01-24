@@ -45,6 +45,7 @@ open class RingRenderer(ctx: Context) : StaticEntityRenderer<Ring>(ctx) {
             Ring.RingType.REVERSE_GRAVITY -> REVERSE_GRAVITY_TEXTURE
             Ring.RingType.FORCE_DOWN -> FORCE_DOWN_TEXTURE
             Ring.RingType.TELEPORT -> TELEPORT_TEXTURE
+            else -> TEXTURE
         }
     }
 
@@ -57,6 +58,7 @@ open class RingRenderer(ctx: Context) : StaticEntityRenderer<Ring>(ctx) {
             Ring.RingType.REVERSE_GRAVITY -> REVERSE_GRAVITY_LAYER
             Ring.RingType.FORCE_DOWN -> FORCE_DOWN_LAYER
             Ring.RingType.TELEPORT -> TELEPORT_LAYER
+            else -> LAYER
         }
     }
 }

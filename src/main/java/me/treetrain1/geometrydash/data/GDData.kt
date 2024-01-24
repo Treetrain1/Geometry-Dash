@@ -93,9 +93,9 @@ open class GDData @JvmOverloads constructor(
     var ringLocked: Boolean = false
 
     @JvmField
-    var dashRingID: String? = null
+    var dashRingID: String = ""
 
-    inline val isDashing: Boolean get() = dashRingID != null
+    inline val isDashing: Boolean get() = dashRingID.isNotEmpty()
 
     @PublishedApi
     internal inline val level: Level get() = this.player.level()
@@ -174,7 +174,7 @@ open class GDData @JvmOverloads constructor(
         this.inputBuffer = false
         this.bufferLocked = false
         this.ringLocked = false
-        this.dashRingID = null
+        this.dashRingID = ""
 
         val player = this.player
         val prevType = this.prevGameType

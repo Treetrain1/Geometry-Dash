@@ -27,7 +27,7 @@ public class GameRendererMixin {
 	@Final
 	Minecraft minecraft;
 
-	@SuppressWarnings({"DataFlowIssue", "InvalidInjectorMethodSignature"})
+	@SuppressWarnings({"DataFlowIssue"})
 	@ModifyExpressionValue(method = "renderLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/OptionInstance;get()Ljava/lang/Object;", ordinal = 0))
 	private Object gd$removeBobbing(Object original) {
 		return (boolean) original && !((PlayerDuck) this.minecraft.player).geometryDash$getGDData().getPlayingGD();
@@ -39,28 +39,4 @@ public class GameRendererMixin {
 			ci.cancel();
 		}
 	}
-
-	/*
-	@Inject(
-		method = "renderLevel",
-		at = @At(
-			value = "INVOKE",
-			target = "Lcom/mojang/blaze3d/vertex/PoseStack;mulPose(Lorg/joml/Quaternionf;)V",
-			ordinal = 3,
-			shift = At.Shift.AFTER
-		)
-	)
-	public void gd$rotateLevel(float partialTicks, long finishTimeNano, PoseStack poseStack, CallbackInfo info) {
-		Entity cameraEntity = this.mainCamera.getEntity();
-		if (cameraEntity != null) {
-			Direction gravityDirection = GravityChangerAPI.getGravityDirection(cameraEntity);
-			if (gravityDirection == Direction.UP) {
-				poseStack.mulPose(Axis.ZP.rotationDegrees(180F)); //Should be Roll/Z for flipping the level upside-down
-				// If you just want to negate the rotation, head over to Gravity Changer's GameRendererMixin instead.
-				// However, I can see why you wouldn't want to in case someone else were to port it...
-				// You could just copy the mixin and apply a negative rotation compared to that in this one, I suppose.
-			}
-		}
-    }
-	 */
 }
