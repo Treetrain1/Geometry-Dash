@@ -4,7 +4,6 @@ import it.unimi.dsi.fastutil.ints.IntArrayList
 import me.treetrain1.geometrydash.data.mode.GDModeData
 import me.treetrain1.geometrydash.duck.PlayerDuck
 import me.treetrain1.geometrydash.entity.Checkpoint
-import me.treetrain1.geometrydash.network.GDModeSyncPacket
 import me.treetrain1.geometrydash.registry.RegisterScaleTypes
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
@@ -138,6 +137,7 @@ open class GDData @JvmOverloads constructor(
             this.exitGD()
         else
             this.enterGD()
+        this.markDirty()
     }
 
     fun setGD(value: Boolean) {
@@ -260,14 +260,4 @@ open class GDData @JvmOverloads constructor(
         this.checkpoints = otherData.checkpoints
         this.prevGameType = otherData.prevGameType
     }
-
-    fun syncS2C(players: Collection<ServerPlayer>) {
-        GDModeSyncPacket.sendS2C(players)
-    }
-
-    @Environment(EnvType.CLIENT)
-    fun syncC2S() {
-        GDModeSyncPacket.sendC2S()
-    }
-
 }

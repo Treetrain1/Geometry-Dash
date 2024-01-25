@@ -4,7 +4,6 @@ import com.mojang.brigadier.CommandDispatcher
 import me.treetrain1.geometrydash.data.GDData
 import me.treetrain1.geometrydash.data.GDMode
 import me.treetrain1.geometrydash.duck.PlayerDuck
-import me.treetrain1.geometrydash.network.GDModeSyncPacket
 import me.treetrain1.geometrydash.util.log
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.minecraft.commands.CommandSourceStack
@@ -54,8 +53,6 @@ object GDCommand {
             val duck = player as PlayerDuck
             val dat: GDData = duck.`geometryDash$getGDData`()
             dat.toggleGD()
-            val packet = GDModeSyncPacket(dat)
-            ServerPlayNetworking.send(player, packet)
         }
 
         if (players.size == 1) {
@@ -74,8 +71,7 @@ object GDCommand {
             val dat: GDData = duck.`geometryDash$getGDData`()
             if (dat.setGD(mode)) {
                 logSet(source, mode, player)
-                val packet = GDModeSyncPacket(dat)
-                ServerPlayNetworking.send(player, packet)
+                dat.markDirty()
                 successful++
             }
         }
@@ -97,7 +93,6 @@ object GDCommand {
     }
 
     private fun exit(source: CommandSourceStack, players: Collection<ServerPlayer>): Int {
-        val packet = GDModeSyncPacket(null, 1F)
         for (player in players) {
             (player as PlayerDuck).`geometryDash$getGDData`().exitGD()
             ServerPlayNetworking.send(player, packet)

@@ -8,7 +8,6 @@ import me.treetrain1.geometrydash.entity.Checkpoint
 import me.treetrain1.geometrydash.entity.Portal
 import me.treetrain1.geometrydash.entity.Ring
 import me.treetrain1.geometrydash.network.C2SFailPacket
-import me.treetrain1.geometrydash.network.GDModeSyncPacket
 import me.treetrain1.geometrydash.registry.*
 import me.treetrain1.geometrydash.util.*
 import net.fabricmc.api.ModInitializer
@@ -91,10 +90,6 @@ object GeometryDash : ModInitializer {
             CommandRegistrationCallback.EVENT.register { dispatcher, _, _ ->
                 GDCommand.register(dispatcher)
                 GravityCommand.register(dispatcher)
-            }
-
-            ServerPlayNetworking.registerGlobalReceiver(GDModeSyncPacket.PACKET_TYPE) { packet, player, _ ->
-                player.gdData.setGD(packet.mode, packet.scale)
             }
 
             ServerPlayNetworking.registerGlobalReceiver(C2SFailPacket.TYPE) { packet, player, _ ->
