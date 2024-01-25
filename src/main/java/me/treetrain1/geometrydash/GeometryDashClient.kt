@@ -3,7 +3,7 @@ package me.treetrain1.geometrydash;
 import me.treetrain1.geometrydash.entity.render.CheckpointRenderer;
 import me.treetrain1.geometrydash.entity.render.PortalRenderer
 import me.treetrain1.geometrydash.entity.render.RingRenderer
-import me.treetrain1.geometrydash.entity.render.model.CubePlayerModel;
+import me.treetrain1.geometrydash.entity.render.model.*
 import me.treetrain1.geometrydash.registry.RegisterBlocks
 import me.treetrain1.geometrydash.registry.RegisterEntities;
 import me.treetrain1.geometrydash.util.gdData

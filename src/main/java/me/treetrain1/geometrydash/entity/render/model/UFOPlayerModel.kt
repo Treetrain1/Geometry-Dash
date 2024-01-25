@@ -4,6 +4,9 @@ import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
 import com.mojang.math.Axis
 import me.treetrain1.geometrydash.duck.PlayerDuck
+import me.treetrain1.geometrydash.util.gdData
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 import net.minecraft.client.model.HierarchicalModel
 import net.minecraft.client.model.geom.ModelPart
 import net.minecraft.client.model.geom.PartPose
@@ -18,7 +21,7 @@ import net.minecraft.util.Mth
 import java.util.function.Function
 
 @Environment(EnvType.CLIENT)
-open class UFOPlayerModel<T : AbstractClientPlayer?>(
+open class UFOPlayerModel<T : AbstractClientPlayer>(
     root: ModelPart
 ): GDPlayerModel<T>(root) {
 
@@ -39,7 +42,6 @@ open class UFOPlayerModel<T : AbstractClientPlayer?>(
     override fun prepareMobModel(player: T, limbSwing: Float, limbSwingAmount: Float, partialTick: Float) {
         super.prepareMobModel(player, limbSwing, limbSwingAmount, partialTick)
         this.xRot =
-            (player.gdData.gdModeData!!.getModelPitch(partialTick) % 360F)
-            * Mth.DEG_TO_RAD
+            (player.gdData.gdModeData!!.getModelPitch(partialTick) % 360F) * Mth.DEG_TO_RAD
     }
 }

@@ -4,6 +4,8 @@ import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
 import com.mojang.math.Axis
 import me.treetrain1.geometrydash.duck.PlayerDuck
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 import net.minecraft.client.model.HierarchicalModel
 import net.minecraft.client.model.geom.ModelPart
 import net.minecraft.client.model.geom.PartPose
@@ -18,8 +20,8 @@ import net.minecraft.util.Mth
 import java.util.function.Function
 
 @Environment(EnvType.CLIENT)
-open class GDPlayerModel<T : AbstractClientPlayer?>(protected val root: ModelPart) : HierarchicalModel<T>(
-    Function { location: ResourceLocation? -> RenderType.entityCutoutNoCull(location) }
+open class GDPlayerModel<T : AbstractClientPlayer>(protected val root: ModelPart) : HierarchicalModel<T>(
+    Function { location: ResourceLocation -> RenderType.entityCutoutNoCull(location) }
 ) {
 
     protected open var xOffset: Double = 0.0

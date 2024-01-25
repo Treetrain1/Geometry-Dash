@@ -1,7 +1,10 @@
 package me.treetrain1.geometrydash.data
 
+import me.treetrain1.geometrydash.util.getVec
+import me.treetrain1.geometrydash.util.putVec
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.FriendlyByteBuf
+import net.minecraft.world.phys.Vec3
 
 /**
  * A snapshot of a player's GD data
@@ -14,7 +17,7 @@ data class CheckpointSnapshot(
     val modeData: CompoundTag,
     val deltaMovement: Vec3,
     val yaw: Float,
-    val size: Float,
+    val scale: Float,
     val gravity: Double,
     val onGround: Boolean,
     val isVisible: Boolean = true,
@@ -26,14 +29,14 @@ data class CheckpointSnapshot(
             = CheckpointSnapshot(
                 compound.getInt("entityId"),
                 try {
-                    GDMode.valueOf(compound.getUtf("mode"))
+                    GDMode.valueOf(compound.getString("mode"))
                 } catch (_: IllegalArgumentException) {
                     GDMode.CUBE
                 },
                 compound.getCompound("modeData"),
-                compound.getVec3("deltaMovement")
+                compound.getVec("deltaMovement"),
                 compound.getFloat("yaw"),
-                compound.getFloat("size"),
+                compound.getFloat("scale"),
                 compound.getDouble("gravity"),
                 compound.getBoolean("onGround"),
                 compound.getBoolean("isVisible"),
@@ -43,13 +46,13 @@ data class CheckpointSnapshot(
         fun toBuf(buf: FriendlyByteBuf, snapshot: CheckpointSnapshot): FriendlyByteBuf {
             buf.writeVarInt(snapshot.entityId)
             buf.writeUtf(snapshot.mode.name)
-            buf.writeCompound(snapshot.modeData)
+            buf.writeNbt(snapshot.modeData)
             val delta = snapshot.deltaMovement
             buf.writeDouble(delta.x)
             buf.writeDouble(delta.y)
             buf.writeDouble(delta.z)
             buf.writeFloat(snapshot.yaw)
-            buf.writeFloat(snapshot.size)
+            buf.writeFloat(snapshot.scale)
             buf.writeDouble(snapshot.gravity)
             buf.writeBoolean(snapshot.onGround)
             buf.writeBoolean(snapshot.isVisible)
@@ -66,7 +69,7 @@ data class CheckpointSnapshot(
                 } catch (_: IllegalArgumentException) {
                     GDMode.CUBE
                 },
-                buf.readCompound(),
+                buf.readNbt()!!,
                 Vec3(
                     buf.readDouble(),
                     buf.readDouble(),
@@ -84,15 +87,15 @@ data class CheckpointSnapshot(
     fun toTag(): CompoundTag {
         val compound = CompoundTag()
         compound.putInt("entityId", this.entityId)
-        compound.putCompound("modeData", this.modeData)
-        compound.putVec3("deltaMovement", this.deltaMovement)
+        compound.put("modeData", this.modeData)
+        compound.putVec("deltaMovement", this.deltaMovement)
         compound.putFloat("yaw", this.yaw)
-        compound.putFloat("size", this.size)
+        compound.putFloat("size", this.scale)
         compound.putDouble("gravity", this.gravity)
         compound.putBoolean("onGround", this.onGround)
         compound.putBoolean("isVisible", this.isVisible)
         compound.putFloat("timeMod", this.timeMod)
 
-        return tag
+        return compound
     }
 }

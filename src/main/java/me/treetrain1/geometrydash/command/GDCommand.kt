@@ -95,7 +95,6 @@ object GDCommand {
     private fun exit(source: CommandSourceStack, players: Collection<ServerPlayer>): Int {
         for (player in players) {
             (player as PlayerDuck).`geometryDash$getGDData`().exitGD()
-            ServerPlayNetworking.send(player, packet)
         }
 
         if (players.size == 1) {

@@ -13,6 +13,9 @@ import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.client.Minecraft
 import net.minecraft.client.player.Input
 import net.minecraft.core.BlockPos
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.DoubleTag
+import net.minecraft.nbt.ListTag
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.Mth
 import net.minecraft.world.entity.Entity
@@ -122,6 +125,22 @@ inline val Player.gdData get() = (this as PlayerDuck).`geometryDash$getGDData`()
 inline var Entity.gravity: Double?
     get() = (this as EntityDuck).`geometryDash$getGravity`()
     set(value) = (this as EntityDuck).`geometryDash$setGravity`(value)
+
+inline fun CompoundTag.putVec(key: String, vec: Vec3) {
+    val list = ListTag()
+
+    list.add(DoubleTag.valueOf(vec.x))
+    list.add(DoubleTag.valueOf(vec.y))
+    list.add(DoubleTag.valueOf(vec.z))
+
+    this.put(key, list)
+}
+
+inline fun CompoundTag.getVec(key: String): Vec3 {
+    val list = this.getList(key, CompoundTag.TAG_DOUBLE.toInt())
+
+    return Vec3(list.getDouble(0), list.getDouble(1), list.getDouble(2))
+}
 
 // Kotlin stuff
 

@@ -3,6 +3,12 @@ package me.treetrain1.geometrydash.entity
 import me.treetrain1.geometrydash.data.CheckpointSnapshot
 import me.treetrain1.geometrydash.data.GDData
 import me.treetrain1.geometrydash.duck.PlayerDuck
+import me.treetrain1.geometrydash.util.gdData
+import me.treetrain1.geometrydash.util.gravity
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
+import net.minecraft.client.player.AbstractClientPlayer
+import net.minecraft.client.player.LocalPlayer
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializer
@@ -46,8 +52,8 @@ open class Checkpoint(
             CompoundTag().apply { gdData.gdModeData!!.save(this) },
             player.deltaMovement,
             player.yRot,
-            gdData.size,
-            player.gravity,
+            gdData.scale,
+            player.gravity ?: 1.0,
             player.onGround(),
             gdData.isVisible,
             gdData.timeMod,
@@ -56,7 +62,7 @@ open class Checkpoint(
 
     @Environment(EnvType.CLIENT)
     protected open fun checkpointTick() {
-        val list: List<ClientPlayer> = this.level().getEntitiesOfClass(ServerPlayer::class.java, this.boundingBox)
+        val list: List<AbstractClientPlayer> = this.level().getEntitiesOfClass(AbstractClientPlayer::class.java, this.boundingBox)
         for (player in list) {
             if (player.isDeadOrDying) continue
             val gdData = player.gdData
