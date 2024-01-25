@@ -1,6 +1,7 @@
 package me.treetrain1.geometrydash.data.mode
 
 import me.treetrain1.geometrydash.entity.pose.GDPoses
+import me.treetrain1.geometrydash.util.gravity
 import me.treetrain1.geometrydash.util.launch
 import net.minecraft.client.player.Input
 import net.minecraft.nbt.CompoundTag
@@ -22,7 +23,8 @@ open class RobotModeData : GDModeData() {
                 if (this.player.onGround()) {
                     this@RobotModeData.targetCubeRot = Math.round(this@RobotModeData.targetCubeRot / 90F) * 90F
                 } else {
-                    this@RobotModeData.targetCubeRot += 20F
+                    val gravity = this.player.gravity
+                    this@RobotModeData.targetCubeRot += if (gravity != null && gravity < 0) -20 else 20
                 }
             }
             this.cubeRot += (this.targetCubeRot - this.cubeRot) * 0.395F // both 0.395F and 0.45F seem alright, up to you tree

@@ -1,6 +1,7 @@
 package me.treetrain1.geometrydash.data.mode
 
 import me.treetrain1.geometrydash.entity.pose.GDPoses
+import me.treetrain1.geometrydash.util.gravity
 import me.treetrain1.geometrydash.util.launch
 import me.treetrain1.geometrydash.util.setRelative
 import me.treetrain1.geometrydash.util.vertTeleport
@@ -23,7 +24,8 @@ open class SpiderModeData : GDModeData() {
                 if (this.player.onGround()) {
                     this@SpiderModeData.targetCubeRot = Math.round(this@SpiderModeData.targetCubeRot / 90F) * 90F
                 } else {
-                    this@SpiderModeData.targetCubeRot += 20F
+                    val gravity = this.player.gravity
+                    this@SpiderModeData.targetCubeRot += if (gravity != null && gravity < 0) -20 else 20
                 }
             }
             this.cubeRot += (this.targetCubeRot - this.cubeRot) * 0.395F // both 0.395F and 0.45F seem alright, up to you tree
