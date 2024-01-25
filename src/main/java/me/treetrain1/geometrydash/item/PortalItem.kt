@@ -19,6 +19,7 @@ open class PortalItem(val type: Portal.PortalType = Portal.PortalType.CUBE, prop
         val stack = player.getItemInHand(usedHand)
 
         val portal = Portal(RegisterEntities.PORTAL, level)
+        portal.setPos(player.position())
         if (level.addFreshEntity(portal)) {
             return InteractionResultHolder.success(stack)
         }
