@@ -2,6 +2,7 @@ package me.treetrain1.geometrydash
 
 import me.treetrain1.geometrydash.command.GDCommand
 import me.treetrain1.geometrydash.command.GDModeArgument
+import me.treetrain1.geometrydash.command.GravityCommand
 import me.treetrain1.geometrydash.duck.PlayerDuck
 import me.treetrain1.geometrydash.entity.Checkpoint
 import me.treetrain1.geometrydash.entity.Ring
@@ -77,6 +78,7 @@ object GeometryDash : ModInitializer {
 
             CommandRegistrationCallback.EVENT.register { dispatcher, _, _ ->
                 GDCommand.register(dispatcher)
+                GravityCommand.register(dispatcher)
             }
 
             ServerPlayNetworking.registerGlobalReceiver(GDModeSyncPacket.PACKET_TYPE) { packet, player, _ ->

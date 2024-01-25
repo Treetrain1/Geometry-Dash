@@ -26,6 +26,7 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -36,8 +37,10 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 public abstract class EntityMixin implements EntityDuck {
 
 
+	@Unique
 	private static final EntityDataAccessor<Boolean> GRAVITY_NOT_NULL_DATA = SynchedEntityData.defineId(Entity.class, EntityDataSerializers.BOOLEAN);
 
+	@Unique
 	private static final EntityDataAccessor<Double> GRAVITY_DATA = SynchedEntityData.defineId(Entity.class, GeometryDash.DOUBLE_SERIALIZER);
 
 	@Shadow

@@ -53,6 +53,7 @@ fun LivingEntity.vertTeleport(level: Level) {
         teleport when it hits
         if it misses, tp to y 1000 & kill the entity
     */
+    if (!level.isClientSide) return
     if (this.gravity == null) this.gravity = 1.0
     val gravity = this.gravity!!
     val up: Boolean = gravity < 0
@@ -69,11 +70,11 @@ fun LivingEntity.vertTeleport(level: Level) {
     ) ?: return
 
     if (raycast.type == HitResult.Type.MISS) {
-        this.teleportTo(this.x, 1000.0, this.z)
+        this.moveTo(this.x, 1000.0, this.z)
         this.hurt(level.damageSources().source(GeometryDash.LEVEL_FAIL), Float.MAX_VALUE)
     } else {
         val rayPos = raycast.location.add(0.0, if (up) -1.8 else 0.0, 0.0)
-        this.teleportToWithTicket(rayPos.x, rayPos.y, rayPos.z)
+        this.moveTo(rayPos.x, rayPos.y, rayPos.z)
         this.setOnGround(true)
     }
 }
