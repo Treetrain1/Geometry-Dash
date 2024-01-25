@@ -45,6 +45,7 @@ open class Checkpoint(
     protected open fun checkpointTick() {
         val list: List<ServerPlayer> = this.level().getEntitiesOfClass(ServerPlayer::class.java, this.boundingBox)
         for (player in list) {
+            if (player.isDeadOrDying) continue
             val gdData = (player as PlayerDuck).`geometryDash$getGDData`()
             if (this.type.shouldAddSpawn)
                 this.addCheckpoint(player, gdData)
