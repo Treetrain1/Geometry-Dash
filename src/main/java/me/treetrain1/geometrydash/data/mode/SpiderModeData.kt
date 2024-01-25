@@ -2,6 +2,7 @@ package me.treetrain1.geometrydash.data.mode
 
 import me.treetrain1.geometrydash.entity.pose.GDPoses
 import me.treetrain1.geometrydash.util.launch
+import me.treetrain1.geometrydash.util.setRelative
 import me.treetrain1.geometrydash.util.vertTeleport
 import net.minecraft.client.player.Input
 import net.minecraft.nbt.CompoundTag
@@ -33,6 +34,7 @@ open class SpiderModeData : GDModeData() {
         val data = this.gdData!!
         val player = data.player
         if (data.canProcessInput && player.onGround()) {
+            player.setRelative(true)
             player.vertTeleport(player.level())
             return true
         }
