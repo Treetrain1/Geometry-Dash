@@ -58,23 +58,23 @@ object GeometryDashClient : ClientModInitializer {
         )
         EntityModelLayerRegistry.registerModelLayer(
             SHIP_PLAYER,
-            CubePlayerModel.Companion::createBodyLayer
+            ShipPlayerModel.Companion::createBodyLayer
         )
         EntityModelLayerRegistry.registerModelLayer(
             BALL_PLAYER,
-            CubePlayerModel.Companion::createBodyLayer
+            BallPlayerModel.Companion::createBodyLayer
         )
         EntityModelLayerRegistry.registerModelLayer(
             UFO_PLAYER,
-            CubePlayerModel.Companion::createBodyLayer
+            UFOPlayerModel.Companion::createBodyLayer
         )
         EntityModelLayerRegistry.registerModelLayer(
             WAVE_PLAYER,
-            CubePlayerModel.Companion::createBodyLayer
+            WavePlayerModel.Companion::createBodyLayer
         )
         EntityModelLayerRegistry.registerModelLayer(
             ROBOT_PLAYER,
-            CubePlayerModel.Companion::createBodyLayer
+            RobotPlayerModel.Companion::createBodyLayer
         )
         EntityModelLayerRegistry.registerModelLayer(
             SPIDER_PLAYER,
@@ -82,7 +82,7 @@ object GeometryDashClient : ClientModInitializer {
         )
         EntityModelLayerRegistry.registerModelLayer(
             SWING_PLAYER,
-            CubePlayerModel.Companion::createBodyLayer
+            SwingPlayerModel.Companion::createBodyLayer
         )
     }
 }

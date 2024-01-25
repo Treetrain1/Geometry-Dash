@@ -35,12 +35,42 @@ public abstract class PlayerRendererMixin extends LivingEntityRenderer<AbstractC
 		this.addLayer(new GDModeLayer(
 			renderer,
 			new CubePlayerModel<>(context.bakeLayer(GeometryDashClient.CUBE_PLAYER)),
-			GDMode.CUBE, GDMode.CUBE_3D, GDMode.UFO, GDMode.BALL, GDMode.WAVE, GDMode.SPIDER, GDMode.ROBOT, GDMode.SHIP, GDMode.SWING
+			GDMode.CUBE, GDMode.CUBE_3D
+		));
+		this.addLayer(new GDModeLayer(
+			renderer,
+			new ShipPlayerModel<>(context.bakeLayer(GeometryDashClient.SHIP_PLAYER)),
+			GDMode.SHIP
+		));
+		this.addLayer(new GDModeLayer(
+			renderer,
+			new BallPlayerModel<>(context.bakeLayer(GeometryDashClient.BALL_PLAYER)),
+			GDMode.BALL
+		));
+		this.addLayer(new GDModeLayer(
+			renderer,
+			new UFOPlayerModel<>(context.bakeLayer(GeometryDashClient.UFO_PLAYER)),
+			GDMode.UFO
+		));
+		this.addLayer(new GDModeLayer(
+			renderer,
+			new WavePlayerModel<>(context.bakeLayer(GeometryDashClient.WAVE_PLAYER)),
+			GDMode.WAVE
+		));
+		this.addLayer(new GDModeLayer(
+			renderer,
+			new RobotPlayerModel<>(context.bakeLayer(GeometryDashClient.ROBOT_PLAYER)),
+			GDMode.ROBOT
 		));
 		this.addLayer(new GDModeLayer(
 			renderer,
 			new SpiderPlayerModel<>(context.bakeLayer(GeometryDashClient.SPIDER_PLAYER)),
 			GDMode.SPIDER
+		));
+		this.addLayer(new GDModeLayer(
+			renderer,
+			new SwingPlayerModel<>(context.bakeLayer(GeometryDashClient.SWING_PLAYER)),
+			GDMode.SWING
 		));
 	}
 
