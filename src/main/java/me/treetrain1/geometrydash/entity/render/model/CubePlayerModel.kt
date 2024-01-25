@@ -34,15 +34,14 @@ class CubePlayerModel<T : AbstractClientPlayer?>(private val root: ModelPart) : 
     }
 
     private val cube: ModelPart = root.getChild("cube")
-    private var cubeRotation = 0f
+    private var cubeRotation = 0F
 
 
     override fun prepareMobModel(player: T, limbSwing: Float, limbSwingAmount: Float, partialTick: Float) {
         root().allParts.forEach { obj: ModelPart -> obj.resetPose() }
-        if (player is PlayerDuck) {
             this.cubeRotation =
-                (player.`geometryDash$getGDData`().gdModeData!!.getModelPitch(partialTick) % 360f) * Mth.DEG_TO_RAD
-        }
+                (player.gdData.gdModeData!!.getModelPitch(partialTick) % 360F)
+                * Mth.DEG_TO_RAD
     }
 
     override fun setupAnim(
@@ -53,7 +52,7 @@ class CubePlayerModel<T : AbstractClientPlayer?>(private val root: ModelPart) : 
         netHeadYaw: Float,
         headPitch: Float
     ) {
-        this.root.xRot = 0f
+        this.root.xRot = 0F
     }
 
     override fun renderToBuffer(
