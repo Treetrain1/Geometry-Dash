@@ -34,7 +34,6 @@ open class CubePlayerModel<T : AbstractClientPlayer?>(
     }
 
     private val cube: ModelPart = root.getChild("cube")
-    private var cubeRotation = 0F
 
     override fun prepareMobModel(player: T, limbSwing: Float, limbSwingAmount: Float, partialTick: Float) {
         super.prepareMobModel(player, limbSwing, limbSwingAmount, partialTick)

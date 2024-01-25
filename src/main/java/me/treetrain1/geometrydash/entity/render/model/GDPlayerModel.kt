@@ -21,6 +21,10 @@ open class GDPlayerModel<T : AbstractClientPlayer?>(protected val root: ModelPar
     Function { location: ResourceLocation? -> RenderType.entityCutoutNoCull(location) }
 ) {
 
+    protected open var xOffset: Double = 0.0
+    protected open var yOffset: Double = 1.25
+    protected open var zOffset: Double = 0.0
+
     protected open var xRot: Float = 0F
     protected open var yRot: Float = 0F
     protected open var zRot: Float = 0F
@@ -51,7 +55,7 @@ open class GDPlayerModel<T : AbstractClientPlayer?>(protected val root: ModelPar
         alpha: Float
     ) {
         poseStack.pushPose()
-        poseStack.translate(0.0, 1.25, 0.0)
+        poseStack.translate(this.xOffset, this.yOffset, this.zOffset)
         poseStack.mulPose(Axis.XP.rotation(this.xRot))
         poseStack.mulPose(Axis.YP.rotation(this.yRot))
         poseStack.mulPose(Axis.ZP.rotation(this.zRot))
