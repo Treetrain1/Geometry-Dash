@@ -43,9 +43,9 @@ object GravityCommand {
         }
 
         if (targets.size == 1) {
-            source.sendSuccess({ Component.translatable("commands.gravity.success.single", targets.first().name) }, true)
+            source.sendSuccess({ Component.translatable("commands.gravity.success.single", gravity, targets.first().name) }, true)
         } else {
-            source.sendSuccess({ Component.translatable("commands.gravity.success.multiple", targets.size) }, true)
+            source.sendSuccess({ Component.translatable("commands.gravity.success.multiple", gravity, targets.size) }, true)
         }
 
         return targets.size
