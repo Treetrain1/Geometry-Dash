@@ -27,6 +27,7 @@ public class KeyboardInputMixin {
 			if (!gdModeData.allowSidewaysMovement()) {
 				input.leftImpulse = 0F;
 			}
+			input.shiftKeyDown = false;
 		}
 	}
 }
