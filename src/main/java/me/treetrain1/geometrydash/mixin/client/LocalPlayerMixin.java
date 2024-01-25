@@ -40,6 +40,8 @@ public class LocalPlayerMixin {
 		if (((PlayerDuck) this).geometryDash$getGDData().getPlayingGD()) {
 			original.call(instance, false, 1F);
 			this.crouching = false;
+		} else {
+			original.call(instance, isSneaking, sneakingSpeedMultiplier);
 		}
 	}
 
