@@ -27,8 +27,7 @@ import virtuoel.pehkui.api.ScaleTypes
 open class GDData @JvmOverloads constructor(
     @JvmField val player: Player,
     @JvmField var gdModeData: GDModeData? = null,
-    @JvmField var checkpoints: MutableList<CheckpointSnapshot> = mutableListOf(),
-    @JvmField var dirty: Boolean? = true
+    @JvmField var checkpoints: MutableList<CheckpointSnapshot> = mutableListOf()
 ) {
 
     companion object {
@@ -58,12 +57,21 @@ open class GDData @JvmOverloads constructor(
             }
         }
 
-    var scale: Float
+    inline var scale: Float
         get() = ScaleTypes.WIDTH.getScaleData(this.player).scale
         set(value) {
             ScaleTypes.WIDTH.getScaleData(this.player).scale = value
             ScaleTypes.HEIGHT.getScaleData(this.player).scale = value
         }
+
+    @JvmField
+    var isVisible: Boolean = true
+
+    @JvmField
+    var timeMod: Float = 1F
+
+    @JvmField
+    var dirty: Boolean = true
 
     inline val playingGD: Boolean
         get() = this.mode != null

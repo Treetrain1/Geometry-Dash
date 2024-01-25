@@ -39,7 +39,18 @@ open class Checkpoint(
     protected open fun addCheckpoint(player: Player, gdData: GDData) {
         val list = gdData.checkpoints
         if (list.map { it.entityId }.contains(this.id)) return
-        list.add(CheckpointSnapshot(this.id, player.yRot))
+        list.add(CheckpointSnapshot(
+            this.id,
+            gdData.mode!!,
+            CompoundTag().apply { gdData.gdModeData!!.save(this) },
+            player.deltaMovement,
+            player.yRot,
+            gdData.size,
+            player.gravity,
+            player.onGround(),
+            gdData.isVisible,
+            gdData.timeMod,
+        ))
     }
 
     protected open fun checkpointTick() {
@@ -47,13 +58,13 @@ open class Checkpoint(
         for (player in list) {
             if (player.isDeadOrDying) continue
             val gdData = (player as PlayerDuck).`geometryDash$getGDData`()
-            if (this.type.shouldAddSpawn)
-                this.addCheckpoint(player, gdData)
             when (this.type) {
                 CheckpointType.START -> gdData.enterGD()
                 CheckpointType.END -> gdData.exitGD()
                 else -> {}
             }
+            if (this.type.shouldAddSpawn)
+                this.addCheckpoint(player, gdData)
         }
     }
 
