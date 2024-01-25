@@ -1,5 +1,6 @@
 package me.treetrain1.geometrydash.entity
 
+import me.treetrain1.geometrydash.data.CheckpointSnapshot
 import me.treetrain1.geometrydash.data.GDData
 import me.treetrain1.geometrydash.duck.PlayerDuck
 import net.minecraft.nbt.CompoundTag
@@ -9,6 +10,7 @@ import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
 
 open class Checkpoint(
@@ -34,10 +36,10 @@ open class Checkpoint(
         this.checkpointTick()
     }
 
-    protected open fun addCheckpoint(gdData: GDData) {
+    protected open fun addCheckpoint(player: Player, gdData: GDData) {
         val list = gdData.checkpoints
-        if (list.contains(this.id)) return
-        list.add(this.id)
+        if (list.map { it.entityId }.contains(this.id)) return
+        list.add(CheckpointSnapshot(this.id, player.yRot))
     }
 
     protected open fun checkpointTick() {
@@ -45,7 +47,7 @@ open class Checkpoint(
         for (player in list) {
             val gdData = (player as PlayerDuck).`geometryDash$getGDData`()
             if (this.type.shouldAddSpawn)
-                this.addCheckpoint(gdData)
+                this.addCheckpoint(player, gdData)
             when (this.type) {
                 CheckpointType.START -> gdData.enterGD()
                 CheckpointType.END -> gdData.exitGD()

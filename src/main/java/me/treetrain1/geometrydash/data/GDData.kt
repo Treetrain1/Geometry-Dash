@@ -9,6 +9,7 @@ import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.minecraft.core.BlockPos
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.ListTag
 import net.minecraft.nbt.Tag
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
@@ -25,7 +26,7 @@ open class GDData @JvmOverloads constructor(
     @JvmField val player: Player,
     @JvmField var gdModeData: GDModeData? = null,
     @JvmField var scale: Double = 1.0,
-    @JvmField var checkpoints: IntArrayList = IntArrayList(),
+    @JvmField var checkpoints: MutableList<CheckpointSnapshot> = mutableListOf(),
     @JvmField var dirty: Boolean? = true
 ) {
 
@@ -107,17 +108,13 @@ open class GDData @JvmOverloads constructor(
 
     inline val canBounceFromRing: Boolean get() = !(ignoreInput || ringLocked || isDashing) && inputBuffer
 
-    inline val lastValidCheckpoint: BlockPos? get() {
+    inline val lastValidCheckpoint: CheckpointSnapshot? get() {
         val level = this.level
-        checkpoints.removeAll { id ->
-            val entity: Entity? = level.getEntity(id)
+        checkpoints.removeAll { checkpoint ->
+            val entity: Entity? = level.getEntity(checkpoint.entityId)
             entity !is Checkpoint
         }
-        for (id in checkpoints.reversed()) {
-            val entity: Entity = level.getEntity(id) ?: continue
-            return entity.blockPosition()
-        }
-        return null
+        return checkpoints.lastOrNull()
     }
 
     fun toggleGD() {
@@ -211,7 +208,9 @@ open class GDData @JvmOverloads constructor(
             this.gdModeData?.save(CompoundTag())?.let { compound.put(MODE_DATA_TAG, it) }
         }
         compound.putDouble(SCALE_TAG, this.scale)
-        compound.putIntArray(CHECKPOINTS_TAG, this.checkpoints)
+        val checkpoints = ListTag()
+        checkpoints.addAll(this.checkpoints.map { it.toTag() })
+        compound.put(CHECKPOINTS_TAG, checkpoints)
         compound.putInt(PREV_GAME_TYPE_TAG, this.prevGameType?.id ?: -1)
         compound.putString(DASH_RING_TAG, this.dashRingID)
         return compound
@@ -231,7 +230,9 @@ open class GDData @JvmOverloads constructor(
         }
 
         this.scale = compound.getDouble(SCALE_TAG)
-        this.checkpoints = compound.getIntArray(CHECKPOINTS_TAG).toList().toMutableIntList()
+        this.checkpoints = compound.getList(CHECKPOINTS_TAG, CompoundTag.TAG_COMPOUND.toInt())
+            .map { tag -> CheckpointSnapshot.fromTag(tag as CompoundTag) }
+            .toMutableList()
         this.prevGameType = GameType.byNullableId(compound.getInt(PREV_GAME_TYPE_TAG))
         return compound
     }

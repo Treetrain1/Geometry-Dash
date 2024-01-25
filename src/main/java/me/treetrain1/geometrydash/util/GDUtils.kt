@@ -26,6 +26,7 @@ import net.minecraft.world.phys.shapes.CollisionContext
 // GRAVITY
 
 fun Entity.setRelative(flip: Boolean) {
+    if (!this.level().isClientSide) return // synced
     if (this.gravity == null) this.gravity = 1.0
 
     if (flip)
