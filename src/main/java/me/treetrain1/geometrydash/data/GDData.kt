@@ -59,8 +59,11 @@ open class GDData @JvmOverloads constructor(
         }
 
     var scale: Float
-        get() = ScaleTypes.BASE.getScaleData(this.player).scale
-        set(value) { ScaleTypes.BASE.getScaleData(this.player).scale = value }
+        get() = ScaleTypes.WIDTH.getScaleData(this.player).scale
+        set(value) {
+            ScaleTypes.WIDTH.getScaleData(this.player).scale = value
+            ScaleTypes.HEIGHT.getScaleData(this.player).scale = value
+        }
 
     inline val playingGD: Boolean
         get() = this.mode != null
@@ -234,7 +237,7 @@ open class GDData @JvmOverloads constructor(
             this.gdModeData = null
         }
 
-        this.scale = compound.getFloat(SCALE_TAG)
+        this.scale = compound.getFloat(SCALE_TAG).let { if (it > 10F) 1F else it}
         this.checkpoints = compound.getList(CHECKPOINTS_TAG, CompoundTag.TAG_COMPOUND.toInt())
             .map { tag -> CheckpointSnapshot.fromTag(tag as CompoundTag) }
             .toMutableList()

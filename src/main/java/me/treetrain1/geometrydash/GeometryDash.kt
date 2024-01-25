@@ -94,7 +94,7 @@ object GeometryDash : ModInitializer {
             }
 
             ServerPlayNetworking.registerGlobalReceiver(GDModeSyncPacket.PACKET_TYPE) { packet, player, _ ->
-                (player as PlayerDuck).`geometryDash$getGDData`().setGD(packet.mode, packet.scale)
+                player.gdData.setGD(packet.mode, packet.scale)
             }
 
             ServerPlayNetworking.registerGlobalReceiver(C2SFailPacket.TYPE) { packet, player, _ ->

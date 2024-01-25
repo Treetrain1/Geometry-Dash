@@ -1,6 +1,5 @@
 package me.treetrain1.geometrydash;
 
-import me.treetrain1.geometrydash.duck.PlayerDuck;
 import me.treetrain1.geometrydash.entity.render.CheckpointRenderer;
 import me.treetrain1.geometrydash.entity.render.PortalRenderer
 import me.treetrain1.geometrydash.entity.render.RingRenderer
@@ -8,6 +7,7 @@ import me.treetrain1.geometrydash.entity.render.model.CubePlayerModel;
 import me.treetrain1.geometrydash.network.GDModeSyncPacket;
 import me.treetrain1.geometrydash.registry.RegisterBlocks
 import me.treetrain1.geometrydash.registry.RegisterEntities;
+import me.treetrain1.geometrydash.util.gdData
 import me.treetrain1.geometrydash.util.id
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -28,7 +28,7 @@ object GeometryDashClient : ClientModInitializer {
 	@Override
     override fun onInitializeClient() {
 		ClientPlayNetworking.registerGlobalReceiver(GDModeSyncPacket.PACKET_TYPE) { packet, player, sender ->
-            (player as PlayerDuck).`geometryDash$getGDData`().setGD(packet.mode, packet.scale)
+            player.gdData.setGD(packet.mode, packet.scale)
         }
 
         val layerRegistry = BlockRenderLayerMap.INSTANCE
