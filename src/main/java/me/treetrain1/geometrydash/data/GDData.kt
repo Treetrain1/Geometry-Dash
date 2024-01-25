@@ -5,6 +5,7 @@ import me.treetrain1.geometrydash.data.mode.GDModeData
 import me.treetrain1.geometrydash.duck.PlayerDuck
 import me.treetrain1.geometrydash.entity.Checkpoint
 import me.treetrain1.geometrydash.network.GDModeSyncPacket
+import me.treetrain1.geometrydash.registry.RegisterScaleTypes
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.minecraft.core.BlockPos
@@ -20,12 +21,12 @@ import net.minecraft.world.entity.Pose
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.GameType
 import net.minecraft.world.level.Level
+import virtuoel.pehkui.api.ScaleTypes
 
 @Suppress("MemberVisibilityCanBePrivate")
 open class GDData @JvmOverloads constructor(
     @JvmField val player: Player,
     @JvmField var gdModeData: GDModeData? = null,
-    @JvmField var scale: Double = 1.0,
     @JvmField var checkpoints: MutableList<CheckpointSnapshot> = mutableListOf(),
     @JvmField var dirty: Boolean? = true
 ) {
@@ -56,6 +57,10 @@ open class GDData @JvmOverloads constructor(
                 this.gdModeData = modeData
             }
         }
+
+    var scale: Float
+        get() = ScaleTypes.BASE.getScaleData(this.player).scale
+        set(value) { ScaleTypes.BASE.getScaleData(this.player).scale = value }
 
     inline val playingGD: Boolean
         get() = this.mode != null
@@ -130,7 +135,7 @@ open class GDData @JvmOverloads constructor(
         toggleGD()
     }
 
-    fun setGD(mode: GDMode?, scale: Double? = 1.0): Boolean {
+    fun setGD(mode: GDMode?, scale: Float? = 1F): Boolean {
         if (mode == null) {
             return this.exitGD()
         }
@@ -140,7 +145,7 @@ open class GDData @JvmOverloads constructor(
     /**
      * @return if not already in GD mode
      */
-    fun enterGD(mode: GDMode = GDMode.CUBE, scale: Double? = 1.0): Boolean {
+    fun enterGD(mode: GDMode = GDMode.CUBE, scale: Float? = 1F): Boolean {
         val noChange: Boolean = this.playingGD && this.mode == mode
         this.mode = mode
         if (scale != null) {
@@ -164,7 +169,7 @@ open class GDData @JvmOverloads constructor(
         if (!this.playingGD) return false
 
         this.mode = null
-        this.scale = 1.0
+        this.scale = 1F
         this.gdModeData = null
         this.checkpoints.clear()
         this.ignoreInput = false
@@ -207,7 +212,7 @@ open class GDData @JvmOverloads constructor(
         if (this.gdModeData != null) {
             this.gdModeData?.save(CompoundTag())?.let { compound.put(MODE_DATA_TAG, it) }
         }
-        compound.putDouble(SCALE_TAG, this.scale)
+        compound.putFloat(SCALE_TAG, this.scale)
         val checkpoints = ListTag()
         checkpoints.addAll(this.checkpoints.map { it.toTag() })
         compound.put(CHECKPOINTS_TAG, checkpoints)
@@ -229,7 +234,7 @@ open class GDData @JvmOverloads constructor(
             this.gdModeData = null
         }
 
-        this.scale = compound.getDouble(SCALE_TAG)
+        this.scale = compound.getFloat(SCALE_TAG)
         this.checkpoints = compound.getList(CHECKPOINTS_TAG, CompoundTag.TAG_COMPOUND.toInt())
             .map { tag -> CheckpointSnapshot.fromTag(tag as CompoundTag) }
             .toMutableList()

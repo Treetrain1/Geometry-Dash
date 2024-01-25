@@ -16,7 +16,7 @@ import net.minecraft.client.Minecraft
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.server.level.ServerPlayer
 
-data class GDModeSyncPacket(@JvmField val mode: GDMode?, @JvmField val scale: Double, @JvmField val checkpoints: List<CheckpointSnapshot> = emptyList()) : FabricPacket {
+data class GDModeSyncPacket(@JvmField val mode: GDMode?, @JvmField val scale: Float, @JvmField val checkpoints: List<CheckpointSnapshot> = emptyList()) : FabricPacket {
     companion object {
         @JvmField
         val PACKET_TYPE: PacketType<GDModeSyncPacket> = PacketType.create(id("gd_mode_sync"), ::GDModeSyncPacket)
@@ -40,12 +40,12 @@ data class GDModeSyncPacket(@JvmField val mode: GDMode?, @JvmField val scale: Do
 
     constructor(dat: GDData) : this(dat.mode, dat.scale, dat.checkpoints)
 
-    constructor(buf: FriendlyByteBuf) : this(buf.readNullable { buf1 -> buf1.readInt() }?.let { GDMode.entries[it] }, buf.readDouble(), buf.readList(CheckpointSnapshot::fromBuf))
+    constructor(buf: FriendlyByteBuf) : this(buf.readNullable { buf1 -> buf1.readInt() }?.let { GDMode.entries[it] }, buf.readFloat(), buf.readList(CheckpointSnapshot::fromBuf))
 
     override fun write(buf: FriendlyByteBuf) {
         buf.writeNullable(this.mode?.ordinal) { buf1, ord -> buf1.writeInt(ord) }
 
-        buf.writeDouble(this.scale)
+        buf.writeFloat(this.scale)
         buf.writeCollection(this.checkpoints, CheckpointSnapshot::toBuf)
     }
 

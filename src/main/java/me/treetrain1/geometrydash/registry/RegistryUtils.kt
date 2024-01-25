@@ -16,6 +16,10 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.entity.BlockEntityType
+import virtuoel.pehkui.Pehkui
+import virtuoel.pehkui.api.ScaleModifier
+import virtuoel.pehkui.api.ScaleRegistries
+import virtuoel.pehkui.api.ScaleType
 import kotlin.jvm.optionals.getOrNull
 
 internal inline fun <T : Any> Registry<T>.register(id: String, `object`: T): T
@@ -37,6 +41,28 @@ internal inline fun register(id: String, item: Item): Item
 @Suppress("UNCHECKED_CAST")
 internal inline fun <T : Entity?> register(id: String, entity: EntityType<T>): EntityType<T>
     = BuiltInRegistries.ENTITY_TYPE.register(id, entity) as EntityType<T>
+
+// MODDED
+
+fun register(path: String, valueModifier: ScaleModifier?, vararg dependantModifiers: ScaleModifier): ScaleType {
+    val builder = ScaleType.Builder.create()
+        .affectsDimensions()
+
+    if (valueModifier != null) {
+        builder.addBaseValueModifier(valueModifier)
+    }
+
+    for (scaleModifier in dependantModifiers) {
+        builder.addDependentModifier(scaleModifier)
+    }
+
+    return register(path, builder.build())
+}
+
+internal inline fun register(id: String, scaleType: ScaleType): ScaleType {
+    ScaleRegistries.SCALE_TYPES[id(id)] = scaleType
+    return scaleType
+}
 
 // CREATIVE TAB
 

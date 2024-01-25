@@ -80,7 +80,7 @@ open class Portal(
     enum class PortalType(
         val modeSwitch: GDMode? = null,
         val shouldFlipGravity: Boolean = false,
-        val scale: Double? = null,
+        val scale: Float? = null,
     ) {
         CUBE(modeSwitch = GDMode.CUBE),
         SHIP(modeSwitch = GDMode.SHIP),
@@ -94,9 +94,9 @@ open class Portal(
 
         GRAVITY_FLIP(shouldFlipGravity = true),
 
-        SCALE_NORMAL(scale = 1.0),
-        SCALE_SMALL(scale = 0.5),
-        SCALE_LARGE(scale = 2.0);
+        SCALE_NORMAL(scale = 1F),
+        SCALE_SMALL(scale = 0.5F),
+        SCALE_LARGE(scale = 2F);
 
         companion object {
             @JvmField
