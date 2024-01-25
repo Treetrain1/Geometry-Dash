@@ -5,8 +5,10 @@ package me.treetrain1.geometrydash.util
 import me.treetrain1.geometrydash.GeometryDash
 import me.treetrain1.geometrydash.duck.EntityDuck
 import me.treetrain1.geometrydash.duck.PlayerDuck
+import me.treetrain1.geometrydash.network.C2SFailPacket
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.client.Minecraft
 import net.minecraft.client.player.Input
@@ -47,14 +49,9 @@ fun Entity.setRelative(flip: Boolean) {
  * WIP
  */
 fun LivingEntity.vertTeleport(level: Level) {
-    /*
-        TODO: make a raycast thing going down relative to the entity gravity
-        (not up bc gravity is already flipped)
-        teleport when it hits
-        if it misses, tp to y 1000 & kill the entity
-    */
     if (!level.isClientSide) return
     if (this.gravity == null) this.gravity = 1.0
+
     val gravity = this.gravity!!
     val up: Boolean = gravity < 0
     val rayOffset = Vec3(0.0, if (up) 100.0 else -100.0, 0.0)
@@ -71,7 +68,8 @@ fun LivingEntity.vertTeleport(level: Level) {
 
     if (raycast.type == HitResult.Type.MISS) {
         this.moveTo(this.x, 1000.0, this.z)
-        this.hurt(level.damageSources().source(GeometryDash.LEVEL_FAIL), Float.MAX_VALUE)
+        this.health = 0.0F
+        ClientPlayNetworking.send(C2SFailPacket())
     } else {
         val rayPos = raycast.location.add(0.0, if (up) -1.8 else 0.0, 0.0)
         this.moveTo(rayPos.x, rayPos.y, rayPos.z)
