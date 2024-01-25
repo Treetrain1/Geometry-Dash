@@ -17,6 +17,7 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.Mth
 import java.util.function.Function
 
+@Environment(EnvType.CLIENT)
 open class GDPlayerModel<T : AbstractClientPlayer?>(protected val root: ModelPart) : HierarchicalModel<T>(
     Function { location: ResourceLocation? -> RenderType.entityCutoutNoCull(location) }
 ) {

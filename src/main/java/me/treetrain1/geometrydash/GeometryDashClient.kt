@@ -24,6 +24,8 @@ object GeometryDashClient : ClientModInitializer {
 
     @JvmField
     val CUBE_PLAYER: ModelLayerLocation = ModelLayerLocation(id("player"), "cube")
+    @JvmField
+    val SPIDER_PLAYER: ModelLayerLocation = ModelLayerLocation(id("player"), "spider")
 
 	@Override
     override fun onInitializeClient() {
@@ -41,6 +43,10 @@ object GeometryDashClient : ClientModInitializer {
         EntityModelLayerRegistry.registerModelLayer(
             CUBE_PLAYER,
             CubePlayerModel.Companion::createBodyLayer
-        );
+        )
+        EntityModelLayerRegistry.registerModelLayer(
+            SPIDER_PLAYER,
+            SpiderPlayerModel.Companion::createBodyLayer
+        )
     }
 }

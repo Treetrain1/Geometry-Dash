@@ -18,23 +18,51 @@ import net.minecraft.util.Mth
 import java.util.function.Function
 
 @Environment(EnvType.CLIENT)
-open class CubePlayerModel<T : AbstractClientPlayer?>(
+open class SpiderPlayerModel<T : AbstractClientPlayer?>(
     root: ModelPart
 ): GDPlayerModel<T>(root) {
 
     companion object {
         fun createBodyLayer(): LayerDefinition {
             val meshDefinition = MeshDefinition()
-            meshDefinition.root.addOrReplaceChild(
-                "cube", CubeListBuilder.create()
-                    .texOffs(0, 0).addBox(-4f, -4f, -4f, 8f, 8f, 8f), PartPose.ZERO
+            val root = meshDefinition.root
+            root.addOrReplaceChild(
+                "head", CubeListBuilder.create()
+                    .texOffs(0, 0)
+                    .addBox(-2F, -2F, -2F, 4F, 4F, 4F),
+                PartPose.ZERO
+            )
+            // TODO: make the legs actual legs
+            root.addOrReplaceChild(
+                "front_left_leg", CubeListBuilder.create()
+                    .texOffs(0, 0)
+                    .addBox(-2F, -2F, -2F, 4F, 4F, 4F),
+                PartPose.ZERO
+            )
+            root.addOrReplaceChild(
+                "front_right_leg", CubeListBuilder.create()
+                    .texOffs(0, 0)
+                    .addBox(-2F, -2F, -2F, 4F, 4F, 4F),
+                PartPose.ZERO
+            )
+            root.addOrReplaceChild(
+                "back_left_leg", CubeListBuilder.create()
+                    .texOffs(0, 0)
+                    .addBox(-2F, -2F, -2F, 4F, 4F, 4F),
+                PartPose.ZERO
+            )
+            root.addOrReplaceChild(
+                "back_right_leg", CubeListBuilder.create()
+                    .texOffs(0, 0)
+                    .addBox(-2F, -2F, -2F, 4F, 4F, 4F),
+                PartPose.ZERO
             )
 
             return LayerDefinition.create(meshDefinition, 64, 64)
         }
     }
 
-    private val cube: ModelPart = root.getChild("cube")
+    private val head: ModelPart = root.getChild("head")
 
     override fun prepareMobModel(player: T, limbSwing: Float, limbSwingAmount: Float, partialTick: Float) {
         super.prepareMobModel(player, limbSwing, limbSwingAmount, partialTick)

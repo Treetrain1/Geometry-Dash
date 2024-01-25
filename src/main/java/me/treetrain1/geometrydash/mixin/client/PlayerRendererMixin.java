@@ -31,10 +31,16 @@ public abstract class PlayerRendererMixin extends LivingEntityRenderer<AbstractC
 
 	@Inject(method = "<init>", at = @At("TAIL"))
 	public void gd$init(EntityRendererProvider.Context context, boolean useSlimModel, CallbackInfo ci) {
+		PlayerRenderer renderer = PlayerRenderer.class.cast(this);
 		this.addLayer(new GDModeLayer(
-			PlayerRenderer.class.cast(this),
+			renderer,
 			new CubePlayerModel<>(context.bakeLayer(GeometryDashClient.CUBE_PLAYER)),
 			GDMode.CUBE, GDMode.CUBE_3D, GDMode.UFO, GDMode.BALL, GDMode.WAVE, GDMode.SPIDER, GDMode.ROBOT, GDMode.SHIP, GDMode.SWING
+		));
+		this.addLayer(new GDModeLayer(
+			renderer,
+			new SpiderPlayerModel<>(context.bakeLayer(GeometryDashClient.SPIDER_PLAYER)),
+			GDMode.SPIDER
 		));
 	}
 
