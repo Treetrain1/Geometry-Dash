@@ -2,6 +2,7 @@ package me.treetrain1.geometrydash;
 
 import me.treetrain1.geometrydash.duck.PlayerDuck;
 import me.treetrain1.geometrydash.entity.render.CheckpointRenderer;
+import me.treetrain1.geometrydash.entity.render.PortalRenderer
 import me.treetrain1.geometrydash.entity.render.RingRenderer
 import me.treetrain1.geometrydash.entity.render.model.CubePlayerModel;
 import me.treetrain1.geometrydash.network.GDModeSyncPacket;
@@ -35,6 +36,7 @@ object GeometryDashClient : ClientModInitializer {
 
         EntityRendererRegistry.register(RegisterEntities.CHECKPOINT, ::CheckpointRenderer)
         EntityRendererRegistry.register(RegisterEntities.RING, ::RingRenderer)
+        EntityRendererRegistry.register(RegisterEntities.PORTAL, ::PortalRenderer)
 
         EntityModelLayerRegistry.registerModelLayer(
             CUBE_PLAYER,

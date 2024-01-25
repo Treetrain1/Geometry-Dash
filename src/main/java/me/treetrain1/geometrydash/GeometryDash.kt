@@ -5,6 +5,7 @@ import me.treetrain1.geometrydash.command.GDModeArgument
 import me.treetrain1.geometrydash.command.GravityCommand
 import me.treetrain1.geometrydash.duck.PlayerDuck
 import me.treetrain1.geometrydash.entity.Checkpoint
+import me.treetrain1.geometrydash.entity.Portal
 import me.treetrain1.geometrydash.entity.Ring
 import me.treetrain1.geometrydash.network.C2SFailPacket
 import me.treetrain1.geometrydash.network.GDModeSyncPacket
@@ -21,13 +22,10 @@ import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.network.chat.Component
-import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializer
 import net.minecraft.network.syncher.EntityDataSerializers
-import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.resources.ResourceKey
 import net.minecraft.world.damagesource.DamageType
-import net.minecraft.world.entity.Entity
 import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
@@ -48,7 +46,20 @@ object GeometryDash : ModInitializer {
                 entries.accept(RegisterBlocks.HIGH_JUMP_PAD)
                 entries.accept(RegisterBlocks.REVERSE_GRAVITY_JUMP_PAD)
                 entries.accept(RegisterBlocks.TELEPORT_PAD)
-                entries.accept(RegisterItems.PORTAL_GUN)
+
+                entries.accept(RegisterItems.CUBE_PORTAL)
+                entries.accept(RegisterItems.SHIP_PORTAL)
+                entries.accept(RegisterItems.BALL_PORTAL)
+                entries.accept(RegisterItems.UFO_PORTAL)
+                entries.accept(RegisterItems.WAVE_PORTAL)
+                entries.accept(RegisterItems.ROBOT_PORTAL)
+                entries.accept(RegisterItems.SPIDER_PORTAL)
+                entries.accept(RegisterItems.SWING_PORTAL)
+                entries.accept(RegisterItems.CUBE_3D_PORTAL)
+                entries.accept(RegisterItems.GRAVITY_FLIP_PORTAL)
+                entries.accept(RegisterItems.NORMAL_SCALE_PORTAL)
+                entries.accept(RegisterItems.SMALL_SCALE_PORTAL)
+                entries.accept(RegisterItems.LARGE_SCALE_PORTAL)
             }
             .build()
     ).key!!
@@ -92,6 +103,7 @@ object GeometryDash : ModInitializer {
             EntityDataSerializers.registerSerializer(DOUBLE_SERIALIZER)
             EntityDataSerializers.registerSerializer(Checkpoint.CheckpointType.SERIALIZER)
             EntityDataSerializers.registerSerializer(Ring.RingType.SERIALIZER)
+            EntityDataSerializers.registerSerializer(Portal.PortalType.SERIALIZER)
 
             GravityAPI.MODIFICATIONS.register { ctx ->
                 val entity = ctx.entity ?: return@register

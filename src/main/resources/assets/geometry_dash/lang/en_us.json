@@ -18,5 +18,6 @@
   "death.attack.levelFail": "%s Failed a Geometry Dash level",
 
   "entity.geometry_dash.checkpoint": "Checkpoint",
-  "entity.geometry_dash.ring": "Ring"
+  "entity.geometry_dash.ring": "Ring",
+  "entity.geometry_dash.portal": "Portal"
 }

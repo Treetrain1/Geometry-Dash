@@ -1,25 +1,27 @@
 package me.treetrain1.geometrydash.item
 
 import me.treetrain1.geometrydash.data.GDMode
+import me.treetrain1.geometrydash.entity.Portal
+import me.treetrain1.geometrydash.registry.RegisterEntities
+import net.minecraft.world.InteractionHand
+import net.minecraft.world.InteractionResult
+import net.minecraft.world.InteractionResultHolder
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.Item
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.context.UseOnContext
+import net.minecraft.world.level.Level
 
-open class PortalItem(props: Properties) : Item(props) {
+open class PortalItem(val type: Portal.PortalType = Portal.PortalType.CUBE, props: Properties = Properties().stacksTo(1)) : Item(props) {
 
-    enum class PortalType(
-        val modeSwitch: GDMode? = null,
-        val flipGravity: Boolean = false,
-        val scale: Double? = null,
-    ) {
-        CUBE(modeSwitch = GDMode.CUBE),
-        ROBOT(modeSwitch = GDMode.ROBOT),
-        SHIP(modeSwitch = GDMode.SHIP),
-        WAVE(modeSwitch = GDMode.WAVE),
-        SWING(modeSwitch = GDMode.SWING),
+    override fun use(level: Level, player: Player, usedHand: InteractionHand): InteractionResultHolder<ItemStack> {
+        val stack = player.getItemInHand(usedHand)
 
-        GRAVITY_FLIP(flipGravity = true),
-
-        SCALE_NORMAL(scale = 1.0),
-        SCALE_SMALL(scale = 0.5),
-        SCALE_LARGE(scale = 2.0),
+        val portal = Portal(RegisterEntities.PORTAL, level)
+        if (level.addFreshEntity(portal)) {
+            return InteractionResultHolder.success(stack)
+        }
+        return super.use(level, player, usedHand)
     }
 }
