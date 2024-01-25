@@ -92,9 +92,8 @@ public abstract class EntityMixin implements EntityDuck {
 
 	@Inject(method = "load", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;readAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V"))
 	private void loadGravity(CompoundTag compound, CallbackInfo ci) {
-		if (compound.getBoolean("GravityNotNull")) {
-			geometryDash$setGravity(compound.getDouble("Gravity"));
-		}
+		this.entityData.set(GRAVITY_NOT_NULL_DATA, compound.getBoolean("GravityNotNull"));
+		this.entityData.set(GRAVITY_DATA, compound.getDouble("Gravity"));
 	}
 
 	@Override

@@ -26,7 +26,6 @@ import net.minecraft.world.phys.shapes.CollisionContext
 // GRAVITY
 
 fun Entity.setRelative(flip: Boolean) {
-    if (!this.level().isClientSide) return // synced
     if (this.gravity == null) this.gravity = 1.0
 
     if (flip)
@@ -56,12 +55,12 @@ fun LivingEntity.vertTeleport(level: Level) {
     */
     if (this.gravity == null) this.gravity = 1.0
     val gravity = this.gravity!!
-    val up: Boolean = gravity >= 0
+    val up: Boolean = gravity < 0
     val rayOffset = Vec3(0.0, if (up) 100.0 else -100.0, 0.0)
     val rayEnd: Vec3 = this.position().add(rayOffset)
     val raycast: BlockHitResult = level.clip(
         ClipContext(
-            this.position(),
+            this.position().add(0.0, if (up) 0.01 else -2.01, 0.0),
             rayEnd,
             ClipContext.Block.COLLIDER,
             ClipContext.Fluid.NONE,
@@ -73,7 +72,7 @@ fun LivingEntity.vertTeleport(level: Level) {
         this.teleportTo(this.x, 1000.0, this.z)
         this.hurt(level.damageSources().source(GeometryDash.LEVEL_FAIL), Float.MAX_VALUE)
     } else {
-        val rayPos = raycast.location
+        val rayPos = raycast.location.add(0.0, if (up) -1.8 else 0.0, 0.0)
         this.teleportToWithTicket(rayPos.x, rayPos.y, rayPos.z)
         this.setOnGround(true)
     }
