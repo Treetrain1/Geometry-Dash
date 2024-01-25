@@ -33,7 +33,8 @@ open class Checkpoint(
     }
 
     override fun tick() {
-        this.checkpointTick()
+        if (this.level().isClientSide)
+            this.checkpointTick()
     }
 
     protected open fun addCheckpoint(player: Player, gdData: GDData) {
@@ -53,11 +54,12 @@ open class Checkpoint(
         ))
     }
 
+    @Environment(EnvType.CLIENT)
     protected open fun checkpointTick() {
-        val list: List<ServerPlayer> = this.level().getEntitiesOfClass(ServerPlayer::class.java, this.boundingBox)
+        val list: List<ClientPlayer> = this.level().getEntitiesOfClass(ServerPlayer::class.java, this.boundingBox)
         for (player in list) {
             if (player.isDeadOrDying) continue
-            val gdData = (player as PlayerDuck).`geometryDash$getGDData`()
+            val gdData = player.gdData
             when (this.type) {
                 CheckpointType.START -> gdData.enterGD()
                 CheckpointType.END -> gdData.exitGD()
@@ -65,6 +67,7 @@ open class Checkpoint(
             }
             if (this.type.shouldAddSpawn)
                 this.addCheckpoint(player, gdData)
+            gdData.markDirty()
         }
     }
 
