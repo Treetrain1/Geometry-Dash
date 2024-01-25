@@ -49,7 +49,7 @@ open class GDData @JvmOverloads constructor(
     var mode: GDMode? = null
         set(value) {
             field = value
-            val modeDataSupplier = value?.modeDataSupplier
+            val modeDataSupplier = value?.modeData
             if (modeDataSupplier != null) {
                 val modeData = modeDataSupplier()
                 modeData.gdData = this
