@@ -1,5 +1,5 @@
 {
-  "message_id": "levelFail",
+  "message_id": "geometry_dash.level_fail",
   "scaling": "when_caused_by_living_non_player",
   "exhaustion": 0,
   "effects": "hurt",

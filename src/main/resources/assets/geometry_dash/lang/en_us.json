@@ -15,7 +15,7 @@
   "commands.gravity.success.single": "Set Gravity to %s for %s",
   "commands.gravity.success.multiple": "Set Gravity to %s for %s entities",
 
-  "death.attack.levelFail": "%s Failed a Geometry Dash level",
+  "death.attack.geometry_dash.level_fail": "%s failed a Geometry Dash level",
 
   "entity.geometry_dash.checkpoint": "Checkpoint",
   "entity.geometry_dash.ring": "Ring",
