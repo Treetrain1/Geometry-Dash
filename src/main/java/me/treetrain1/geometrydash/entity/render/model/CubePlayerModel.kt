@@ -17,9 +17,9 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.Mth
 import java.util.function.Function
 
-class CubePlayerModel<T : AbstractClientPlayer?>(private val root: ModelPart) : HierarchicalModel<T>(
-    Function { location: ResourceLocation? -> RenderType.entityCutoutNoCull(location) }
-) {
+open class CubePlayerModel<T : AbstractClientPlayer?>(
+    root: ModelPart
+): GDPlayerModel<T>(root) {
 
     companion object {
         fun createBodyLayer(): LayerDefinition {
@@ -36,41 +36,10 @@ class CubePlayerModel<T : AbstractClientPlayer?>(private val root: ModelPart) : 
     private val cube: ModelPart = root.getChild("cube")
     private var cubeRotation = 0F
 
-
     override fun prepareMobModel(player: T, limbSwing: Float, limbSwingAmount: Float, partialTick: Float) {
-        root().allParts.forEach { obj: ModelPart -> obj.resetPose() }
-            this.cubeRotation =
-                (player.gdData.gdModeData!!.getModelPitch(partialTick) % 360F)
-                * Mth.DEG_TO_RAD
+        super.prepareMobModel(player, limbSwing, limbSwingAmount, partialTick)
+        this.xRot =
+            (player.gdData.gdModeData!!.getModelPitch(partialTick) % 360F)
+            * Mth.DEG_TO_RAD
     }
-
-    override fun setupAnim(
-        entity: T,
-        limbSwing: Float,
-        limbSwingAmount: Float,
-        ageInTicks: Float,
-        netHeadYaw: Float,
-        headPitch: Float
-    ) {
-        this.root.xRot = 0F
-    }
-
-    override fun renderToBuffer(
-        poseStack: PoseStack,
-        vertexConsumer: VertexConsumer,
-        packedLight: Int,
-        packedOverlay: Int,
-        red: Float,
-        green: Float,
-        blue: Float,
-        alpha: Float
-    ) {
-        poseStack.pushPose()
-        poseStack.translate(0.0, 1.25, 0.0)
-        poseStack.mulPose(Axis.XP.rotation(this.cubeRotation))
-        root().render(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY, red, green, blue, alpha)
-        poseStack.popPose()
-    }
-
-    override fun root(): ModelPart = this.root
 }
