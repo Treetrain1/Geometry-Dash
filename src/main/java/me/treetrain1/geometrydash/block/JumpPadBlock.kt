@@ -3,10 +3,7 @@
 package me.treetrain1.geometrydash.block
 import com.mojang.serialization.MapCodec
 import me.treetrain1.geometrydash.block.entity.JumpPadBlockEntity
-import me.treetrain1.geometrydash.util.gravity
-import me.treetrain1.geometrydash.util.isCollidingWithBlockShape
-import me.treetrain1.geometrydash.util.setRelative
-import me.treetrain1.geometrydash.util.vertTeleport
+import me.treetrain1.geometrydash.util.*
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.world.entity.Entity
@@ -75,10 +72,11 @@ open class JumpPadBlock(val type: JumpPadType, props: Properties) : MultifaceBlo
         }
 
         fun LivingEntity.applyDelta(type: JumpPadType) {
-            val delta = this.deltaMovement
-            this.setJumping(true)
-            this.setDeltaMovement(delta.x, type.jumpPower * this.gravity, delta.z)
-            this.hasImpulse = true
+            //val delta = this.deltaMovement
+            //this.setJumping(true)
+            //this.setDeltaMovement(delta.x, type.jumpPower * this.gravity, delta.z)
+            //this.hasImpulse = true
+            this.launch(2.2)
         }
     }
 
@@ -196,7 +194,7 @@ open class JumpPadBlock(val type: JumpPadType, props: Properties) : MultifaceBlo
         LOW(jumpPower = 0.5),
         NORMAL,
         HIGH(jumpPower = 1.5),
-        REVERSE_GRAVITY(shouldFlipGravity = true, jumpPower = -1.0),
+        REVERSE_GRAVITY(shouldFlipGravity = true),
         TELEPORT(shouldJump = false, shouldFlipGravity = true, shouldTeleport = true); // Spider vertical teleporting
     }
 }

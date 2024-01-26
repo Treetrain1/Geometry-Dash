@@ -7,6 +7,7 @@ import me.treetrain1.geometrydash.data.GDData;
 import me.treetrain1.geometrydash.data.mode.GDModeData;
 import me.treetrain1.geometrydash.duck.PlayerDuck;
 import me.treetrain1.geometrydash.util.GDSharedConstantsKt;
+import me.treetrain1.geometrydash.util.GDUtilsKt;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.world.entity.Entity;
@@ -61,7 +62,8 @@ public abstract class LivingEntityMixin extends Entity {
 	@Inject(method = "travel", at = @At("TAIL"))
 	private void gdGravity(Vec3 travelVector, CallbackInfo ci) {
 		if (this instanceof PlayerDuck duck && duck.geometryDash$getGDData().getPlayingGD()) {
-			this.setDeltaMovement(this.getDeltaMovement().add(0.0, GDSharedConstantsKt.GD_GRAVITY_PULL, 0.0));
+			double gravity = GDUtilsKt.getGravity(Entity.class.cast(this));
+			this.setDeltaMovement(this.getDeltaMovement().add(0.0, gravity < 0 ? GDSharedConstantsKt.GD_GRAVITY_PULL * -1 : GDSharedConstantsKt.GD_GRAVITY_PULL, 0.0));
 		}
 	}
 
