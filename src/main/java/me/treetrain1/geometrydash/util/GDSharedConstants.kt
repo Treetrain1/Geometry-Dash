@@ -11,3 +11,6 @@ internal const val MOD_NAME = "Geometry Dash"
 
 @JvmField
 internal val LOGGER: Logger = LoggerFactory.getLogger(MOD_NAME)!!
+
+const val GD_MOVEMENT_SPEED: Float = 1.5F // 1 = sprint speed
+const val GD_GRAVITY_PULL: Double = -0.12

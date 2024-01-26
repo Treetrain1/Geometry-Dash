@@ -14,7 +14,6 @@ import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -22,7 +21,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -35,10 +33,6 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(Entity.class)
 public abstract class EntityMixin implements EntityDuck {
-
-
-	@Unique
-	private static final EntityDataAccessor<Boolean> GRAVITY_NOT_NULL_DATA = SynchedEntityData.defineId(Entity.class, EntityDataSerializers.BOOLEAN);
 
 	@Unique
 	private static final EntityDataAccessor<Double> GRAVITY_DATA = SynchedEntityData.defineId(Entity.class, GeometryDash.DOUBLE_SERIALIZER);
@@ -81,38 +75,27 @@ public abstract class EntityMixin implements EntityDuck {
 
 	@Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;defineSynchedData()V"))
 	private void addGravityData(EntityType<?> entityType, Level level, CallbackInfo ci) {
-		this.entityData.define(GRAVITY_NOT_NULL_DATA, false);
 		this.entityData.define(GRAVITY_DATA, 1.0);
 	}
 
 	@Inject(method = "saveWithoutId", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;addAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V"))
 	private void saveGravity(CompoundTag compound, CallbackInfoReturnable<CompoundTag> cir) {
 		double gravity = this.entityData.get(GRAVITY_DATA);
-		boolean notNull = this.entityData.get(GRAVITY_NOT_NULL_DATA);
-		compound.putBoolean("GravityNotNull", notNull);
 		compound.putDouble("Gravity", gravity);
 	}
 
 	@Inject(method = "load", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;readAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V"))
 	private void loadGravity(CompoundTag compound, CallbackInfo ci) {
-		this.entityData.set(GRAVITY_NOT_NULL_DATA, compound.getBoolean("GravityNotNull"));
 		this.entityData.set(GRAVITY_DATA, compound.getDouble("Gravity"));
 	}
 
 	@Override
-	@Nullable
-	public Double geometryDash$getGravity() {
-		boolean notNull = this.entityData.get(GRAVITY_NOT_NULL_DATA);
-		return notNull ? this.entityData.get(GRAVITY_DATA) : null;
+	public double geometryDash$getGravity() {
+		return this.entityData.get(GRAVITY_DATA);
 	}
 
 	@Override
-	public void geometryDash$setGravity(Double gravity) {
-		if (gravity == null) {
-			this.entityData.set(GRAVITY_NOT_NULL_DATA, false);
-		} else {
-			this.entityData.set(GRAVITY_DATA, gravity);
-			this.entityData.set(GRAVITY_NOT_NULL_DATA, true);
-		}
+	public void geometryDash$setGravity(double gravity) {
+		this.entityData.set(GRAVITY_DATA, gravity);
 	}
 }

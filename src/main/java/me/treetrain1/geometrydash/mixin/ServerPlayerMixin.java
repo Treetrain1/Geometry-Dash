@@ -40,4 +40,15 @@ public class ServerPlayerMixin {
 		}
 		return original;
 	}
+
+	@Inject(method = "restoreFrom", at = @At("TAIL"))
+	private void restoreGD(ServerPlayer that, boolean keepEverything, CallbackInfo ci) {
+		var thisDuck = (PlayerDuck) this;
+		var thisData = thisDuck.geometryDash$getGDData();
+		var thatDuck = (PlayerDuck) that;
+		var thatData = thatDuck.geometryDash$getGDData();
+
+		thisData.copyFrom(thatData);
+		thisData.markDirty();
+	}
 }

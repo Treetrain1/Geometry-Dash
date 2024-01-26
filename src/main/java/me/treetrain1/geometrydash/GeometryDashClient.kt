@@ -5,17 +5,17 @@ import me.treetrain1.geometrydash.entity.render.PortalRenderer
 import me.treetrain1.geometrydash.entity.render.RingRenderer
 import me.treetrain1.geometrydash.entity.render.model.*
 import me.treetrain1.geometrydash.registry.RegisterBlocks
-import me.treetrain1.geometrydash.registry.RegisterEntities;
+import me.treetrain1.geometrydash.registry.RegisterEntities
 import me.treetrain1.geometrydash.util.gdData
 import me.treetrain1.geometrydash.util.id
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
+import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry
+import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry
+import net.minecraft.client.model.geom.ModelLayerLocation
 import net.minecraft.client.renderer.RenderType
 
 @Environment(EnvType.CLIENT)

@@ -4,10 +4,9 @@ import it.unimi.dsi.fastutil.ints.IntArrayList
 import me.treetrain1.geometrydash.data.mode.GDModeData
 import me.treetrain1.geometrydash.duck.PlayerDuck
 import me.treetrain1.geometrydash.entity.Checkpoint
-import me.treetrain1.geometrydash.registry.RegisterScaleTypes
+import me.treetrain1.geometrydash.util.gravity
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
-import net.minecraft.core.BlockPos
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
 import net.minecraft.nbt.Tag
@@ -42,7 +41,6 @@ open class GDData @JvmOverloads constructor(
             Player::class.java, EntityDataSerializers.COMPOUND_TAG
         )
 
-        private fun List<Int>.toMutableIntList(): IntArrayList = IntArrayList().apply { this.addAll(this@toMutableIntList) }
     }
 
     var mode: GDMode? = null
@@ -59,8 +57,10 @@ open class GDData @JvmOverloads constructor(
     inline var scale: Float
         get() = ScaleTypes.WIDTH.getScaleData(this.player).scale
         set(value) {
-            ScaleTypes.WIDTH.getScaleData(this.player).scale = value
-            ScaleTypes.HEIGHT.getScaleData(this.player).scale = value
+            val width = ScaleTypes.WIDTH.getScaleData(this.player)
+            val height = ScaleTypes.HEIGHT.getScaleData(this.player)
+            width.targetScale = value
+            height.targetScale = value
         }
 
     @JvmField
@@ -77,6 +77,9 @@ open class GDData @JvmOverloads constructor(
 
     @JvmField
     protected var prevGameType: GameType? = null
+
+    @JvmField
+    protected var prevGravity: Double? = null
 
     /**
      * Whether or not player input is ignored
@@ -137,7 +140,6 @@ open class GDData @JvmOverloads constructor(
             this.exitGD()
         else
             this.enterGD()
-        this.markDirty()
     }
 
     fun setGD(value: Boolean) {
@@ -154,6 +156,7 @@ open class GDData @JvmOverloads constructor(
     }
 
     /**
+     * Must only be directly called on server due to setting game mode to adventure
      * @return if not already in GD mode
      */
     fun enterGD(mode: GDMode = GDMode.CUBE, scale: Float? = 1F): Boolean {
@@ -169,6 +172,11 @@ open class GDData @JvmOverloads constructor(
         if (this.prevGameType == null)
             this.prevGameType = player.gameMode.gameModeForPlayer
         player.setGameMode(GameType.ADVENTURE)
+
+        if (this.prevGravity == null)
+            this.prevGravity = player.gravity
+        player.isNoGravity
+
         this.markDirty()
         return true
     }
@@ -195,6 +203,11 @@ open class GDData @JvmOverloads constructor(
             player.setGameMode(prevType)
             this.prevGameType = null
         }
+        val prevGravity = this.prevGravity
+        if (prevGravity != null) {
+            player.gravity = prevGravity
+            this.prevGravity = null
+        }
         player.pose = Pose.STANDING
         player.refreshDimensions()
         this.markDirty()
@@ -202,7 +215,7 @@ open class GDData @JvmOverloads constructor(
     }
 
     fun tick() {
-        if (this.dirty == true) {
+        if (this.dirty) {
             (this.player as PlayerDuck).`geometryDash$updateSyncedGDData`()
             this.dirty = false
         }
@@ -245,7 +258,7 @@ open class GDData @JvmOverloads constructor(
             this.gdModeData = null
         }
 
-        this.scale = compound.getFloat(SCALE_TAG).let { if (it > 10F) 1F else it}
+        this.scale = compound.getFloat(SCALE_TAG)
         this.checkpoints = compound.getList(CHECKPOINTS_TAG, CompoundTag.TAG_COMPOUND.toInt())
             .map { tag -> CheckpointSnapshot.fromTag(tag as CompoundTag) }
             .toMutableList()

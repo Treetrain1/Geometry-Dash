@@ -233,10 +233,6 @@ dependencies {
     // Gravity Changer
     //api(project(":GravityChanger", configuration = "namedElements"))?.let { include(it) }
 
-    // Immersive Portals
-    modApi(files("libs/immersive-portals-5.1.3-mc1.20.4-fabric.jar"))
-    modCompileOnlyApi("maven.modrinth:midnightlib:1.5.2-fabric")
-
     // Pehkui
     modApi("com.github.Virtuoel:Pehkui:3.7.12") {
         exclude(group = "net.fabricmc.fabric-api")

@@ -39,7 +39,7 @@ open class Checkpoint(
     }
 
     override fun tick() {
-        if (this.level().isClientSide)
+        if (!this.level().isClientSide)
             this.checkpointTick()
     }
 
@@ -53,16 +53,15 @@ open class Checkpoint(
             player.deltaMovement,
             player.yRot,
             gdData.scale,
-            player.gravity ?: 1.0,
+            player.gravity,
             player.onGround(),
             gdData.isVisible,
             gdData.timeMod,
         ))
     }
 
-    @Environment(EnvType.CLIENT)
     protected open fun checkpointTick() {
-        val list: List<AbstractClientPlayer> = this.level().getEntitiesOfClass(AbstractClientPlayer::class.java, this.boundingBox)
+        val list: List<ServerPlayer> = this.level().getEntitiesOfClass(ServerPlayer::class.java, this.boundingBox)
         for (player in list) {
             if (player.isDeadOrDying) continue
             val gdData = player.gdData

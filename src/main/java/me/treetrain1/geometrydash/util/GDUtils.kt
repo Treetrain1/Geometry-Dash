@@ -2,7 +2,6 @@
 
 package me.treetrain1.geometrydash.util
 
-import me.treetrain1.geometrydash.GeometryDash
 import me.treetrain1.geometrydash.duck.EntityDuck
 import me.treetrain1.geometrydash.duck.PlayerDuck
 import me.treetrain1.geometrydash.network.C2SFailPacket
@@ -30,32 +29,17 @@ import net.minecraft.world.phys.shapes.CollisionContext
 
 // GRAVITY
 
-fun Entity.setRelative(flip: Boolean) {
-    if (this.gravity == null) this.gravity = 1.0
-
-    if (flip)
-        this.gravity = this.gravity!! * -1
-    /*val gravityDirection = GravityChangerAPI.getGravityDirection(this)
-    val combinedRelativeDirection = when (direction) {
-        LocalDirection.DOWN -> Direction.DOWN
-        LocalDirection.UP -> Direction.UP
-        LocalDirection.FORWARD, LocalDirection.BACKWARD, LocalDirection.LEFT, LocalDirection.RIGHT -> Direction.from2DDataValue(
-            direction.horizontalOffset + Direction.fromYRot(this.yRot.toDouble()).get2DDataValue()
-        )
-    }
-    val newGravityDirection = RotationUtil.dirPlayerToWorld(combinedRelativeDirection, gravityDirection)
-    GravityChangerAPI.setBaseGravityDirection(this, newGravityDirection)*/
+inline fun Entity.setRelative(flip: Boolean) {
+    if (flip) this.gravity *= -1
 }
 
 /**
  * Teleports the entity downward
- * WIP
  */
 fun LivingEntity.vertTeleport(level: Level) {
     if (!level.isClientSide) return
-    if (this.gravity == null) this.gravity = 1.0
 
-    val gravity = this.gravity!!
+    val gravity = this.gravity
     val up: Boolean = gravity < 0
     val rayOffset = Vec3(0.0, if (up) 100.0 else -100.0, 0.0)
     val rayEnd: Vec3 = this.position().add(rayOffset)
@@ -103,8 +87,7 @@ private const val defaultLaunch = 0.42 * 1.5
 
 fun Player.launch(multiplier: Double) {
     val vec3: Vec3 = this.deltaMovement
-    if (this.gravity == null) this.gravity = 1.0
-    val gravity = this.gravity!!
+    val gravity = this.gravity
     val up = gravity > 0
     this.setDeltaMovement(vec3.x, defaultLaunch * multiplier * if (up) 1.0 else -1.0, vec3.z)
     if (this.isSprinting) {
@@ -118,11 +101,11 @@ fun Player.launch(multiplier: Double) {
 // Minecraft accessors
 
 @Environment(EnvType.CLIENT)
-fun input(): Input? = Minecraft.getInstance().player?.input
+inline fun input(): Input? = Minecraft.getInstance().player?.input
 
 inline val Player.gdData get() = (this as PlayerDuck).`geometryDash$getGDData`()
 
-inline var Entity.gravity: Double?
+inline var Entity.gravity: Double
     get() = (this as EntityDuck).`geometryDash$getGravity`()
     set(value) = (this as EntityDuck).`geometryDash$setGravity`(value)
 

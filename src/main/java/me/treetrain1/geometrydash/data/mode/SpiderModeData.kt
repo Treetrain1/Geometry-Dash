@@ -25,7 +25,7 @@ open class SpiderModeData : GDModeData() {
                     this@SpiderModeData.targetCubeRot = Math.round(this@SpiderModeData.targetCubeRot / 90F) * 90F
                 } else {
                     val gravity = this.player.gravity
-                    this@SpiderModeData.targetCubeRot += if (gravity != null && gravity < 0) -20 else 20
+                    this@SpiderModeData.targetCubeRot += if (gravity < 0) -20 else 20
                 }
             }
             this.cubeRot += (this.targetCubeRot - this.cubeRot) * 0.395F // both 0.395F and 0.45F seem alright, up to you tree

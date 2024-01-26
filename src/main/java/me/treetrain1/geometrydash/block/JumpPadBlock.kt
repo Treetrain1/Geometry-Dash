@@ -77,7 +77,7 @@ open class JumpPadBlock(val type: JumpPadType, props: Properties) : MultifaceBlo
         fun LivingEntity.applyDelta(type: JumpPadType) {
             val delta = this.deltaMovement
             this.setJumping(true)
-            this.setDeltaMovement(delta.x, type.jumpPower * (this.gravity ?: 1.0), delta.z)
+            this.setDeltaMovement(delta.x, type.jumpPower * this.gravity, delta.z)
             this.hasImpulse = true
         }
     }

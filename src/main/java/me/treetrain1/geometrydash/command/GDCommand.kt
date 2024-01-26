@@ -4,12 +4,10 @@ import com.mojang.brigadier.CommandDispatcher
 import me.treetrain1.geometrydash.data.GDData
 import me.treetrain1.geometrydash.data.GDMode
 import me.treetrain1.geometrydash.duck.PlayerDuck
-import me.treetrain1.geometrydash.util.log
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
+import me.treetrain1.geometrydash.util.gdData
 import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.Commands
 import net.minecraft.commands.arguments.EntityArgument
-import net.minecraft.commands.arguments.StringRepresentableArgument
 import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.level.GameRules
@@ -53,6 +51,7 @@ object GDCommand {
             val duck = player as PlayerDuck
             val dat: GDData = duck.`geometryDash$getGDData`()
             dat.toggleGD()
+            dat.markDirty()
         }
 
         if (players.size == 1) {
@@ -94,7 +93,9 @@ object GDCommand {
 
     private fun exit(source: CommandSourceStack, players: Collection<ServerPlayer>): Int {
         for (player in players) {
-            (player as PlayerDuck).`geometryDash$getGDData`().exitGD()
+            val data = player.gdData
+            data.exitGD()
+            data.markDirty()
         }
 
         if (players.size == 1) {

@@ -24,7 +24,7 @@ open class RobotModeData : GDModeData() {
                     this@RobotModeData.targetCubeRot = Math.round(this@RobotModeData.targetCubeRot / 90F) * 90F
                 } else {
                     val gravity = this.player.gravity
-                    this@RobotModeData.targetCubeRot += if (gravity != null && gravity < 0) -20 else 20
+                    this@RobotModeData.targetCubeRot += if (gravity < 0) -20 else 20
                 }
             }
             this.cubeRot += (this.targetCubeRot - this.cubeRot) * 0.395F // both 0.395F and 0.45F seem alright, up to you tree

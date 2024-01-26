@@ -103,7 +103,7 @@ object GeometryDash : ModInitializer {
 
             GravityAPI.MODIFICATIONS.register { ctx ->
                 val entity = ctx.entity ?: return@register
-                val gravity = entity.gravity ?: return@register
+                val gravity = entity.gravity
                 ctx.gravity = gravity
             }
         }
