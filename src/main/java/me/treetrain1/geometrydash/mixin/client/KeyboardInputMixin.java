@@ -23,7 +23,7 @@ public class KeyboardInputMixin {
 		) {
 			GDModeData gdModeData = duck.geometryDash$getGDData().gdModeData;
 			if (gdModeData.lockForwardsMovement()) {
-				input.forwardImpulse = GDSharedConstantsKt.GD_MOVEMENT_SPEED;
+				input.forwardImpulse = 1F;
 			}
 			if (!gdModeData.allowSidewaysMovement()) {
 				input.leftImpulse = 0F;

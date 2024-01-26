@@ -1,5 +1,6 @@
 package me.treetrain1.geometrydash.util
 
+import net.minecraft.world.entity.ai.attributes.AttributeModifier
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -12,5 +13,10 @@ internal const val MOD_NAME = "Geometry Dash"
 @JvmField
 internal val LOGGER: Logger = LoggerFactory.getLogger(MOD_NAME)!!
 
-const val GD_MOVEMENT_SPEED: Float = 1.5F // 1 = sprint speed
-const val GD_GRAVITY_PULL: Double = -0.12
+@JvmField
+val GD_MOVEMENT_SPEED = AttributeModifier(
+    "Geometry Dash speed boost",
+    1.25,
+    AttributeModifier.Operation.MULTIPLY_TOTAL
+)
+const val GD_GRAVITY_PULL: Double = -0.18

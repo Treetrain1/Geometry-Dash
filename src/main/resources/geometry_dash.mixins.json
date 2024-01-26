@@ -13,6 +13,7 @@
     "ServerPlayerMixin"
   ],
   "client": [
+    "client.AbstractClientPlayerMixin",
     "client.CameraMixin",
     "client.CameraTypeMixin",
     "client.GameRendererMixin",

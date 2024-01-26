@@ -1,7 +1,8 @@
 package me.treetrain1.geometrydash.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import me.treetrain1.geometrydash.data.GDData;
 import me.treetrain1.geometrydash.data.mode.GDModeData;
 import me.treetrain1.geometrydash.duck.PlayerDuck;
@@ -11,6 +12,8 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,6 +21,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import java.util.UUID;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity {
@@ -58,6 +62,23 @@ public abstract class LivingEntityMixin extends Entity {
 	private void gdGravity(Vec3 travelVector, CallbackInfo ci) {
 		if (this instanceof PlayerDuck duck && duck.geometryDash$getGDData().getPlayingGD()) {
 			this.setDeltaMovement(this.getDeltaMovement().add(0.0, GDSharedConstantsKt.GD_GRAVITY_PULL, 0.0));
+		}
+	}
+
+	@WrapOperation(method = "setSprinting", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/ai/attributes/AttributeInstance;removeModifier(Ljava/util/UUID;)V"))
+	private void removeGDSpeed(AttributeInstance instance, UUID identifier, Operation<Void> original) {
+		original.call(instance, identifier);
+		if (this instanceof PlayerDuck duck && duck.geometryDash$getGDData().getPlayingGD()) {
+			original.call(instance, GDSharedConstantsKt.GD_MOVEMENT_SPEED.getId());
+		}
+	}
+
+	@WrapOperation(method = "setSprinting", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/ai/attributes/AttributeInstance;addTransientModifier(Lnet/minecraft/world/entity/ai/attributes/AttributeModifier;)V"))
+	private void setGDSpeed(AttributeInstance instance, AttributeModifier modifier, Operation<Void> original) {
+		if (this instanceof PlayerDuck duck && duck.geometryDash$getGDData().getPlayingGD()) {
+			original.call(instance, GDSharedConstantsKt.GD_MOVEMENT_SPEED);
+		} else {
+			original.call(instance, modifier);
 		}
 	}
 }

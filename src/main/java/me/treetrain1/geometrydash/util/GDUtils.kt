@@ -83,7 +83,7 @@ fun Entity.isCollidingWithBlockShape(level: Level, pos: BlockPos): Boolean {
 }
 
 // 0.42 is the player jump power
-private const val defaultLaunch = 0.42 * 1.5
+private const val defaultLaunch = 0.42 * 1.8
 
 fun Player.launch(multiplier: Double) {
     val vec3: Vec3 = this.deltaMovement
