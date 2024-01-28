@@ -10,7 +10,9 @@
     "PlayerListMixin",
     "PlayerMixin",
     "PoseMixin",
-    "ServerPlayerMixin"
+    "ServerPlayerMixin",
+    "gravity.EntityMixin",
+    "gravity.LivingEntityMixin"
   ],
   "client": [
     "client.AbstractClientPlayerMixin",
