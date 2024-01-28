@@ -76,7 +76,7 @@ open class JumpPadBlock(val type: JumpPadType, props: Properties) : MultifaceBlo
             //this.setJumping(true)
             //this.setDeltaMovement(delta.x, type.jumpPower * this.gravity, delta.z)
             //this.hasImpulse = true
-            this.launch(2.2)
+            this.launch(2.2 * type.jumpPower)
         }
     }
 
