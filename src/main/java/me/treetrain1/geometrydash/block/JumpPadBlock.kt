@@ -118,7 +118,7 @@ open class JumpPadBlock(val type: JumpPadType, props: Properties) : MultifaceBlo
         if (blockEntity.colliding.contains(entity.id)) return
 
         if (type.shouldFlipGravity) {
-            entity.setRelative(true)
+            entity.setRelativeGravity(true)
         }
         if (type.shouldJump) {
             entity.applyDelta(type)

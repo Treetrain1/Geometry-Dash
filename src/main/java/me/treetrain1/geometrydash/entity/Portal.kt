@@ -3,9 +3,7 @@ package me.treetrain1.geometrydash.entity
 import me.treetrain1.geometrydash.data.GDData
 import me.treetrain1.geometrydash.data.GDMode
 import me.treetrain1.geometrydash.util.gdData
-import me.treetrain1.geometrydash.util.launch
-import me.treetrain1.geometrydash.util.setRelative
-import me.treetrain1.geometrydash.util.vertTeleport
+import me.treetrain1.geometrydash.util.setRelativeGravity
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializer
@@ -33,21 +31,19 @@ open class Portal(
         this.entityData.define(TYPE, PortalType.CUBE)
     }
 
-    open fun onApply(player: Player, dat: GDData) {
-        dat.ringLocked = true
-
+    open fun onApply(player: Player, data: GDData) {
         val type = this.type
         val mode = type.modeSwitch
         val scale = type.scale
 
         if (mode != null)
-            dat.mode = mode
+            data.mode = mode
 
         if (type.shouldFlipGravity)
-            player.setRelative(true)
+            player.setRelativeGravity(true)
 
         if (scale != null)
-            dat.scale = scale
+            data.scale = scale
     }
 
     override fun tick() {

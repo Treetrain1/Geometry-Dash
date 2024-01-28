@@ -29,7 +29,7 @@ import net.minecraft.world.phys.shapes.CollisionContext
 
 // GRAVITY
 
-inline fun Entity.setRelative(flip: Boolean) {
+inline fun Entity.setRelativeGravity(flip: Boolean) {
     if (flip) this.gravity *= -1
 }
 

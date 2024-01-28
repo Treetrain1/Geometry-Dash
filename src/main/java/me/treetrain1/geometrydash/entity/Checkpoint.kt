@@ -2,17 +2,11 @@ package me.treetrain1.geometrydash.entity
 
 import me.treetrain1.geometrydash.data.CheckpointSnapshot
 import me.treetrain1.geometrydash.data.GDData
-import me.treetrain1.geometrydash.duck.PlayerDuck
 import me.treetrain1.geometrydash.util.gdData
 import me.treetrain1.geometrydash.util.gravity
-import net.fabricmc.api.EnvType
-import net.fabricmc.api.Environment
-import net.minecraft.client.player.AbstractClientPlayer
-import net.minecraft.client.player.LocalPlayer
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializer
-import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.EntityType

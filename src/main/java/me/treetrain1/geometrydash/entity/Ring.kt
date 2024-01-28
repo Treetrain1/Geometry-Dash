@@ -3,7 +3,7 @@ package me.treetrain1.geometrydash.entity
 import me.treetrain1.geometrydash.data.GDData
 import me.treetrain1.geometrydash.util.gdData
 import me.treetrain1.geometrydash.util.launch
-import me.treetrain1.geometrydash.util.setRelative
+import me.treetrain1.geometrydash.util.setRelativeGravity
 import me.treetrain1.geometrydash.util.vertTeleport
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.syncher.EntityDataAccessor
@@ -41,7 +41,7 @@ open class Ring(
             player.launch(type.bounceStrength)
         }
         if (type.shouldFlipGravity) {
-            player.setRelative(true)
+            player.setRelativeGravity(true)
         }
         if (type.shouldTeleport) {
             player.vertTeleport(this.level())

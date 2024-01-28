@@ -2,15 +2,13 @@ package me.treetrain1.geometrydash.data.mode
 
 import me.treetrain1.geometrydash.entity.pose.GDPoses
 import me.treetrain1.geometrydash.util.gravity
-import me.treetrain1.geometrydash.util.launch
-import me.treetrain1.geometrydash.util.setRelative
+import me.treetrain1.geometrydash.util.setRelativeGravity
 import me.treetrain1.geometrydash.util.vertTeleport
 import net.minecraft.client.player.Input
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.Mth
 import net.minecraft.world.entity.EntityDimensions
 import net.minecraft.world.entity.Pose
-import net.minecraft.world.phys.Vec3
 
 open class SpiderModeData : GDModeData() {
     private var targetCubeRot: Float = 0F
@@ -36,7 +34,7 @@ open class SpiderModeData : GDModeData() {
         val data = this.gdData!!
         val player = data.player
         if (data.canProcessInput && player.onGround()) {
-            player.setRelative(true)
+            player.setRelativeGravity(true)
             player.vertTeleport(player.level())
             return true
         }
