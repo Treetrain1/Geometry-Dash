@@ -194,7 +194,7 @@ open class JumpPadBlock(val type: JumpPadType, props: Properties) : MultifaceBlo
         LOW(jumpPower = 0.5),
         NORMAL,
         HIGH(jumpPower = 1.5),
-        REVERSE_GRAVITY(shouldFlipGravity = true),
+        REVERSE_GRAVITY(shouldFlipGravity = true, jumpPower = -1.0),
         TELEPORT(shouldJump = false, shouldFlipGravity = true, shouldTeleport = true); // Spider vertical teleporting
     }
 }
