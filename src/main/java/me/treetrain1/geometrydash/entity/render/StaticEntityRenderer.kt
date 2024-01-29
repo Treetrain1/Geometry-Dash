@@ -18,19 +18,20 @@ abstract class StaticEntityRenderer<T : StaticEntity>(ctx: Context) : EntityRend
         val QUAT_180: Quaternionf = Axis.YP.rotationDegrees(180F)
     }
 
-    protected abstract val scale: Float
-    protected abstract val width: Float
-    protected abstract val height: Float
-    protected abstract val yOffset: Float
-    protected open val overlay: Int = OverlayTexture.NO_OVERLAY
+    protected abstract fun scale(entity: T) : Float
+    protected abstract fun width(entity: T): Float
+    protected abstract fun height(entity: T): Float
+    protected abstract fun yOffset(entity: T): Float
+    protected open fun overlay(entity: T): Int = OverlayTexture.NO_OVERLAY 
 
     protected abstract fun getLayer(entity: T): RenderType
 
-    private inline val minX: Float get() = -width / 2
-    private inline val maxX: Float get() = width / 2
-    private inline val minY: Float get() = -height / 2
-    private inline val maxY: Float get() = height / 2
+    private inline fun minX(entity: T): Float get() = -width(entity) / 2
+    private inline fun maxX(entity: T): Float get() = width(entity) / 2
+    private inline fun minY(entity: T): Float get() = -height(entity) / 2
+    private inline fun maxY(entity: T): Float get() = height(entity) / 2
 
+    // TODO: add rotation support
     fun renderStaticEntity(
         entity: T,
         poseStack: PoseStack,
@@ -54,10 +55,10 @@ abstract class StaticEntityRenderer<T : StaticEntity>(ctx: Context) : EntityRend
         val matrix3f = entry.normal()
         val vertexConsumer = buffer.getBuffer(this.getLayer(entity))
         val overlay = this.overlay
-        val minX = this.minX
-        val maxX = this.maxX
-        val minY = this.minY
-        val maxY = this.maxY
+        val minX = this.minX(entity)
+        val maxX = this.maxX(entity)
+        val minY = this.minY(entity)
+        val maxY = this.maxY(entity)
 
         vertexConsumer
             .vertex(matrix4f, minX, minY, 0f)
@@ -104,7 +105,7 @@ abstract class StaticEntityRenderer<T : StaticEntity>(ctx: Context) : EntityRend
         packedLight: Int
     ) {
         poseStack.pushPose()
-        renderStaticEntity(entity, poseStack, buffer, packedLight, partialTick, scale, 0F, this.yOffset, 0F, this.entityRenderDispatcher.cameraOrientation())
+        renderStaticEntity(entity, poseStack, buffer, packedLight, partialTick, this.scale(entity), 0F, this.yOffset(entity), 0F, this.entityRenderDispatcher.cameraOrientation())
         poseStack.popPose()
     }
 }

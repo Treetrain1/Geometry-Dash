@@ -87,15 +87,31 @@ private const val defaultLaunch = 0.42 * 1.8
 
 fun LivingEntity.launch(multiplier: Double) {
     val vec3: Vec3 = this.deltaMovement
-    val gravity = this.gravity
-    val up = gravity > 0
-    this.setDeltaMovement(vec3.x, defaultLaunch * multiplier * if (up) 1.0 else -1.0, vec3.z)
+    this.setRelativeDelta(vec3)
     if (this.isSprinting) {
         val rot: Float = this.yRot * (Math.PI / 180.0).toFloat()
         this.deltaMovement = this.deltaMovement.add((-Mth.sin(rot) * 0.2f).toDouble(), 0.0, (Mth.cos(rot) * 0.2f).toDouble())
     }
 
     this.hasImpulse = true
+}
+
+fun Player.dash(ring: Ring) {
+    val data = this.gdData
+    data.dashRingID = ring.id
+
+    val delta = this.deltaMovement
+    this.setDeltaMovement(delta.x, 0.0, delta.z) // TODO: this wont work for sideways gravity
+}
+
+// these are for respecting gravity when setting movement
+inline fun LivingEntity.setRelativeDelta(x: Double, y: Double, z: Double) {
+    val gravity = this.gravity
+    val reverse: Boolean = gravity < 0
+    this.setDeltaMovement(x, if (reverse) y * -1 else y, z)
+}
+inline fun LivingEntity.setRelativeDelta(vec: Vec3) {
+    this.setRelativeDelta(vec.x, vec.y, vec.z)
 }
 
 // Minecraft accessors

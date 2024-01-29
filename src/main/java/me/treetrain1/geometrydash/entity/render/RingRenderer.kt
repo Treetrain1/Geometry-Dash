@@ -31,10 +31,10 @@ open class RingRenderer(ctx: Context) : StaticEntityRenderer<Ring>(ctx) {
         private val TELEPORT_LAYER = RenderType.entityCutout(TELEPORT_TEXTURE)
     }
 
-    override val scale: Float = 1F
-    override val width: Float = 1F
-    override val height: Float = 1F
-    override val yOffset: Float = 0.44F
+    override fun scale(entity: Ring): Float = 1F
+    override fun width(entity: Ring): Float = 1F
+    override fun height(entity: Ring): Float = 1F
+    override fun yOffset(entity: Ring): Float = 0.44F
 
     override fun getTextureLocation(entity: Ring): ResourceLocation {
         return when (entity.type) {

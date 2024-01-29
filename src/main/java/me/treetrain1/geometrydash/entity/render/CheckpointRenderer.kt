@@ -12,14 +12,12 @@ open class CheckpointRenderer(ctx: EntityRendererProvider.Context) : StaticEntit
         private val TEXTURE = id("textures/entity/checkpoint.png")
         private val TEXTURE_ALT = id("textures/entity/checkpoint_alt.png")
         private val LAYER = RenderType.entityCutout(TEXTURE)
-
-        private const val Y_OFFSET: Float = 0.8F
     }
 
-    override val scale: Float = 1F
-    override val height: Float = 1F
-    override val width: Float = 0.5F
-    override val yOffset: Float = Y_OFFSET
+    override fun scale(entity: Checkpoint): Float = 1F
+    override fun height(entity: Checkpoint): Float = 1F
+    override fun width(entity: Checkpoint): Float = 0.5F
+    override fun yOffset(entity: Checkpoint): Float = 0.8F
 
     override fun getLayer(entity: Checkpoint): RenderType {
         return LAYER

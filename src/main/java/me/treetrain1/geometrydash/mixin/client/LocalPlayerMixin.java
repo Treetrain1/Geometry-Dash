@@ -60,9 +60,20 @@ public class LocalPlayerMixin {
 			|| InputConstants.isKeyDown(window, InputConstants.KEY_W)
 			|| InputConstants.isKeyDown(window, InputConstants.KEY_UP)
 			|| GLFW.glfwGetMouseButton(window, InputConstants.MOUSE_BUTTON_LEFT) == 1;
+		String dashRingID = gdData.dashRingID;
+		boolean isDashing = gdData.getIsDashing();
 		gdData.inputBuffer = jumping;
 		if (gdModeData != null) {
 			// TODO: bounce from rings
+			if (isDashing) {
+				if (jumping) {
+					LocalPlayer player = LocalPlayer.class.cast(this);
+					player.setDeltaMovement(1.0, 1.0, 1.0); // TODO: use ring rotation
+					return;
+				}
+				// returns before getting here, else not necessary
+				gdMode.dashRingID = "";
+			}
 			if (!jumping) {
 				gdData.ringLocked = false;
 				if (gdModeData.unlockOnRelease())

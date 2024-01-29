@@ -46,6 +46,9 @@ open class Ring(
         if (type.shouldTeleport) {
             player.vertTeleport(this.level())
         }
+        if (type.shouldDash) {
+            player.dash(Vec3(1.0, 1.0, 1.0)) // TODO: set to ring rotation
+        }
     }
 
     override fun tick() {
@@ -83,6 +86,7 @@ open class Ring(
         val bounceStrength: Double = 1.0,
         val shouldFlipGravity: Boolean = false,
         val shouldTeleport: Boolean = false,
+        val shouldDash: Boolean = false,
     ) {
         SMALL_BOUNCE(bounceStrength = 0.5), // purple/pink
         BOUNCE, // yellow
@@ -90,8 +94,8 @@ open class Ring(
         SWING(shouldBounce = false, shouldFlipGravity = true), // green
         REVERSE_GRAVITY(shouldFlipGravity = true), // blue
         FORCE_DOWN(bounceStrength = -3.0), // black
-        DASH(bounceStrength = 0.0), // green dash
-        DASH_REVERSE_GRAVITY(bounceStrength = 0.0, shouldFlipGravity = true), // pink dash
+        DASH(shouldDash = true, bounceStrength = 0.0), // green dash
+        DASH_REVERSE_GRAVITY(shouldDash = true, shouldBounce = false, shouldFlipGravity = true), // pink dash
         TELEPORT(shouldBounce = false, shouldFlipGravity = true, shouldTeleport = true); // pink with arrows
 
         companion object {

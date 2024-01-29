@@ -14,10 +14,10 @@ open class PortalRenderer(ctx: Context) : StaticEntityRenderer<Portal>(ctx) {
         private val LAYER = RenderType.entityCutout(TEXTURE)
     }
 
-    override val scale: Float = 1F
-    override val width: Float = 1F
-    override val height: Float = 1F
-    override val yOffset: Float = 0.44F
+    override fun scale(entity: Portal): Float = 1F
+    override fun width(entity: Portal): Float = 1F
+    override fun height(entity: Portal): Float = 1F
+    override fun yOffset(entity: Portal): Float = 0.44F
 
     override fun getTextureLocation(entity: Portal): ResourceLocation {
         return when (entity.type) {
