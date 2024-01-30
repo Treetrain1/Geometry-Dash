@@ -6,8 +6,10 @@ import me.treetrain1.geometrydash.util.gravity
 import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.Commands
 import net.minecraft.commands.arguments.EntityArgument
+import net.minecraft.commands.arguments.coordinates.Vec3Argument
 import net.minecraft.network.chat.Component
 import net.minecraft.world.entity.Entity
+import net.minecraft.world.phys.Vec3
 
 
 object GravityCommand {
@@ -15,18 +17,18 @@ object GravityCommand {
     internal fun register(dispatcher: CommandDispatcher<CommandSourceStack>) = dispatcher.register(
         Commands.literal("gravity")
             .then(
-                Commands.argument("gravityAmount", DoubleArgumentType.doubleArg())
+                Commands.argument("gravityAmount", Vec3Argument.vec3())
                     .requires { source -> source.isPlayer && source.hasPermission(2) }
-                    .executes { ctx -> set(ctx.source, DoubleArgumentType.getDouble(ctx, "gravityAmount"), listOf(ctx.source.playerOrException)) }
+                    .executes { ctx -> set(ctx.source, Vec3Argument.getVec3(ctx, "gravityAmount"), listOf(ctx.source.playerOrException)) }
                     .then(
                         Commands.argument("targets", EntityArgument.entities())
                             .requires { source -> source.hasPermission(2) }
-                            .executes { ctx -> set(ctx.source, DoubleArgumentType.getDouble(ctx, "gravityAmount"), EntityArgument.getEntities(ctx, "targets")) }
+                            .executes { ctx -> set(ctx.source, Vec3Argument.getVec3(ctx, "gravityAmount"), EntityArgument.getEntities(ctx, "targets")) }
                     )
             )
     )
 
-    private fun set(source: CommandSourceStack, gravity: Double, targets: Collection<Entity>): Int {
+    private fun set(source: CommandSourceStack, gravity: Vec3, targets: Collection<Entity>): Int {
         targets.forEach {
             it.gravity = gravity
         }

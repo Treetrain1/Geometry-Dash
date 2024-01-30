@@ -22,7 +22,7 @@ open class WaveModeData : GDModeData() {
                     this@WaveModeData.targetCubeRot = Math.round(this@WaveModeData.targetCubeRot / 90F) * 90F
                 } else {
                     val gravity = this.player.gravity
-                    this@WaveModeData.targetCubeRot += if (gravity < 0) -20 else 20
+                    this@WaveModeData.targetCubeRot += if (gravity.y < 0) -20 else 20
                 }
             }
             this.cubeRot += (this.targetCubeRot - this.cubeRot) * 0.395F // both 0.395F and 0.45F seem alright, up to you tree

@@ -28,6 +28,7 @@ import net.minecraft.world.damagesource.DamageType
 import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
+import net.minecraft.world.phys.Vec3
 import kotlin.system.measureNanoTime
 
 object GeometryDash : ModInitializer {
@@ -67,9 +68,9 @@ object GeometryDash : ModInitializer {
     val LEVEL_FAIL: ResourceKey<DamageType> = ResourceKey.create(Registries.DAMAGE_TYPE, id("level_fail"))
 
     @JvmField
-    val DOUBLE_SERIALIZER: EntityDataSerializer<Double> = EntityDataSerializer.simple(
-        FriendlyByteBuf::writeDouble,
-        FriendlyByteBuf::readDouble
+    val VEC_SERIALIZER: EntityDataSerializer<Vec3> = EntityDataSerializer.simple(
+        FriendlyByteBuf::writeVec3,
+        FriendlyByteBuf::readVec3
     )
 
     override fun onInitialize() {
@@ -96,7 +97,7 @@ object GeometryDash : ModInitializer {
                 player.hurt(player.damageSources().source(LEVEL_FAIL), Float.MAX_VALUE)
             }
 
-            EntityDataSerializers.registerSerializer(DOUBLE_SERIALIZER)
+            EntityDataSerializers.registerSerializer(VEC_SERIALIZER)
             EntityDataSerializers.registerSerializer(Checkpoint.CheckpointType.SERIALIZER)
             EntityDataSerializers.registerSerializer(Ring.RingType.SERIALIZER)
             EntityDataSerializers.registerSerializer(Portal.PortalType.SERIALIZER)

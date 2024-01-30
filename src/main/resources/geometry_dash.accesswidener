@@ -10,3 +10,5 @@ accessible field net/minecraft/world/level/block/PointedDripstoneBlock MIDDLE_SH
 accessible field net/minecraft/world/level/block/PointedDripstoneBlock BASE_SHAPE Lnet/minecraft/world/phys/shapes/VoxelShape;
 
 accessible    method    net/minecraft/commands/synchronization/ArgumentTypeInfos    register    (Lnet/minecraft/core/Registry;Ljava/lang/String;Ljava/lang/Class;Lnet/minecraft/commands/synchronization/ArgumentTypeInfo;)Lnet/minecraft/commands/synchronization/ArgumentTypeInfo;
+
+accessible method net/minecraft/world/level/Level getEntities ()Lnet/minecraft/world/level/entity/LevelEntityGetter;

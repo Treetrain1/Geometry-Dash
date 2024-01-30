@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture
 import org.joml.Matrix4f
 import org.joml.Quaternionf
 
+@Suppress("NOTHING_TO_INLINE")
 abstract class StaticEntityRenderer<T : StaticEntity>(ctx: Context) : EntityRenderer<T>(ctx) {
 
     protected companion object {
@@ -22,14 +23,14 @@ abstract class StaticEntityRenderer<T : StaticEntity>(ctx: Context) : EntityRend
     protected abstract fun width(entity: T): Float
     protected abstract fun height(entity: T): Float
     protected abstract fun yOffset(entity: T): Float
-    protected open fun overlay(entity: T): Int = OverlayTexture.NO_OVERLAY 
+    protected open fun overlay(entity: T): Int = OverlayTexture.NO_OVERLAY
 
     protected abstract fun getLayer(entity: T): RenderType
 
-    private inline fun minX(entity: T): Float get() = -width(entity) / 2
-    private inline fun maxX(entity: T): Float get() = width(entity) / 2
-    private inline fun minY(entity: T): Float get() = -height(entity) / 2
-    private inline fun maxY(entity: T): Float get() = height(entity) / 2
+    private inline fun minX(entity: T): Float = -width(entity) / 2
+    private inline fun maxX(entity: T): Float = width(entity) / 2
+    private inline fun minY(entity: T): Float = -height(entity) / 2
+    private inline fun maxY(entity: T): Float = height(entity) / 2
 
     // TODO: add rotation support
     fun renderStaticEntity(
@@ -54,7 +55,7 @@ abstract class StaticEntityRenderer<T : StaticEntity>(ctx: Context) : EntityRend
         val matrix4f: Matrix4f = entry.pose()
         val matrix3f = entry.normal()
         val vertexConsumer = buffer.getBuffer(this.getLayer(entity))
-        val overlay = this.overlay
+        val overlay = this.overlay(entity)
         val minX = this.minX(entity)
         val maxX = this.maxX(entity)
         val minY = this.minY(entity)

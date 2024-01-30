@@ -22,7 +22,7 @@ open class BallModeData : GDModeData() {
                     this@BallModeData.targetCubeRot = Math.round(this@BallModeData.targetCubeRot / 90F) * 90F
                 } else {
                     val gravity = this.player.gravity
-                    this@BallModeData.targetCubeRot += if (gravity < 0) -20 else 20
+                    this@BallModeData.targetCubeRot += if (gravity.y < 0) -20 else 20
                 }
             }
             this.cubeRot += (this.targetCubeRot - this.cubeRot) * 0.395F // both 0.395F and 0.45F seem alright, up to you tree

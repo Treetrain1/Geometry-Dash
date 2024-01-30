@@ -4,6 +4,7 @@ package me.treetrain1.geometrydash.util
 
 import me.treetrain1.geometrydash.duck.EntityDuck
 import me.treetrain1.geometrydash.duck.PlayerDuck
+import me.treetrain1.geometrydash.entity.Ring
 import me.treetrain1.geometrydash.network.C2SFailPacket
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
@@ -30,7 +31,7 @@ import net.minecraft.world.phys.shapes.CollisionContext
 // GRAVITY
 
 inline fun Entity.setRelativeGravity(flip: Boolean) {
-    if (flip) this.gravity *= -1
+    if (flip) this.gravity = this.gravity.scale(-1.0)
 }
 
 /**
@@ -39,9 +40,9 @@ inline fun Entity.setRelativeGravity(flip: Boolean) {
 fun LivingEntity.vertTeleport(level: Level) {
     if (!level.isClientSide) return
 
-    val gravity = this.gravity
-    val up: Boolean = gravity < 0
-    val rayOffset = Vec3(0.0, if (up) 100.0 else -100.0, 0.0)
+    val gravity: Vec3 = this.gravity
+    val rayOffset = gravity.normalize().scale(-100.0)
+    val up = rayOffset.y > 0
     val rayEnd: Vec3 = this.position().add(rayOffset)
     val raycast: BlockHitResult = level.clip(
         ClipContext(
@@ -87,7 +88,7 @@ private const val defaultLaunch = 0.42 * 1.8
 
 fun LivingEntity.launch(multiplier: Double) {
     val vec3: Vec3 = this.deltaMovement
-    this.setRelativeDelta(vec3)
+    this.setRelativeDelta(vec3.x, defaultLaunch * multiplier, vec3.z)
     if (this.isSprinting) {
         val rot: Float = this.yRot * (Math.PI / 180.0).toFloat()
         this.deltaMovement = this.deltaMovement.add((-Mth.sin(rot) * 0.2f).toDouble(), 0.0, (Mth.cos(rot) * 0.2f).toDouble())
@@ -98,21 +99,22 @@ fun LivingEntity.launch(multiplier: Double) {
 
 fun Player.dash(ring: Ring) {
     val data = this.gdData
-    data.dashRingID = ring.id
+    data.dashRingID = ring.stringUUID
 
     val delta = this.deltaMovement
-    this.setDeltaMovement(delta.x, 0.0, delta.z) // TODO: this wont work for sideways gravity
+    this.deltaMovement = Vec3.directionFromRotation(ring.rotationVector)//.multiply(delta)
 }
 
 // these are for respecting gravity when setting movement
 inline fun LivingEntity.setRelativeDelta(x: Double, y: Double, z: Double) {
     val gravity = this.gravity
-    val reverse: Boolean = gravity < 0
-    this.setDeltaMovement(x, if (reverse) y * -1 else y, z)
+    this.deltaMovement = gravity.normalize().multiply(x, y, z)
 }
 inline fun LivingEntity.setRelativeDelta(vec: Vec3) {
     this.setRelativeDelta(vec.x, vec.y, vec.z)
 }
+//inline fun LivingEntity.globalToRelative(vec: Vec3): Vec3 = this.gravity.normalize().multiply(vec)
+//inline fun LivingEntity.relativeToGlobal(vec: Vec3): Vec3 = vec.multiply()
 
 // Minecraft accessors
 
@@ -121,7 +123,7 @@ inline fun input(): Input? = Minecraft.getInstance().player?.input
 
 inline val Player.gdData get() = (this as PlayerDuck).`geometryDash$getGDData`()
 
-inline var Entity.gravity: Double
+inline var Entity.gravity: Vec3
     get() = (this as EntityDuck).`geometryDash$getGravity`()
     set(value) = (this as EntityDuck).`geometryDash$setGravity`(value)
 

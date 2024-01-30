@@ -62,8 +62,8 @@ public abstract class LivingEntityMixin extends Entity {
 	@Inject(method = "travel", at = @At("TAIL"))
 	private void gdGravity(Vec3 travelVector, CallbackInfo ci) {
 		if (this instanceof PlayerDuck duck && duck.geometryDash$getGDData().getPlayingGD()) {
-			double gravity = GDUtilsKt.getGravity(Entity.class.cast(this));
-			this.setDeltaMovement(this.getDeltaMovement().add(0.0, gravity < 0 ? GDSharedConstantsKt.GD_GRAVITY_PULL * -1 : GDSharedConstantsKt.GD_GRAVITY_PULL, 0.0));
+			Vec3 gravity = GDUtilsKt.getGravity(this);
+			this.setDeltaMovement(this.getDeltaMovement().add(gravity.normalize().scale(GDSharedConstantsKt.GD_GRAVITY_PULL)));
 		}
 	}
 

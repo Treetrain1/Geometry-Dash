@@ -18,7 +18,7 @@ data class CheckpointSnapshot(
     val deltaMovement: Vec3,
     val yaw: Float,
     val scale: Float,
-    val gravity: Double,
+    val gravity: Vec3,
     val onGround: Boolean,
     val isVisible: Boolean = true,
     val timeMod: Float
@@ -37,7 +37,7 @@ data class CheckpointSnapshot(
                 compound.getVec("deltaMovement"),
                 compound.getFloat("yaw"),
                 compound.getFloat("scale"),
-                compound.getDouble("gravity"),
+                compound.getVec("gravity"),
                 compound.getBoolean("onGround"),
                 compound.getBoolean("isVisible"),
                 compound.getFloat("timeMod"),
@@ -53,7 +53,7 @@ data class CheckpointSnapshot(
             buf.writeDouble(delta.z)
             buf.writeFloat(snapshot.yaw)
             buf.writeFloat(snapshot.scale)
-            buf.writeDouble(snapshot.gravity)
+            buf.writeVec3(snapshot.gravity)
             buf.writeBoolean(snapshot.onGround)
             buf.writeBoolean(snapshot.isVisible)
             buf.writeFloat(snapshot.timeMod)
@@ -77,7 +77,7 @@ data class CheckpointSnapshot(
                 ),
                 buf.readFloat(),
                 buf.readFloat(),
-                buf.readDouble(),
+                buf.readVec3(),
                 buf.readBoolean(),
                 buf.readBoolean(),
                 buf.readFloat(),
@@ -91,7 +91,7 @@ data class CheckpointSnapshot(
         compound.putVec("deltaMovement", this.deltaMovement)
         compound.putFloat("yaw", this.yaw)
         compound.putFloat("size", this.scale)
-        compound.putDouble("gravity", this.gravity)
+        compound.putVec("gravity", this.gravity)
         compound.putBoolean("onGround", this.onGround)
         compound.putBoolean("isVisible", this.isVisible)
         compound.putFloat("timeMod", this.timeMod)

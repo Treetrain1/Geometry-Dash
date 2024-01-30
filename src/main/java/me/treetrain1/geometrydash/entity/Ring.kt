@@ -1,10 +1,7 @@
 package me.treetrain1.geometrydash.entity
 
 import me.treetrain1.geometrydash.data.GDData
-import me.treetrain1.geometrydash.util.gdData
-import me.treetrain1.geometrydash.util.launch
-import me.treetrain1.geometrydash.util.setRelativeGravity
-import me.treetrain1.geometrydash.util.vertTeleport
+import me.treetrain1.geometrydash.util.*
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializer
@@ -12,6 +9,7 @@ import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
+import net.minecraft.world.phys.Vec3
 
 // Usually called Orbs but in the files I believe it's called Rings
 open class Ring(
@@ -47,7 +45,7 @@ open class Ring(
             player.vertTeleport(this.level())
         }
         if (type.shouldDash) {
-            player.dash(Vec3(1.0, 1.0, 1.0)) // TODO: set to ring rotation
+            player.dash(this) // TODO: set to ring rotation
         }
     }
 

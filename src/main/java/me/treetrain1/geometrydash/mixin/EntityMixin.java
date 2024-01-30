@@ -8,6 +8,7 @@ import me.treetrain1.geometrydash.data.GDData;
 import me.treetrain1.geometrydash.duck.EntityDuck;
 import me.treetrain1.geometrydash.duck.PlayerDuck;
 import me.treetrain1.geometrydash.network.C2SFailPacket;
+import me.treetrain1.geometrydash.util.GDUtilsKt;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
@@ -21,6 +22,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -35,7 +38,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 public abstract class EntityMixin implements EntityDuck {
 
 	@Unique
-	private static final EntityDataAccessor<Double> GRAVITY_DATA = SynchedEntityData.defineId(Entity.class, GeometryDash.DOUBLE_SERIALIZER);
+	private static final EntityDataAccessor<Vec3> GRAVITY_DATA = SynchedEntityData.defineId(Entity.class, GeometryDash.VEC_SERIALIZER);
 
 	@Shadow
 	public boolean horizontalCollision;
@@ -75,27 +78,28 @@ public abstract class EntityMixin implements EntityDuck {
 
 	@Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;defineSynchedData()V"))
 	private void addGravityData(EntityType<?> entityType, Level level, CallbackInfo ci) {
-		this.entityData.define(GRAVITY_DATA, 1.0);
+		this.entityData.define(GRAVITY_DATA, new Vec3(0.0, 1.0, 0.0));
 	}
 
 	@Inject(method = "saveWithoutId", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;addAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V"))
 	private void saveGravity(CompoundTag compound, CallbackInfoReturnable<CompoundTag> cir) {
-		double gravity = this.entityData.get(GRAVITY_DATA);
-		compound.putDouble("Gravity", gravity);
+		Vec3 gravity = this.entityData.get(GRAVITY_DATA);
+		GDUtilsKt.putVec(compound, "Gravity", gravity);
 	}
 
 	@Inject(method = "load", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;readAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V"))
 	private void loadGravity(CompoundTag compound, CallbackInfo ci) {
-		this.entityData.set(GRAVITY_DATA, compound.getDouble("Gravity"));
+		this.entityData.set(GRAVITY_DATA, GDUtilsKt.getVec(compound, "Gravity"));
 	}
 
 	@Override
-	public double geometryDash$getGravity() {
+	@NotNull
+	public Vec3 geometryDash$getGravity() {
 		return this.entityData.get(GRAVITY_DATA);
 	}
 
 	@Override
-	public void geometryDash$setGravity(double gravity) {
+	public void geometryDash$setGravity(@NotNull Vec3 gravity) {
 		this.entityData.set(GRAVITY_DATA, gravity);
 	}
 }

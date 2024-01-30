@@ -1,11 +1,14 @@
 package me.treetrain1.geometrydash.mixin.gravity;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.frozenblock.lib.gravity.api.GravityAPI;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -28,31 +31,33 @@ public class EntityMixin {
 
 	@Inject(method = "getBlockPosBelowThatAffectsMyMovement", at = @At("HEAD"), cancellable = true)
 	private void onPosGravityMod(CallbackInfoReturnable<BlockPos> cir) {
-		double gravity = GravityAPI.calculateGravity(Entity.class.cast(this));
-		if (gravity < 0) {
-			cir.setReturnValue(BlockPos.containing(this.position.add(Vec3.atLowerCornerOf(Direction.UP.getNormal()).scale(0.500001F))));
-		}
+		Vec3 gravity = GravityAPI.calculateGravity(Entity.class.cast(this));
+		cir.setReturnValue(BlockPos.containing(this.position.add(gravity.normalize()).scale(0.500001F)));
 	}
 
 	@Inject(method = "getOnPosLegacy", at = @At("HEAD"), cancellable = true)
 	private void onPosLegGravityMod(CallbackInfoReturnable<BlockPos> cir) {
-		double gravity = GravityAPI.calculateGravity(Entity.class.cast(this));
-		if (gravity < 0) {
-			cir.setReturnValue(BlockPos.containing(new Vec3(0.0, 0.20000000298023224, 0.0).add(this.position)));
-		}
+		Vec3 gravity = GravityAPI.calculateGravity(Entity.class.cast(this));
+		cir.setReturnValue(BlockPos.containing(gravity.normalize().scale(0.20000000298023224).add(this.position)));
 	}
 
-	@ModifyExpressionValue(method = "checkSupportingBlock", at = @At(value = "CONSTANT", args = {"doubleValue=1.0E-6"}))
-	private double reverseGravitySupport(double original) {
-		double gravity = GravityAPI.calculateGravity(Entity.class.cast(this));
-		return gravity < 0 ? original * -1 : original;
-	}
+	@WrapOperation(method = "checkSupportingBlock", at = @At(value = "NEW", target = "(DDDDDD)Lnet/minecraft/world/phys/AABB;", ordinal = 0))
+	private AABB boundingBoxGravMod(double minX, double minY, double minZ, double maxX, double maxY, double maxZ, Operation<AABB> original) {
+		Vec3 gravity = GravityAPI.calculateGravity(Entity.class.cast(this)).normalize();
+		double minOffset = 1.0E-6;
+		Vec3 offset = gravity.scale(minOffset);
+		double xOffset = offset.x;
+		double yOffset = offset.y + minOffset;
+		double zOffset = offset.z;
+
+        return original.call(minX - xOffset, minY - yOffset, minZ - zOffset, maxX, maxY, maxZ);
+    }
 
 	@Inject(method = "move", at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/Entity;verticalCollisionBelow:Z", shift = At.Shift.AFTER))
 	private void reverseGravityModify(MoverType type, Vec3 pos, CallbackInfo ci) {
 		if (!this.verticalCollisionBelow && this.verticalCollision) {
-			double gravity = GravityAPI.calculateGravity(Entity.class.cast(this));
-			if (gravity < 0 && pos.y > 0.0) this.verticalCollisionBelow = true;
+			Vec3 gravity = GravityAPI.calculateGravity(Entity.class.cast(this));
+			if (gravity.y < 0 && pos.y > 0.0) this.verticalCollisionBelow = true;
 		}
 	}
 }
