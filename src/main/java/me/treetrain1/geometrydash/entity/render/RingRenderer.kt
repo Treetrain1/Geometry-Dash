@@ -27,6 +27,12 @@ open class RingRenderer(ctx: Context) : StaticEntityRenderer<Ring>(ctx) {
         private val FORCE_DOWN_TEXTURE = id("textures/entity/force_down_ring.png")
         private val FORCE_DOWN_LAYER = RenderType.entityCutout(FORCE_DOWN_TEXTURE)
 
+        private val DASH_TEXTURE = id("textures/entity/dash_ring.png")
+        private val DASH_LAYER = RenderType.entityCutout(DASH_TEXTURE)
+
+        private val DASH_REVERSE_GRAVITY_TEXTURE = id("textures/entity/dash_reverse_gravity_ring.png")
+        private val DASH_REVERSE_GRAVITY_LAYER = RenderType.entityCutout(DASH_REVERSE_GRAVITY_TEXTURE)
+
         private val TELEPORT_TEXTURE = id("textures/entity/teleport_ring.png")
         private val TELEPORT_LAYER = RenderType.entityCutout(TELEPORT_TEXTURE)
     }
@@ -44,6 +50,8 @@ open class RingRenderer(ctx: Context) : StaticEntityRenderer<Ring>(ctx) {
             Ring.RingType.SWING -> SWING_TEXTURE
             Ring.RingType.REVERSE_GRAVITY -> REVERSE_GRAVITY_TEXTURE
             Ring.RingType.FORCE_DOWN -> FORCE_DOWN_TEXTURE
+            Ring.RingType.DASH -> DASH_TEXTURE
+            Ring.RingType.DASH_REVERSE_GRAVITY -> DASH_REVERSE_GRAVITY_TEXTURE
             Ring.RingType.TELEPORT -> TELEPORT_TEXTURE
             else -> TEXTURE
         }
@@ -57,6 +65,8 @@ open class RingRenderer(ctx: Context) : StaticEntityRenderer<Ring>(ctx) {
             Ring.RingType.SWING -> SWING_LAYER
             Ring.RingType.REVERSE_GRAVITY -> REVERSE_GRAVITY_LAYER
             Ring.RingType.FORCE_DOWN -> FORCE_DOWN_LAYER
+            Ring.RingType.DASH -> DASH_LAYER
+            Ring.RingType.DASH_REVERSE_GRAVITY -> DASH_REVERSE_GRAVITY_LAYER
             Ring.RingType.TELEPORT -> TELEPORT_LAYER
             else -> LAYER
         }

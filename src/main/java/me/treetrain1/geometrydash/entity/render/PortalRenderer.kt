@@ -10,8 +10,8 @@ import net.minecraft.resources.ResourceLocation
 open class PortalRenderer(ctx: Context) : StaticEntityRenderer<Portal>(ctx) {
 
     companion object {
-        private val TEXTURE = id("textures/entity/ring.png")
-        private val LAYER = RenderType.entityCutout(TEXTURE)
+        private val CUBE_TEXTURE = id("textures/entity/cube_portal.png")
+        private val CUBE_LAYER = RenderType.entityCutout(CUBE_TEXTURE)
     }
 
     override fun scale(entity: Portal): Float = 1F
@@ -21,13 +21,15 @@ open class PortalRenderer(ctx: Context) : StaticEntityRenderer<Portal>(ctx) {
 
     override fun getTextureLocation(entity: Portal): ResourceLocation {
         return when (entity.type) {
-            else -> TEXTURE
+            Portal.PortalType.CUBE -> CUBE_TEXTURE
+            else -> CUBE_TEXTURE
         }
     }
 
     override fun getLayer(entity: Portal): RenderType {
         return when (entity.type) {
-            else -> LAYER
+            Portal.PortalType.CUBE -> CUBE_LAYER
+            else -> CUBE_LAYER
         }
     }
 }
