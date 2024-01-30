@@ -16,7 +16,7 @@ open class PortalRenderer(ctx: Context) : StaticEntityRenderer<Portal>(ctx) {
 
     override fun scale(entity: Portal): Float = 1F
     override fun width(entity: Portal): Float = 1F
-    override fun height(entity: Portal): Float = 1F
+    override fun height(entity: Portal): Float = 2F
     override fun yOffset(entity: Portal): Float = 0.44F
 
     override fun getTextureLocation(entity: Portal): ResourceLocation {
