@@ -46,7 +46,7 @@ fun LivingEntity.vertTeleport(level: Level) {
     val rayEnd: Vec3 = this.position().add(rayOffset)
     val raycast: BlockHitResult = level.clip(
         ClipContext(
-            this.position().add(0.0, if (up) 0.01 else -2.01, 0.0),
+            this.position(),
             rayEnd,
             ClipContext.Block.COLLIDER,
             ClipContext.Fluid.NONE,

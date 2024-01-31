@@ -14,7 +14,6 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(LivingEntity.class)
 public class LivingEntityMixin {
 
-	// TODO: fix slow movement
 	@WrapOperation(method = "jumpFromGround", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;setDeltaMovement(DDD)V"))
 	private void gravityJump(LivingEntity instance, double x, double y, double z, Operation<Void> original) {
 		Vec3 gravity = GravityAPI.calculateGravity(Entity.class.cast(this)).normalize();

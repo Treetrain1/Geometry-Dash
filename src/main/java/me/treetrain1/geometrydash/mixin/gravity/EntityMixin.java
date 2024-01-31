@@ -32,13 +32,13 @@ public class EntityMixin {
 	@Inject(method = "getBlockPosBelowThatAffectsMyMovement", at = @At("HEAD"), cancellable = true)
 	private void onPosGravityMod(CallbackInfoReturnable<BlockPos> cir) {
 		Vec3 gravity = GravityAPI.calculateGravity(Entity.class.cast(this));
-		cir.setReturnValue(BlockPos.containing(this.position.add(gravity.normalize()).scale(0.500001F)));
+		cir.setReturnValue(BlockPos.containing(this.position.add(Vec3.atLowerCornerOf(gravity.normalize().scale(0.500001F)))));
 	}
 
 	@Inject(method = "getOnPosLegacy", at = @At("HEAD"), cancellable = true)
 	private void onPosLegGravityMod(CallbackInfoReturnable<BlockPos> cir) {
 		Vec3 gravity = GravityAPI.calculateGravity(Entity.class.cast(this));
-		cir.setReturnValue(BlockPos.containing(gravity.normalize().scale(0.20000000298023224).add(this.position)));
+		cir.setReturnValue(BlockPos.containing(gravity.normalize().scale(-0.20000000298023224).add(this.position)));
 	}
 
 	@WrapOperation(method = "checkSupportingBlock", at = @At(value = "NEW", target = "(DDDDDD)Lnet/minecraft/world/phys/AABB;", ordinal = 0))
@@ -57,7 +57,13 @@ public class EntityMixin {
 	private void reverseGravityModify(MoverType type, Vec3 pos, CallbackInfo ci) {
 		if (!this.verticalCollisionBelow && this.verticalCollision) {
 			Vec3 gravity = GravityAPI.calculateGravity(Entity.class.cast(this));
-			if (gravity.y < 0 && pos.y > 0.0) this.verticalCollisionBelow = true;
+			if (
+				(gravity.y < 0 && pos.y > 0)
+				|| (gravity.x > 0 && pos.x < 0)
+				|| (gravity.x < 0 && pos.x > 0)
+				|| (gravity.z > 0 && pos.z < 0)
+				|| (gravity.z < 0 && pos.z > 0)
+			) this.verticalCollisionBelow = true;
 		}
 	}
 }

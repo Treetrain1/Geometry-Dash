@@ -45,7 +45,7 @@ open class Ring(
             player.vertTeleport(this.level())
         }
         if (type.shouldDash) {
-            player.dash(this) // TODO: set to ring rotation
+            player.dash(this)
         }
     }
 
