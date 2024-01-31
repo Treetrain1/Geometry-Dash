@@ -17,7 +17,7 @@ object GravityCommand {
     internal fun register(dispatcher: CommandDispatcher<CommandSourceStack>) = dispatcher.register(
         Commands.literal("gravity")
             .then(
-                Commands.argument("gravityAmount", Vec3Argument.vec3())
+                Commands.argument("gravityAmount", Vec3Argument.vec3(false))
                     .requires { source -> source.isPlayer && source.hasPermission(2) }
                     .executes { ctx -> set(ctx.source, Vec3Argument.getVec3(ctx, "gravityAmount"), listOf(ctx.source.playerOrException)) }
                     .then(
