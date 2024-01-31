@@ -88,9 +88,12 @@ private const val defaultLaunch = 0.42 * 1.5//1.8
 
 fun LivingEntity.launch(multiplier: Double) {
     val vec3: Vec3 = this.deltaMovement
-    this.setRelativeDelta(vec3.x, defaultLaunch * multiplier, vec3.z)
+    val launchVal = defaultLaunch * multiplier
+    val launchVec = this.gravity.multiply(launchVal, launchVal, launchVal)
+    this.setRelativeDelta(vec3.x + launchVec.x, launchVec.y, vec3.z + launchVec.z)
     if (this.isSprinting) {
         val rot: Float = this.yRot * (Math.PI / 180.0).toFloat()
+        // TODO: check if this needs to be relative
         this.deltaMovement = this.deltaMovement.add((-Mth.sin(rot) * 0.2f).toDouble(), 0.0, (Mth.cos(rot) * 0.2f).toDouble())
     }
 
