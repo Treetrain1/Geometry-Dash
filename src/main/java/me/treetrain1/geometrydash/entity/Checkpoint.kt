@@ -46,7 +46,7 @@ open class Checkpoint(
             gdData.mode!!,
             CompoundTag().apply { gdData.gdModeData!!.save(this) },
             player.deltaMovement,
-            player.yRot,
+            this.yRot,
             gdData.scale,
             player.gravity,
             player.onGround(),
