@@ -100,6 +100,6 @@ public abstract class EntityMixin implements EntityDuck {
 
 	@Override
 	public void geometryDash$setGravity(@NotNull Vec3 gravity) {
-		this.entityData.set(GRAVITY_DATA, gravity);
+		this.entityData.set(GRAVITY_DATA, gravity, true);
 	}
 }
