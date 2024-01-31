@@ -16,7 +16,7 @@ internal val LOGGER: Logger = LoggerFactory.getLogger(MOD_NAME)!!
 @JvmField
 val GD_MOVEMENT_SPEED = AttributeModifier(
     "Geometry Dash speed boost",
-    1.25,
+    0.0,//1.25,
     AttributeModifier.Operation.MULTIPLY_TOTAL
 )
-const val GD_GRAVITY_PULL: Double = -0.18
+const val GD_GRAVITY_PULL: Double = -0.08//-0.18

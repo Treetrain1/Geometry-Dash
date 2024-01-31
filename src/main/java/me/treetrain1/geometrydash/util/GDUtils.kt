@@ -84,7 +84,7 @@ fun Entity.isCollidingWithBlockShape(level: Level, pos: BlockPos): Boolean {
 }
 
 // 0.42 is the player jump power
-private const val defaultLaunch = 0.42 * 1.8
+private const val defaultLaunch = 0.42 * 1.5//1.8
 
 fun LivingEntity.launch(multiplier: Double) {
     val vec3: Vec3 = this.deltaMovement
@@ -101,14 +101,13 @@ fun Player.dash(ring: Ring) {
     val data = this.gdData
     data.dashRingID = ring.stringUUID
 
-    val delta = this.deltaMovement
-    this.deltaMovement = Vec3.directionFromRotation(ring.rotationVector)//.multiply(delta)
+    this.deltaMovement = ring.forward
 }
 
 // these are for respecting gravity when setting movement
 inline fun LivingEntity.setRelativeDelta(x: Double, y: Double, z: Double) {
-    val gravity = this.gravity
-    this.deltaMovement = gravity.normalize().multiply(x, y, z)
+    val gravity = this.normalizedGravity
+    this.deltaMovement = gravity.multiply(x, y, z)
 }
 inline fun LivingEntity.setRelativeDelta(vec: Vec3) {
     this.setRelativeDelta(vec.x, vec.y, vec.z)
@@ -126,6 +125,16 @@ inline val Player.gdData get() = (this as PlayerDuck).`geometryDash$getGDData`()
 inline var Entity.gravity: Vec3
     get() = (this as EntityDuck).`geometryDash$getGravity`()
     set(value) = (this as EntityDuck).`geometryDash$setGravity`(value)
+
+inline val Entity.normalizedGravity: Vec3 get() {
+    val gravity: Vec3 = this.gravity.normalize()
+    var newX = gravity.x
+    var newZ = gravity.z
+    if (newX == 0.0) newX = 1.0
+    if (newZ == 0.0) newZ = 1.0
+
+    return Vec3(newX, gravity.y, newZ)
+}
 
 inline fun CompoundTag.putVec(key: String, vec: Vec3) {
     val list = ListTag()

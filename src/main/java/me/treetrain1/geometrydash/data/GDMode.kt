@@ -7,7 +7,7 @@ import org.jetbrains.annotations.Contract
 
 enum class GDMode(val title: String, val modeData: () -> GDModeData, val isFlying: Boolean = false) : StringRepresentable {
     CUBE("Cube", { CubeModeData() }),
-    SHIP("Ship", { CubeModeData() }, isFlying = true),
+    SHIP("Ship", { ShipModeData() }, isFlying = true),
     BALL("Ball", { BallModeData() }),
     UFO("UFO", { UFOModeData() }, isFlying = true),
     WAVE("Wave", { WaveModeData() }, isFlying = true),

@@ -74,7 +74,7 @@ public class LocalPlayerMixin {
 					LocalPlayer player = LocalPlayer.class.cast(this);
 					Entity entity = player.level().getEntities().get(UUID.fromString(dashRingID));
 					if (entity instanceof Ring ring) {
-						player.setDeltaMovement(Vec3.directionFromRotation(ring.getRotationVector()));//.multiply(player.getDeltaMovement()));
+						player.setDeltaMovement(ring.getForward());
 						return;
 					}
 				}

@@ -10,6 +10,8 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider.Context
 import net.minecraft.client.renderer.texture.OverlayTexture
 import org.joml.Matrix4f
 import org.joml.Quaternionf
+import kotlin.math.cos
+import kotlin.math.sin
 
 @Suppress("NOTHING_TO_INLINE")
 abstract class StaticEntityRenderer<T : StaticEntity>(ctx: Context) : EntityRenderer<T>(ctx) {
@@ -25,12 +27,14 @@ abstract class StaticEntityRenderer<T : StaticEntity>(ctx: Context) : EntityRend
     protected abstract fun yOffset(entity: T): Float
     protected open fun overlay(entity: T): Int = OverlayTexture.NO_OVERLAY
 
+    protected open fun xRot(entity: T): Float = 0F
+
     protected abstract fun getLayer(entity: T): RenderType
 
-    private inline fun minX(entity: T): Float = -width(entity) / 2
-    private inline fun maxX(entity: T): Float = width(entity) / 2
-    private inline fun minY(entity: T): Float = -height(entity) / 2
-    private inline fun maxY(entity: T): Float = height(entity) / 2
+    private inline fun minX(entity: T): Float = -maxX(entity)
+    private inline fun maxX(entity: T): Float = /*sin(xRot(entity)) **/ width(entity) / 2
+    private inline fun minY(entity: T): Float = -maxY(entity)
+    private inline fun maxY(entity: T): Float = /*cos(xRot(entity)) **/ height(entity) / 2
 
     // TODO: add rotation support
     fun renderStaticEntity(

@@ -37,7 +37,8 @@ object RegisterEntities {
         "portal",
         FabricEntityTypeBuilder.create(MobCategory.MISC, ::Portal)
             .fireImmune()
-            .dimensions(EntityDimensions.scalable(0.7F, 1.9F))
+            // wide enough to fit an entire block (the player)
+            .dimensions(EntityDimensions.scalable(1.05F, 1.92F))
             .trackRangeBlocks(32)
             .trackedUpdateRate(2)
             .build()
