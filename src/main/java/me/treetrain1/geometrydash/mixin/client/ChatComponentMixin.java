@@ -16,6 +16,7 @@ public class ChatComponentMixin {
 	@Final
 	private Minecraft minecraft;
 
+	// TODO: fix
 	@ModifyReturnValue(method = "isChatHidden", at = @At("RETURN"))
 	private boolean gdHideChat(boolean original) {
 		return original && !((PlayerDuck) this.minecraft.player).geometryDash$getGDData().getPlayingGD();
