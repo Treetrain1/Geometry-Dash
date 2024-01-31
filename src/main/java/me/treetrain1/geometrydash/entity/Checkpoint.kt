@@ -41,6 +41,7 @@ open class Checkpoint(
         if (!gdData.playingGD) return
         val list = gdData.checkpoints
         if (list.map { it.entityId }.contains(this.id)) return
+        player.yRot = this.yRot
         list.add(CheckpointSnapshot(
             this.id,
             gdData.mode!!,
