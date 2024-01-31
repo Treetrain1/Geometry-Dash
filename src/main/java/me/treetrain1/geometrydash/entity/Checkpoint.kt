@@ -37,8 +37,7 @@ open class Checkpoint(
             this.checkpointTick()
     }
 
-    protected open fun addCheckpoint(player: Player, gdData: GDData, rot: Float) {
-        if (!gdData.playingGD) return
+    protected open fun addCheckpoint(player: Player, gdData: GDData) {
         val list = gdData.checkpoints
         if (list.map { it.entityId }.contains(this.id)) return
         list.add(CheckpointSnapshot(
@@ -46,7 +45,7 @@ open class Checkpoint(
             gdData.mode!!,
             CompoundTag().apply { gdData.gdModeData!!.save(this) },
             player.deltaMovement,
-            rot,
+            player.yRot,
             gdData.scale,
             player.gravity,
             player.onGround(),
@@ -63,13 +62,13 @@ open class Checkpoint(
             when (this.type) {
                 CheckpointType.START -> {
                     gdData.enterGD()
-                    this.addCheckpoint(player, gdData, this.yRot)
+                    player.yRot = this.yRot
                 }
                 CheckpointType.END -> gdData.exitGD()
-                else -> {
-                    this.addCheckpoint(player, gdData, yRot)
-                }
+                else -> {}
             }
+            if (this.type.shouldAddSpawn)
+                this.addCheckpoint(player, gdData)
             gdData.markDirty()
         }
     }
@@ -86,10 +85,10 @@ open class Checkpoint(
         }
     }
 
-    enum class CheckpointType {
+    enum class CheckpointType(val shouldAddSpawn: Boolean = true) {
         STANDARD,
         START,
-        END;
+        END(false);
 
         companion object {
             @JvmField
