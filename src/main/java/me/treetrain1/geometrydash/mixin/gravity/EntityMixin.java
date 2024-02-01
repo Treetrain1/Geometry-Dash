@@ -31,21 +31,21 @@ public class EntityMixin {
 
 	@Inject(method = "getBlockPosBelowThatAffectsMyMovement", at = @At("HEAD"), cancellable = true)
 	private void onPosGravityMod(CallbackInfoReturnable<BlockPos> cir) {
-		Vec3 gravity = GravityAPI.calculateGravity(Entity.class.cast(this));
-		cir.setReturnValue(BlockPos.containing(this.position.add(Vec3.atLowerCornerOf(gravity.normalize().scale(0.500001F)))));
+		Vec3 offset = GDUtilsKt.toRelative(Entity.class.cast(this), new Vec3(0, 0.500001F, 0));
+		cir.setReturnValue(BlockPos.containing(this.position.add(offset)));
 	}
 
 	@Inject(method = "getOnPosLegacy", at = @At("HEAD"), cancellable = true)
 	private void onPosLegGravityMod(CallbackInfoReturnable<BlockPos> cir) {
-		Vec3 gravity = GravityAPI.calculateGravity(Entity.class.cast(this));
-		cir.setReturnValue(BlockPos.containing(gravity.normalize().scale(-0.20000000298023224).add(this.position)));
+		Vec3 offset = GDUtilsKt.toRelative(Entity.class.cast(this), new Vec3(0, -0.20000000298023224, 0));
+		cir.setReturnValue(BlockPos.containing(this.position.add(offset)));
 	}
 
+	// TODO: test this specifically
 	@WrapOperation(method = "checkSupportingBlock", at = @At(value = "NEW", target = "(DDDDDD)Lnet/minecraft/world/phys/AABB;", ordinal = 0))
 	private AABB boundingBoxGravMod(double minX, double minY, double minZ, double maxX, double maxY, double maxZ, Operation<AABB> original) {
-		Vec3 gravity = GravityAPI.calculateGravity(Entity.class.cast(this)).normalize();
 		double minOffset = 1.0E-6;
-		Vec3 offset = gravity.scale(minOffset);
+		Vec3 offset = GDUtilsKt.toRelative(Entity.class.cast(this), new Vec3(0, minOffset, 0));
 		double xOffset = offset.x;
 		double yOffset = offset.y + minOffset;
 		double zOffset = offset.z;

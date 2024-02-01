@@ -40,8 +40,7 @@ inline fun Entity.setRelativeGravity(flip: Boolean) {
 fun LivingEntity.vertTeleport(level: Level) {
     if (!level.isClientSide) return
 
-    val gravity: Vec3 = this.gravity
-    val rayOffset = gravity.normalize().scale(-100.0)
+    val rayOffset: Vec3 = this.toRelative(Vec3(0, -100, 0))
     val up = rayOffset.y > 0
     val rayEnd: Vec3 = this.position().add(rayOffset)
     val raycast: BlockHitResult = level.clip(
@@ -89,8 +88,12 @@ private const val defaultLaunch = 0.42 * 1.5//1.8
 fun LivingEntity.launch(multiplier: Double) {
     val vec3: Vec3 = this.deltaMovement
     val launchVal = defaultLaunch * multiplier
-    val launchVec = this.gravity.multiply(launchVal, launchVal, launchVal)
-    this.setRelativeDelta(vec3.x + launchVec.x, launchVec.y, vec3.z + launchVec.z)
+    val launchVec = this.toRelative(0, launchVal, 0)
+    val newDelta: Vec3 = vec3
+    if (launchVec.x != 0) newDelta = Vec3(launchVec.x, newDelta.y, newDelta.z)
+    if (launchVec.y != 0) newDelta = Vec3(newDelta.x, launchVec.y, newDelta.z)
+    if (launchVec.z != 0) newDelta = Vec3(newDelta.x, newDelta.y, launchVec.z)
+    this.deltaMovement = newDelta
     if (this.isSprinting) {
         val rot: Float = this.yRot * (Math.PI / 180.0).toFloat()
         // TODO: check if this needs to be relative
@@ -109,19 +112,20 @@ fun Player.dash(ring: Ring) {
 
 // these are for respecting gravity when setting movement
 inline fun LivingEntity.setRelativeDelta(x: Double, y: Double, z: Double) {
-    val gravity = this.normalizedGravity
-    this.deltaMovement = gravity.multiply(x, y, z)
+    this.setRelativeDelta(Vec3(x, y, z))
 }
 inline fun LivingEntity.setRelativeDelta(vec: Vec3) {
-    this.setRelativeDelta(vec.x, vec.y, vec.z)
+    this.deltaMovement = this.toRelative(vec)
 }
-inline fun LivingEntity.toRelative(vec: Vec3): Vec3 {
+inline fun Entity.toRelative(vec: Vec3): Vec3 {
     val gravity = this.gravity
 
     val newY = gravity.normalize() // relative y
     val newZ = gravity.cross(newY, Vec3(0.0, 1.0, 0.0)).normalize()
     val newX = gravity.cross(newY, newZ).normalize()
-    return vec.multiply(newX, newY, newZ)
+    val matrix = Matrix3d(newX, newY, newZ)
+
+    return vec.multiply(matrix) // something like this i dont really know
 }
 //inline fun LivingEntity.globalToRelative(vec: Vec3): Vec3 = this.gravity.normalize().multiply(vec)
 //inline fun LivingEntity.relativeToGlobal(vec: Vec3): Vec3 = vec.multiply()
@@ -136,16 +140,6 @@ inline val Player.gdData get() = (this as PlayerDuck).`geometryDash$getGDData`()
 inline var Entity.gravity: Vec3
     get() = (this as EntityDuck).`geometryDash$getGravity`()
     set(value) = (this as EntityDuck).`geometryDash$setGravity`(value)
-
-inline val Entity.normalizedGravity: Vec3 get() {
-    val gravity: Vec3 = this.gravity.normalize()
-    var newX = gravity.x
-    var newZ = gravity.z
-    if (newX == 0.0) newX = 1.0
-    if (newZ == 0.0) newZ = 1.0
-
-    return Vec3(newX, gravity.y, newZ)
-}
 
 inline fun CompoundTag.putVec(key: String, vec: Vec3) {
     val list = ListTag()

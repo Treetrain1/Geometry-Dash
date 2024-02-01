@@ -16,11 +16,7 @@ public class LivingEntityMixin {
 
 	@WrapOperation(method = "jumpFromGround", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;setDeltaMovement(DDD)V"))
 	private void gravityJump(LivingEntity instance, double x, double y, double z, Operation<Void> original) {
-		Vec3 gravity = GravityAPI.calculateGravity(Entity.class.cast(this)).normalize();
-		double newX = gravity.x;
-		double newZ = gravity.z;
-		if (newX == 0) newX = 1; if (newZ == 0) newZ = 1;
-		Vec3 modified = new Vec3(newX, gravity.y, newZ).multiply(x, y, z);
+		Vec3 modified = GDUtilsKt.toRelative(x, y, z);
  		original.call(instance, modified.x, modified.y, modified.z);
 	}
 }
