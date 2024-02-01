@@ -27,6 +27,8 @@ import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec3
 import net.minecraft.world.phys.shapes.CollisionContext
+import org.joml.Matrix3d
+import org.joml.Vector3d
 
 // GRAVITY
 
@@ -40,7 +42,7 @@ inline fun Entity.setRelativeGravity(flip: Boolean) {
 fun LivingEntity.vertTeleport(level: Level) {
     if (!level.isClientSide) return
 
-    val rayOffset: Vec3 = this.toRelative(Vec3(0, -100, 0))
+    val rayOffset: Vec3 = this.toRelative(Vec3(0.0, -100.0, 0.0))
     val up = rayOffset.y > 0
     val rayEnd: Vec3 = this.position().add(rayOffset)
     val raycast: BlockHitResult = level.clip(
@@ -88,11 +90,11 @@ private const val defaultLaunch = 0.42 * 1.5//1.8
 fun LivingEntity.launch(multiplier: Double) {
     val vec3: Vec3 = this.deltaMovement
     val launchVal = defaultLaunch * multiplier
-    val launchVec = this.toRelative(0, launchVal, 0)
-    val newDelta: Vec3 = vec3
-    if (launchVec.x != 0) newDelta = Vec3(launchVec.x, newDelta.y, newDelta.z)
-    if (launchVec.y != 0) newDelta = Vec3(newDelta.x, launchVec.y, newDelta.z)
-    if (launchVec.z != 0) newDelta = Vec3(newDelta.x, newDelta.y, launchVec.z)
+    val launchVec = this.toRelative(0.0, launchVal, 0.0)
+    var newDelta: Vec3 = vec3
+    if (launchVec.x != 0.0) newDelta = Vec3(launchVec.x, newDelta.y, newDelta.z)
+    if (launchVec.y != 0.0) newDelta = Vec3(newDelta.x, launchVec.y, newDelta.z)
+    if (launchVec.z != 0.0) newDelta = Vec3(newDelta.x, newDelta.y, launchVec.z)
     this.deltaMovement = newDelta
     if (this.isSprinting) {
         val rot: Float = this.yRot * (Math.PI / 180.0).toFloat()
@@ -117,16 +119,24 @@ inline fun LivingEntity.setRelativeDelta(x: Double, y: Double, z: Double) {
 inline fun LivingEntity.setRelativeDelta(vec: Vec3) {
     this.deltaMovement = this.toRelative(vec)
 }
+inline fun Entity.toRelative(x: Double, y: Double, z: Double) = this.toRelative(Vec3(x,y, z))
 inline fun Entity.toRelative(vec: Vec3): Vec3 {
-    val gravity = this.gravity
+    val gravity = this.gravity.toVector3d()
 
     val newY = gravity.normalize() // relative y
-    val newZ = gravity.cross(newY, Vec3(0.0, 1.0, 0.0)).normalize()
+    val newZ = gravity.cross(newY, Vector3d(0.0, 1.0, 0.0)).normalize()
     val newX = gravity.cross(newY, newZ).normalize()
-    val matrix = Matrix3d(newX, newY, newZ)
+    val matrix = Matrix3d(
+        newX.x, newX.y, newX.z,
+        newY.x, newY.y, newY.z,
+        newZ.x, newZ.y, newZ.z
+    )
 
-    return vec.multiply(matrix) // something like this i dont really know
+    return matrix.transform(vec.toVector3d()).toVec3()
 }
+
+inline fun Vec3.toVector3d(): Vector3d = Vector3d(this.x, this.y, this.z)
+inline fun Vector3d.toVec3(): Vec3 = Vec3(this.x, this.y, this.z)
 //inline fun LivingEntity.globalToRelative(vec: Vec3): Vec3 = this.gravity.normalize().multiply(vec)
 //inline fun LivingEntity.relativeToGlobal(vec: Vec3): Vec3 = vec.multiply()
 

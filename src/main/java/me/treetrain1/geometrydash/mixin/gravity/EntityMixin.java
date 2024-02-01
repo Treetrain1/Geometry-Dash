@@ -3,6 +3,7 @@ package me.treetrain1.geometrydash.mixin.gravity;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import me.treetrain1.geometrydash.util.GDUtilsKt;
 import net.frozenblock.lib.gravity.api.GravityAPI;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
