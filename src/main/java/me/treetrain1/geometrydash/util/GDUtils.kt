@@ -115,6 +115,14 @@ inline fun LivingEntity.setRelativeDelta(x: Double, y: Double, z: Double) {
 inline fun LivingEntity.setRelativeDelta(vec: Vec3) {
     this.setRelativeDelta(vec.x, vec.y, vec.z)
 }
+inline fun LivingEntity.toRelative(vec: Vec3): Vec3 {
+    val gravity = this.gravity
+
+    val newY = gravity.normalize() // relative y
+    val newZ = gravity.cross(newY, Vec3(0.0, 1.0, 0.0)).normalize()
+    val newX = gravity.cross(newY, newZ).normalize()
+    return Vec3(newX, newY, newZ)
+}
 //inline fun LivingEntity.globalToRelative(vec: Vec3): Vec3 = this.gravity.normalize().multiply(vec)
 //inline fun LivingEntity.relativeToGlobal(vec: Vec3): Vec3 = vec.multiply()
 
