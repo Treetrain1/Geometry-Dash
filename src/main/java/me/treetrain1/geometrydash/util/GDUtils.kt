@@ -27,7 +27,7 @@ import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec3
 import net.minecraft.world.phys.shapes.CollisionContext
-import org.joml.Matrix3d
+import org.joml.Matrix4d
 import org.joml.Vector3d
 
 // GRAVITY
@@ -122,23 +122,18 @@ inline fun LivingEntity.setRelativeDelta(vec: Vec3) {
 inline fun Entity.toRelative(x: Double, y: Double, z: Double) = this.toRelative(Vec3(x,y, z))
 inline fun Entity.toRelative(vec: Vec3): Vec3 {
     val gravity = this.gravity.toVector3d()
+    val vec3d = vec.toVector3d()
 
-    val newY = gravity.normalize() // relative y
-    val newZ = gravity.cross(newY, Vector3d(0.0, 1.0, 0.0)).normalize()
-    val newX = gravity.cross(newY, newZ).normalize()
-    val matrix = Matrix3d(
-        newX.x, newX.y, newX.z,
-        newY.x, newY.y, newY.z,
-        newZ.x, newZ.y, newZ.z
-    )
+    Matrix4d().translate(gravity)
+        .rotate(Math.toRadians(90.0), 1.0, 0.0, 0.0)
+        .translate(gravity.negate())
+        .transformPosition(vec3d)
 
-    return matrix.transform(vec.toVector3d()).toVec3()
+    return vec3d.toVec3()
 }
 
 inline fun Vec3.toVector3d(): Vector3d = Vector3d(this.x, this.y, this.z)
 inline fun Vector3d.toVec3(): Vec3 = Vec3(this.x, this.y, this.z)
-//inline fun LivingEntity.globalToRelative(vec: Vec3): Vec3 = this.gravity.normalize().multiply(vec)
-//inline fun LivingEntity.relativeToGlobal(vec: Vec3): Vec3 = vec.multiply()
 
 // Minecraft accessors
 
