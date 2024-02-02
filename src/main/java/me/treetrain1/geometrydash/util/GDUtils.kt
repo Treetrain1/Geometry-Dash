@@ -125,7 +125,7 @@ inline fun Entity.toRelative(vec: Vec3): Vec3 {
     val vec3d = vec.toVector3d()
 
     Matrix4d().translate(gravity)
-        .rotate(Math.toRadians(90.0), 1.0, 0.0, 0.0)
+        .rotate(Math.toRadians(90.0), 0.0, 1.0, 0.0)
         .translate(gravity.negate())
         .transformPosition(vec3d)
 
