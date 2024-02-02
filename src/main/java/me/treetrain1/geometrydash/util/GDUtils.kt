@@ -124,10 +124,14 @@ inline fun Entity.toRelative(vec: Vec3): Vec3 {
     val gravity = this.gravity.toVector3d()
     val vec3d = vec.toVector3d()
 
-    Matrix4d().translate(gravity)
+    val angle = vec3d.angle(gravity)
+    val normal = gravity.normalize()
+    vec3d.rotateAxis(angle, normal.x, normal.y, normal.z)
+
+    /*Matrix4d().translate(gravity)
         .rotate(Math.toRadians(90.0), 0.0, 1.0, 0.0)
         .translate(gravity.negate())
-        .transformPosition(vec3d)
+        .transformPosition(vec3d)*/
 
     return vec3d.toVec3()
 }
