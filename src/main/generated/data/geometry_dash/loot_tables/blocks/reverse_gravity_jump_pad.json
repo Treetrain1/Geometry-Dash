@@ -11,7 +11,7 @@
               "add": true,
               "conditions": [
                 {
-                  "block": "geometry_dash:low_jump_pad",
+                  "block": "geometry_dash:reverse_gravity_jump_pad",
                   "condition": "minecraft:block_state_property",
                   "properties": {
                     "down": "true"
@@ -25,7 +25,7 @@
               "add": true,
               "conditions": [
                 {
-                  "block": "geometry_dash:low_jump_pad",
+                  "block": "geometry_dash:reverse_gravity_jump_pad",
                   "condition": "minecraft:block_state_property",
                   "properties": {
                     "up": "true"
@@ -39,7 +39,7 @@
               "add": true,
               "conditions": [
                 {
-                  "block": "geometry_dash:low_jump_pad",
+                  "block": "geometry_dash:reverse_gravity_jump_pad",
                   "condition": "minecraft:block_state_property",
                   "properties": {
                     "north": "true"
@@ -53,7 +53,7 @@
               "add": true,
               "conditions": [
                 {
-                  "block": "geometry_dash:low_jump_pad",
+                  "block": "geometry_dash:reverse_gravity_jump_pad",
                   "condition": "minecraft:block_state_property",
                   "properties": {
                     "south": "true"
@@ -67,7 +67,7 @@
               "add": true,
               "conditions": [
                 {
-                  "block": "geometry_dash:low_jump_pad",
+                  "block": "geometry_dash:reverse_gravity_jump_pad",
                   "condition": "minecraft:block_state_property",
                   "properties": {
                     "west": "true"
@@ -81,7 +81,7 @@
               "add": true,
               "conditions": [
                 {
-                  "block": "geometry_dash:low_jump_pad",
+                  "block": "geometry_dash:reverse_gravity_jump_pad",
                   "condition": "minecraft:block_state_property",
                   "properties": {
                     "east": "true"
@@ -100,7 +100,7 @@
               "function": "minecraft:explosion_decay"
             }
           ],
-          "name": "geometry_dash:low_jump_pad"
+          "name": "geometry_dash:reverse_gravity_jump_pad"
         }
       ],
       "rolls": 1.0
