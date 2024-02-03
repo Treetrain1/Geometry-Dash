@@ -371,11 +371,6 @@ fun getVersion(): String {
     return version
 }
 
-if (!(release == true || System.getenv("GITHUB_ACTIONS") == "true")) {
-    test.dependsOn(runDatagen)
-    runClient.dependsOn(runDatagen)
-}
-
 val env: MutableMap<String, String> = System.getenv()
 
 publishing {

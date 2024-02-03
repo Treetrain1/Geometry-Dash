@@ -25,9 +25,10 @@ import kotlin.jvm.optionals.getOrNull
 internal inline fun <T : Any> Registry<T>.register(id: String, `object`: T): T
     = Registry.register(this, id(id), `object`)
 
-internal inline fun register(id: String, block: Block): Block {
+internal inline fun register(id: String, block: Block, registerBlockItem: Boolean = true): Block {
     val registered = Registry.register(BuiltInRegistries.BLOCK, id(id), block)
-    Registry.register(BuiltInRegistries.ITEM, id(id), BlockItem(block, FabricItemSettings()))
+    if (registerBlockItem)
+        Registry.register(BuiltInRegistries.ITEM, id(id), BlockItem(block, FabricItemSettings()))
     return registered
 }
 

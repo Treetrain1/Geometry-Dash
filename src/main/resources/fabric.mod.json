@@ -31,6 +31,12 @@
         "adapter": "kotlin",
         "value": "me.treetrain1.geometrydash.GeometryDashClient"
       }
+    ],
+    "fabric-datagen": [
+      {
+        "adapter": "kotlin",
+        "value": "me.treetrain1.geometrydash.datagen.GDDatagen"
+      }
     ]
   },
   "mixins": [
