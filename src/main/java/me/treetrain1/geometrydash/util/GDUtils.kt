@@ -28,6 +28,8 @@ import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec3
 import net.minecraft.world.phys.shapes.CollisionContext
 import org.joml.Matrix4d
+import org.joml.Quaterniond
+import org.joml.Quaternionf
 import org.joml.Vector3d
 
 // GRAVITY
@@ -122,11 +124,14 @@ inline fun LivingEntity.setRelativeDelta(vec: Vec3) {
 inline fun Entity.toRelative(x: Double, y: Double, z: Double) = this.toRelative(Vec3(x,y, z))
 inline fun Entity.toRelative(vec: Vec3): Vec3 {
     val gravity = this.gravity.toVector3d()
+    if (gravity.y < 0) return vec.multiply(0.0, -1.0, 1.0)
+    return vec
+    // TODO: add horizontal gravity support
     val vec3d = vec.toVector3d()
 
-    val angle = vec3d.angle(gravity)
+    /*val angle = vec3d.angle(gravity)
     val normal = gravity.normalize()
-    vec3d.rotateAxis(angle, normal.x, normal.y, normal.z)
+    vec3d.rotateAxis(angle, normal.x, normal.y, normal.z)*/
 
     /*Matrix4d().translate(gravity)
         .rotate(Math.toRadians(90.0), 0.0, 1.0, 0.0)

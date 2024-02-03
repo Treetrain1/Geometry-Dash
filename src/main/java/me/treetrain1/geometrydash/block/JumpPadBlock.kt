@@ -2,10 +2,12 @@
 
 package me.treetrain1.geometrydash.block
 import com.mojang.serialization.MapCodec
+import com.mojang.serialization.codecs.RecordCodecBuilder
 import me.treetrain1.geometrydash.block.entity.JumpPadBlockEntity
 import me.treetrain1.geometrydash.util.*
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
+import net.minecraft.util.StringRepresentable
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.level.BlockGetter
@@ -55,6 +57,14 @@ open class JumpPadBlock(val type: JumpPadType, props: Properties) : MultifaceBlo
             Direction.EAST to EAST,
             Direction.WEST to WEST
         )
+
+        @JvmField
+        val CODEC: MapCodec<JumpPadBlock> = RecordCodecBuilder.mapCodec { instance ->
+            instance.group(
+                StringRepresentable.fromValues(JumpPadType::values).fieldOf("type").forGetter(JumpPadBlock::type),
+                propertiesCodec()
+            ).apply(instance, ::JumpPadBlock)
+        }
 
         private fun calcShape(state: BlockState): VoxelShape {
             var voxelShape = Shapes.empty()
@@ -130,7 +140,7 @@ open class JumpPadBlock(val type: JumpPadType, props: Properties) : MultifaceBlo
         blockEntity.colliding.add(entity.id)
     }
 
-    override fun codec(): MapCodec<out MultifaceBlock>? = null
+    override fun codec(): MapCodec<out MultifaceBlock>? = CODEC
 
     override fun isValidStateForPlacement(
         level: BlockGetter,
@@ -190,11 +200,13 @@ open class JumpPadBlock(val type: JumpPadType, props: Properties) : MultifaceBlo
         val jumpPower: Double = 1.0,
         val shouldFlipGravity: Boolean = false,
         val shouldTeleport: Boolean = false,
-    ) {
+    ) : StringRepresentable {
         LOW(jumpPower = 0.5),
         NORMAL,
         HIGH(jumpPower = 1.5),
         REVERSE_GRAVITY(shouldFlipGravity = true, jumpPower = -1.0),
         TELEPORT(shouldJump = false, shouldFlipGravity = true, shouldTeleport = true); // Spider vertical teleporting
+
+        override fun getSerializedName(): String = this.name
     }
 }
