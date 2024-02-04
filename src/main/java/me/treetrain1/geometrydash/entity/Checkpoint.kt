@@ -38,6 +38,7 @@ open class Checkpoint(
     }
 
     protected open fun addCheckpoint(player: Player, gdData: GDData) {
+        if (!gdData.playingGD) return
         val list = gdData.checkpoints
         if (list.map { it.entityId }.contains(this.id)) return
         list.add(CheckpointSnapshot(
