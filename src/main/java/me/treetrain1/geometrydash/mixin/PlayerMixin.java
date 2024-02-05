@@ -21,6 +21,10 @@ public class PlayerMixin implements PlayerDuck {
 	@Unique
 	private final GDData gdData = new GDData(Player.class.cast(this));
 
+	{
+		gdData.enterGD();
+	}
+
 	@Unique
 	@Override
 	@NotNull

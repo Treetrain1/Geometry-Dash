@@ -1,6 +1,5 @@
 package me.treetrain1.geometrydash
 
-import me.treetrain1.geometrydash.command.GDCommand
 import me.treetrain1.geometrydash.command.GDModeArgument
 import me.treetrain1.geometrydash.command.GravityCommand
 import me.treetrain1.geometrydash.entity.Checkpoint
@@ -46,14 +45,6 @@ object GeometryDash : ModInitializer {
                 entries.accept(RegisterBlocks.REVERSE_GRAVITY_JUMP_PAD)
                 entries.accept(RegisterBlocks.TELEPORT_PAD)
 
-                entries.accept(RegisterItems.CUBE_PORTAL)
-                entries.accept(RegisterItems.SHIP_PORTAL)
-                entries.accept(RegisterItems.BALL_PORTAL)
-                entries.accept(RegisterItems.UFO_PORTAL)
-                entries.accept(RegisterItems.WAVE_PORTAL)
-                entries.accept(RegisterItems.ROBOT_PORTAL)
-                entries.accept(RegisterItems.SPIDER_PORTAL)
-                entries.accept(RegisterItems.SWING_PORTAL)
                 entries.accept(RegisterItems.CUBE_3D_PORTAL)
                 entries.accept(RegisterItems.GRAVITY_FLIP_PORTAL)
                 entries.accept(RegisterItems.MIRROR_PORTAL)
@@ -81,15 +72,7 @@ object GeometryDash : ModInitializer {
             RegisterItems
             RegisterScaleTypes
 
-            ArgumentTypeInfos.register(
-                BuiltInRegistries.COMMAND_ARGUMENT_TYPE,
-                string("gd_mode"),
-                GDModeArgument::class.java,
-                SingletonArgumentInfo.contextFree(GDModeArgument::gdMode)
-            )
-
             CommandRegistrationCallback.EVENT.register { dispatcher, _, _ ->
-                GDCommand.register(dispatcher)
                 GravityCommand.register(dispatcher)
             }
 

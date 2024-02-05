@@ -34,7 +34,6 @@ open class GDData @JvmOverloads constructor(
         private const val MODE_DATA_TAG = "ModeData"
         private const val SCALE_TAG = "Scale"
         private const val CHECKPOINTS_TAG = "Checkpoints"
-        private const val PREV_GAME_TYPE_TAG = "PrevGameType"
         private const val DASH_RING_TAG = "DashRingID"
 
         @JvmField
@@ -44,16 +43,7 @@ open class GDData @JvmOverloads constructor(
 
     }
 
-    var mode: GDMode? = null
-        set(value) {
-            field = value
-            val modeDataSupplier = value?.modeData
-            if (modeDataSupplier != null) {
-                val modeData = modeDataSupplier()
-                modeData.gdData = this
-                this.gdModeData = modeData
-            }
-        }
+    val mode: GDMode = GDMode.CUBE_3D
 
     inline var scale: Float
         get() = ScaleTypes.WIDTH.getScaleData(this.player).scale
@@ -75,12 +65,6 @@ open class GDData @JvmOverloads constructor(
 
     inline val playingGD: Boolean
         get() = this.mode != null
-
-    @JvmField
-    protected var prevGameType: GameType? = null
-
-    @JvmField
-    protected var prevGravity: Vec3? = null
 
     /**
      * Whether or not player input is ignored
@@ -136,31 +120,11 @@ open class GDData @JvmOverloads constructor(
         return checkpoints.lastOrNull()
     }
 
-    fun toggleGD() {
-        if (this.playingGD)
-            this.exitGD()
-        else
-            this.enterGD()
-    }
-
-    fun setGD(value: Boolean) {
-        if (value == this.playingGD) return
-
-        toggleGD()
-    }
-
-    fun setGD(mode: GDMode?, scale: Float? = 1F): Boolean {
-        if (mode == null) {
-            return this.exitGD()
-        }
-        return this.enterGD(mode, scale)
-    }
-
     /**
      * Must only be directly called on server due to setting game mode to adventure
      * @return if not already in GD mode
      */
-    fun enterGD(mode: GDMode = GDMode.CUBE, scale: Float? = 1F): Boolean {
+    fun enterGD(mode: GDMode = GDMode.CUBE_3D, scale: Float? = 1F): Boolean {
         val noChange: Boolean = this.playingGD && this.mode == mode
         this.mode = mode
         if (scale != null) {
@@ -169,14 +133,6 @@ open class GDData @JvmOverloads constructor(
 
         val player = this.player
         if (noChange || player !is ServerPlayer) return false
-
-        if (this.prevGameType == null)
-            this.prevGameType = player.gameMode.gameModeForPlayer
-        player.setGameMode(GameType.ADVENTURE)
-
-        if (this.prevGravity == null)
-            this.prevGravity = player.gravity
-        player.isNoGravity
 
         this.markDirty()
         return true
@@ -199,16 +155,6 @@ open class GDData @JvmOverloads constructor(
         this.dashRingID = ""
 
         val player = this.player
-        val prevType = this.prevGameType
-        if (player is ServerPlayer && prevType != null) {
-            player.setGameMode(prevType)
-            this.prevGameType = null
-        }
-        val prevGravity = this.prevGravity
-        if (prevGravity != null) {
-            player.gravity = prevGravity
-            this.prevGravity = null
-        }
         player.pose = Pose.STANDING
         player.refreshDimensions()
         this.markDirty()
@@ -241,7 +187,6 @@ open class GDData @JvmOverloads constructor(
         val checkpoints = ListTag()
         checkpoints.addAll(this.checkpoints.map { it.toTag() })
         compound.put(CHECKPOINTS_TAG, checkpoints)
-        compound.putInt(PREV_GAME_TYPE_TAG, this.prevGameType?.id ?: -1)
         compound.putString(DASH_RING_TAG, this.dashRingID)
         return compound
     }
@@ -263,7 +208,6 @@ open class GDData @JvmOverloads constructor(
         this.checkpoints = compound.getList(CHECKPOINTS_TAG, CompoundTag.TAG_COMPOUND.toInt())
             .map { tag -> CheckpointSnapshot.fromTag(tag as CompoundTag) }
             .toMutableList()
-        this.prevGameType = GameType.byNullableId(compound.getInt(PREV_GAME_TYPE_TAG))
         return compound
     }
 
@@ -272,6 +216,5 @@ open class GDData @JvmOverloads constructor(
         this.gdModeData = otherData.gdModeData
         this.scale = otherData.scale
         this.checkpoints = otherData.checkpoints
-        this.prevGameType = otherData.prevGameType
     }
 }

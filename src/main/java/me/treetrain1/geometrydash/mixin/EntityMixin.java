@@ -64,18 +64,6 @@ public abstract class EntityMixin implements EntityDuck {
 		original.call(instance, particleOptions, x, y, z, xSpeed, ySpeed, zSpeed);
 	}
 
-	@Inject(method = "tick", at = @At("TAIL"), locals = LocalCapture.CAPTURE_FAILHARD)
-	private void gdCheck(CallbackInfo ci) {
-		Entity entity = Entity.class.cast(this);
-		if (entity.level().isClientSide && this instanceof PlayerDuck duck && entity instanceof Player player) {
-			GDData data = duck.geometryDash$getGDData();
-			if (!player.isDeadOrDying() && data.getPlayingGD() && this.horizontalCollision && !this.minorHorizontalCollision) {
-				player.setHealth(0);
-				ClientPlayNetworking.send(new C2SFailPacket());
-			}
-		}
-	}
-
 	@Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;defineSynchedData()V"))
 	private void addGravityData(EntityType<?> entityType, Level level, CallbackInfo ci) {
 		this.entityData.define(GRAVITY_DATA, new Vec3(0.0, 1.0, 0.0));

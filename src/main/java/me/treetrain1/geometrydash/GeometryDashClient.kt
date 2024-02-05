@@ -23,20 +23,6 @@ object GeometryDashClient : ClientModInitializer {
 
     @JvmField
     val CUBE_PLAYER: ModelLayerLocation = ModelLayerLocation(id("player"), "cube")
-    @JvmField
-    val SHIP_PLAYER: ModelLayerLocation = ModelLayerLocation(id("player"), "ship")
-    @JvmField
-    val BALL_PLAYER: ModelLayerLocation = ModelLayerLocation(id("player"), "ball")
-    @JvmField
-    val UFO_PLAYER: ModelLayerLocation = ModelLayerLocation(id("player"), "ufo")
-    @JvmField
-    val WAVE_PLAYER: ModelLayerLocation = ModelLayerLocation(id("player"), "wave")
-    @JvmField
-    val ROBOT_PLAYER: ModelLayerLocation = ModelLayerLocation(id("player"), "robot")
-    @JvmField
-    val SPIDER_PLAYER: ModelLayerLocation = ModelLayerLocation(id("player"), "spider")
-    @JvmField
-    val SWING_PLAYER: ModelLayerLocation = ModelLayerLocation(id("player"), "swing")
 
 	@Override
     override fun onInitializeClient() {
@@ -50,34 +36,6 @@ object GeometryDashClient : ClientModInitializer {
         EntityModelLayerRegistry.registerModelLayer(
             CUBE_PLAYER,
             CubePlayerModel.Companion::createBodyLayer
-        )
-        EntityModelLayerRegistry.registerModelLayer(
-            SHIP_PLAYER,
-            ShipPlayerModel.Companion::createBodyLayer
-        )
-        EntityModelLayerRegistry.registerModelLayer(
-            BALL_PLAYER,
-            BallPlayerModel.Companion::createBodyLayer
-        )
-        EntityModelLayerRegistry.registerModelLayer(
-            UFO_PLAYER,
-            UFOPlayerModel.Companion::createBodyLayer
-        )
-        EntityModelLayerRegistry.registerModelLayer(
-            WAVE_PLAYER,
-            WavePlayerModel.Companion::createBodyLayer
-        )
-        EntityModelLayerRegistry.registerModelLayer(
-            ROBOT_PLAYER,
-            RobotPlayerModel.Companion::createBodyLayer
-        )
-        EntityModelLayerRegistry.registerModelLayer(
-            SPIDER_PLAYER,
-            SpiderPlayerModel.Companion::createBodyLayer
-        )
-        EntityModelLayerRegistry.registerModelLayer(
-            SWING_PLAYER,
-            SwingPlayerModel.Companion::createBodyLayer
         )
     }
 }
