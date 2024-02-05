@@ -98,11 +98,6 @@ fun LivingEntity.launch(multiplier: Double) {
     if (launchVec.y != 0.0) newDelta = Vec3(newDelta.x, launchVec.y, newDelta.z)
     if (launchVec.z != 0.0) newDelta = Vec3(newDelta.x, newDelta.y, launchVec.z)
     this.deltaMovement = newDelta
-    if (this.isSprinting) {
-        val rot: Float = this.yRot * (Math.PI / 180.0).toFloat()
-        // TODO: check if this needs to be relative
-        this.deltaMovement = this.deltaMovement.add((-Mth.sin(rot) * 0.2f).toDouble(), 0.0, (Mth.cos(rot) * 0.2f).toDouble())
-    }
 
     this.hasImpulse = true
 }
