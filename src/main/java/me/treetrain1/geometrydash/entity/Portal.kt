@@ -42,6 +42,9 @@ open class Portal(
         if (type.shouldFlipGravity)
             player.setRelativeGravity(true)
 
+        if (type.shouldMirror)
+            player.mirrorView()
+
         if (scale != null)
             data.scale = scale
     }
@@ -76,6 +79,7 @@ open class Portal(
     enum class PortalType(
         val modeSwitch: GDMode? = null,
         val shouldFlipGravity: Boolean = false,
+        val shouldMirror: Boolean = false,
         val scale: Float? = null,
     ) {
         CUBE(modeSwitch = GDMode.CUBE),
@@ -89,6 +93,8 @@ open class Portal(
         CUBE_3D(modeSwitch = GDMode.CUBE_3D),
 
         GRAVITY_FLIP(shouldFlipGravity = true),
+
+        MIRROR(shouldMirror = true)
 
         SCALE_NORMAL(scale = 1F),
         SCALE_SMALL(scale = 0.5F),

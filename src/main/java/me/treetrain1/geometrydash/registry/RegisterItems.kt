@@ -67,6 +67,12 @@ object RegisterItems {
     )
 
     @JvmField
+    val MIRROR_PORTAL: Item = register(
+        "mirror_portal",
+        PortalItem(Portal.PortalType.MIRROR)
+    )
+
+    @JvmField
     val NORMAL_SCALE_PORTAL: Item = register(
         "normal_scale_portal",
         PortalItem(Portal.PortalType.SCALE_NORMAL)
