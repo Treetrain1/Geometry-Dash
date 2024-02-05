@@ -3,6 +3,7 @@ package me.treetrain1.geometrydash.entity
 import me.treetrain1.geometrydash.data.GDData
 import me.treetrain1.geometrydash.data.GDMode
 import me.treetrain1.geometrydash.util.gdData
+import me.treetrain1.geometrydash.util.mirrorView
 import me.treetrain1.geometrydash.util.setRelativeGravity
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.syncher.EntityDataAccessor
@@ -94,7 +95,7 @@ open class Portal(
 
         GRAVITY_FLIP(shouldFlipGravity = true),
 
-        MIRROR(shouldMirror = true)
+        MIRROR(shouldMirror = true),
 
         SCALE_NORMAL(scale = 1F),
         SCALE_SMALL(scale = 0.5F),

@@ -2,7 +2,7 @@ package me.treetrain1.geometrydash.entity.render.layer
 
 import com.mojang.blaze3d.vertex.PoseStack
 import me.treetrain1.geometrydash.data.GDMode
-import me.treetrain1.geometrydash.duck.PlayerDuck
+import me.treetrain1.geometrydash.util.gdData
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.minecraft.client.model.EntityModel

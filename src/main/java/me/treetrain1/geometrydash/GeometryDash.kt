@@ -80,6 +80,7 @@ object GeometryDash : ModInitializer {
             RegisterEntities
             RegisterItems
             RegisterScaleTypes
+            RegisterSounds
 
             ArgumentTypeInfos.register(
                 BuiltInRegistries.COMMAND_ARGUMENT_TYPE,
