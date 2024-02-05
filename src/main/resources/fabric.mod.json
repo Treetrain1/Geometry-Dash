@@ -46,6 +46,7 @@
 
   "depends": {
     "fabric-language-kotlin": "${fabric_kotlin_version}",
+    "pehkui": "*",
     "fabricloader": ">=0.15.3",
     "fabric-api": ">=0.91.0",
     "minecraft": "${minecraft_version}"
