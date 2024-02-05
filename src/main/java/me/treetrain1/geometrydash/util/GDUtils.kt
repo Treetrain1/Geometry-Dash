@@ -94,11 +94,12 @@ fun LivingEntity.launch(multiplier: Double) {
     val launchVal = defaultLaunch * multiplier
     val launchVec = this.toRelative(0.0, launchVal, 0.0)
     var newDelta: Vec3 = vec3
+
     if (launchVec.x != 0.0) newDelta = Vec3(launchVec.x, newDelta.y, newDelta.z)
     if (launchVec.y != 0.0) newDelta = Vec3(newDelta.x, launchVec.y, newDelta.z)
     if (launchVec.z != 0.0) newDelta = Vec3(newDelta.x, newDelta.y, launchVec.z)
-    this.deltaMovement = newDelta
 
+    this.deltaMovement = newDelta
     this.hasImpulse = true
 }
 
