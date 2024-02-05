@@ -176,7 +176,6 @@ open class GDData @JvmOverloads constructor(
 
         if (this.prevGravity == null)
             this.prevGravity = player.gravity
-        player.isNoGravity
 
         this.markDirty()
         return true

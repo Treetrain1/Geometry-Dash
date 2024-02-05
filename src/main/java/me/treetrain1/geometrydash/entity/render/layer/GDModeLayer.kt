@@ -32,7 +32,7 @@ open class GDModeLayer(
         netHeadYaw: Float,
         headPitch: Float
     ) {
-        if (player is PlayerDuck && requiredModes.contains(player.`geometryDash$getGDData`().mode)) {
+        if (requiredModes.contains(player.gdData.mode)) {
             model.prepareMobModel(player, limbSwing, limbSwingAmount, partialTicks)
             model.setupAnim(player, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch)
             val vertexConsumer = buffer.getBuffer(RenderType.entityCutout(player.skin.texture()))

@@ -37,6 +37,7 @@ open class ShipModeData : GDModeData() {
         val delta = player.deltaMovement
         if (data.canProcessInput) {
             player.addDeltaMovement(Vec3(0.0, 0.15, 0.0))
+            player.hasImpulse = true
             return true
         }
         return false

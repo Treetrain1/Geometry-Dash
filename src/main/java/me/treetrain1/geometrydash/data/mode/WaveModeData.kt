@@ -35,9 +35,11 @@ open class WaveModeData : GDModeData() {
         val delta = player.deltaMovement
         if (data.canProcessInput) {
             player.setDeltaMovement(delta.x, 0.5, delta.z)
+            player.hasImpulse = true
             return true
         }
         player.setDeltaMovement(delta.x, -0.5, delta.z)
+        player.hasImpulse = true
         return false
     }
 
