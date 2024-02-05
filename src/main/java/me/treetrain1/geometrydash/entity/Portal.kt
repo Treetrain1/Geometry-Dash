@@ -82,14 +82,6 @@ open class Portal(
         val shouldMirror: Boolean = false,
         val scale: Float? = null,
     ) {
-        CUBE(modeSwitch = GDMode.CUBE),
-        SHIP(modeSwitch = GDMode.SHIP),
-        BALL(modeSwitch = GDMode.BALL),
-        UFO(modeSwitch = GDMode.UFO),
-        WAVE(modeSwitch = GDMode.WAVE),
-        ROBOT(modeSwitch = GDMode.ROBOT),
-        SPIDER(modeSwitch = GDMode.SPIDER),
-        SWING(modeSwitch = GDMode.SWING),
         CUBE_3D(modeSwitch = GDMode.CUBE_3D),
 
         GRAVITY_FLIP(shouldFlipGravity = true),

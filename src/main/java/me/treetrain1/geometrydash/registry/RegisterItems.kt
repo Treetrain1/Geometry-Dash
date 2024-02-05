@@ -7,54 +7,6 @@ import net.minecraft.world.item.Item
 object RegisterItems {
 
     @JvmField
-    val CUBE_PORTAL: Item = register(
-        "cube_portal",
-        PortalItem()
-    )
-
-    @JvmField
-    val SHIP_PORTAL: Item = register(
-        "ship_portal",
-        PortalItem(Portal.PortalType.SHIP)
-    )
-
-    @JvmField
-    val BALL_PORTAL: Item = register(
-        "ball_portal",
-        PortalItem(Portal.PortalType.BALL)
-    )
-
-    @JvmField
-    val UFO_PORTAL: Item = register(
-        "ufo_portal",
-        PortalItem(Portal.PortalType.UFO)
-    )
-
-    @JvmField
-    val WAVE_PORTAL: Item = register(
-        "wave_portal",
-        PortalItem(Portal.PortalType.WAVE)
-    )
-
-    @JvmField
-    val ROBOT_PORTAL: Item = register(
-        "robot_portal",
-        PortalItem(Portal.PortalType.ROBOT)
-    )
-
-    @JvmField
-    val SPIDER_PORTAL: Item = register(
-        "spider_portal",
-        PortalItem(Portal.PortalType.SPIDER)
-    )
-
-    @JvmField
-    val SWING_PORTAL: Item = register(
-        "swing_portal",
-        PortalItem(Portal.PortalType.SWING)
-    )
-
-    @JvmField
     val CUBE_3D_PORTAL: Item = register(
         "cube_3d_portal",
         PortalItem(Portal.PortalType.CUBE_3D)
