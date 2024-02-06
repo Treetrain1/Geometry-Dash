@@ -3,7 +3,33 @@
   "generator": {
     "type": "minecraft:flat",
     "settings": {
-      "layers": []
+      "layers": [
+        {
+          "height": 0,
+          "block": "minecraft:bedrock"
+        },
+        {
+          "height": 1,
+          "block": "minecraft:stone"
+        },
+        {
+          "height": 2,
+          "block": "minecraft:stone"
+        },
+        {
+          "height": 3,
+          "block": "minecraft:dirt"
+        },
+        {
+          "height": 4,
+          "block": "minecraft:dirt"
+        },
+        {
+          "height": 5,
+          "block": "minecraft:grass_block"
+        }
+      ],
+      "biome": "geometry_dash:geometry"
     }
   }
 }

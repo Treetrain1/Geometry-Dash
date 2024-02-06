@@ -7,7 +7,7 @@
   },
   "structures": [
     {
-      "structure": "geometry_dash:stereo_madness",
+      "structure": "geometry_dash:gd_level",
       "weight": 1
     }
   ]

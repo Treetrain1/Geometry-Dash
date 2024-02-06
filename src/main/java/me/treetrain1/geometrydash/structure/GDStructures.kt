@@ -12,7 +12,7 @@ object GDStructures {
     val GD_LEVELS: ResourceKey<StructureSet> = ResourceKey.create(Registries.STRUCTURE_SET, id("gd_levels"))
 
     @JvmField
-    val STEREO_MADNESS: ResourceKey<Structure> = key("stereo_madness")
+    val GD_LEVEL: ResourceKey<Structure> = key("gd_level")
 
     private fun key(id: String): ResourceKey<Structure>
         = ResourceKey.create(Registries.STRUCTURE, id(id))
