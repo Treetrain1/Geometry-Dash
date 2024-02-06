@@ -27,6 +27,7 @@ import net.minecraft.world.damagesource.DamageType
 import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
+import net.minecraft.world.level.dimension.DimensionType
 import net.minecraft.world.phys.Vec3
 import kotlin.system.measureNanoTime
 
@@ -63,6 +64,9 @@ object GeometryDash : ModInitializer {
             }
             .build()
     ).key!!
+
+    @JvmField
+    val DIMENSION_TYPE: ResourceKey<DimensionType> = ResourceKey.create(Registries.DIMENSION_TYPE, id("geometry"))
 
     @JvmField
     val LEVEL_FAIL: ResourceKey<DamageType> = ResourceKey.create(Registries.DAMAGE_TYPE, id("level_fail"))
