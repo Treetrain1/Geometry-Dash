@@ -98,9 +98,9 @@ object GDDatagen : DataGeneratorEntrypoint {
                         GenerationStep.Decoration.SURFACE_STRUCTURES,
                         TerrainAdjustment.BEARD_THIN
                     ),
-                    ctx.lookup(Registries.TEMPLATE_POOL).getOrThrow(PillagerOutpostPools.START),
+                    ctx.lookup(Registries.TEMPLATE_POOL).getOrThrow(LevelGenerator.GD_LEVEL),
                     1,
-                    ConstantHeight.of(VerticalAnchor.absolute(-59)),
+                    ConstantHeight.of(VerticalAnchor.top()),
                     true,
                     Heightmap.Types.WORLD_SURFACE_WG
                 )

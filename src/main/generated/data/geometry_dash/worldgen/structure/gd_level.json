@@ -6,9 +6,9 @@
   "size": 1,
   "spawn_overrides": {},
   "start_height": {
-    "absolute": -59
+    "below_top": 0
   },
-  "start_pool": "minecraft:pillager_outpost/base_plates",
+  "start_pool": "geometry_dash:gd_level",
   "step": "surface_structures",
   "terrain_adaptation": "beard_thin",
   "use_expansion_hack": true
