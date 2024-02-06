@@ -1,6 +1,7 @@
 package me.treetrain1.geometrydash.datagen
 
 import me.treetrain1.geometrydash.GeometryDash
+import me.treetrain1.geometrydash.biome.GeometryBiome
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator
 import net.minecraft.core.RegistrySetBuilder
@@ -21,6 +22,13 @@ object GDDatagen : DataGeneratorEntrypoint {
     }
 
     override fun buildRegistry(registryBuilder: RegistrySetBuilder) {
+        registryBuilder.add(Registries.BIOME) { ctx ->
+            ctx.register(
+                GeometryBiome.key,
+                GeometryBiome.create(ctx)
+            )
+        }
+
         registryBuilder.add(Registries.DIMENSION_TYPE) { ctx ->
             ctx.register(
                 GeometryDash.DIMENSION_TYPE, DimensionType(

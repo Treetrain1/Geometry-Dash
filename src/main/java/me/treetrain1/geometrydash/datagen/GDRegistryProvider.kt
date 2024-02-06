@@ -11,6 +11,7 @@ class GDRegistryProvider(output: FabricDataOutput, registriesFuture: Completable
         = "Geometry Dash Dynamic Registries"
 
     override fun configure(registries: HolderLookup.Provider, entries: Entries) {
+        entries.addAll(registries.lookupOrThrow(Registries.BIOME))
         entries.addAll(registries.lookupOrThrow(Registries.DIMENSION_TYPE))
     }
 }
