@@ -1,0 +1,9 @@
+{
+  "type": "geometry_dash:geometry",
+  "generator": {
+    "type": "minecraft:flat",
+    "settings": {
+      "layers": []
+    }
+  }
+}
