@@ -1,0 +1,6 @@
+{
+  "type": "minecraft:woodland_mansion",
+  "biomes": "#geometry_dash:has_structure/gd_level",
+  "spawn_overrides": {},
+  "step": "surface_structures"
+}

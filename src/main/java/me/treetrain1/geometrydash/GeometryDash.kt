@@ -8,6 +8,7 @@ import me.treetrain1.geometrydash.entity.Portal
 import me.treetrain1.geometrydash.entity.Ring
 import me.treetrain1.geometrydash.network.C2SFailPacket
 import me.treetrain1.geometrydash.registry.*
+import me.treetrain1.geometrydash.structure.GDStructures
 import me.treetrain1.geometrydash.util.*
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
@@ -85,6 +86,7 @@ object GeometryDash : ModInitializer {
             RegisterItems
             RegisterScaleTypes
             RegisterSounds
+            GDStructures
 
             ArgumentTypeInfos.register(
                 BuiltInRegistries.COMMAND_ARGUMENT_TYPE,

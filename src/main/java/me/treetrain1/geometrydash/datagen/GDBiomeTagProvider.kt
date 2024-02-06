@@ -8,6 +8,7 @@ import net.minecraft.core.HolderLookup
 import java.util.concurrent.CompletableFuture
 
 class GDBiomeTagProvider(output: FabricDataOutput, registriesFuture: CompletableFuture<HolderLookup.Provider>) : FrozenBiomeTagProvider(output, registriesFuture) {
+
     override fun addTags(arg: HolderLookup.Provider) {
         this.getOrCreateTagBuilder(GDBiomeTags.GD_LEVEL_HAS_STRUCTURE)
             .add(GeometryBiome.key)

@@ -11,69 +11,37 @@ import net.minecraft.world.level.biome.*
 import java.util.function.Consumer
 
 object GeometryBiome : FrozenBiome() {
-    override fun modID(): String {
-        return MOD_ID
-    }
+    override fun modID(): String = MOD_ID
 
-    override fun biomeID(): String {
-        return "geometry"
-    }
+    override fun biomeID(): String = "geometry"
 
-    override fun temperature(): Float {
-        return 0F
-    }
+    override fun temperature(): Float = 0F
 
-    override fun downfall(): Float {
-        return 0F
-    }
+    override fun downfall(): Float = 0F
 
-    override fun hasPrecipitation(): Boolean {
-        return false
-    }
+    override fun hasPrecipitation(): Boolean = false
 
-    override fun skyColor(): Int {
-        return 0
-    }
+    override fun skyColor(): Int = 0
 
-    override fun fogColor(): Int {
-        return 0
-    }
+    override fun fogColor(): Int = 0
 
-    override fun waterColor(): Int {
-        return 0
-    }
+    override fun waterColor(): Int = 0
 
-    override fun waterFogColor(): Int {
-        return 0
-    }
+    override fun waterFogColor(): Int = 0
 
-    override fun foliageColorOverride(): Int? {
-        return null
-    }
+    override fun foliageColorOverride(): Int? = null
 
-    override fun grassColorOverride(): Int? {
-        return null
-    }
+    override fun grassColorOverride(): Int? = null
 
-    override fun ambientParticleSettings(): AmbientParticleSettings? {
-        return null
-    }
+    override fun ambientParticleSettings(): AmbientParticleSettings? = null
 
-    override fun ambientLoopSound(): Holder<SoundEvent>? {
-        return null
-    }
+    override fun ambientLoopSound(): Holder<SoundEvent>? = null
 
-    override fun ambientMoodSettings(): AmbientMoodSettings? {
-        return null
-    }
+    override fun ambientMoodSettings(): AmbientMoodSettings? = null
 
-    override fun ambientAdditionsSound(): AmbientAdditionsSettings? {
-        return null
-    }
+    override fun ambientAdditionsSound(): AmbientAdditionsSettings? = null
 
-    override fun backgroundMusic(): Music? {
-        return null
-    }
+    override fun backgroundMusic(): Music? = null
 
     override fun addFeatures(features: BiomeGenerationSettings.Builder) {
     }
