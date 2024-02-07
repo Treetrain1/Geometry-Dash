@@ -16,3 +16,4 @@ accessible method net/minecraft/world/level/Level getEntities ()Lnet/minecraft/w
 # Structures
 accessible method net/minecraft/data/worldgen/Structures structure (Lnet/minecraft/core/HolderSet;Lnet/minecraft/world/level/levelgen/GenerationStep$Decoration;Lnet/minecraft/world/level/levelgen/structure/TerrainAdjustment;)Lnet/minecraft/world/level/levelgen/structure/Structure$StructureSettings;
 accessible method net/minecraft/data/worldgen/Structures structure (Lnet/minecraft/core/HolderSet;Lnet/minecraft/world/level/levelgen/structure/TerrainAdjustment;)Lnet/minecraft/world/level/levelgen/structure/Structure$StructureSettings;
+accessible method net/minecraft/world/level/levelgen/structure/pieces/StructurePieceType setTemplatePieceId (Lnet/minecraft/world/level/levelgen/structure/pieces/StructurePieceType$StructureTemplateType;Ljava/lang/String;)Lnet/minecraft/world/level/levelgen/structure/pieces/StructurePieceType;

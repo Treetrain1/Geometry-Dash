@@ -61,9 +61,9 @@ object GDDatagen : DataGeneratorEntrypoint {
                     1.0,
                     true,
                     false,
-                    -64,
-                    384,
-                    384,
+                    0,
+                    1280,
+                    1280,
                     BlockTags.INFINIBURN_OVERWORLD,
                     BuiltinDimensionTypes.OVERWORLD_EFFECTS,
                     0.0F,
@@ -99,10 +99,13 @@ object GDDatagen : DataGeneratorEntrypoint {
                         TerrainAdjustment.BEARD_THIN
                     ),
                     ctx.lookup(Registries.TEMPLATE_POOL).getOrThrow(LevelGenerator.GD_LEVEL),
-                    1,
+                    Optional.empty(),
+                    2,
                     ConstantHeight.of(VerticalAnchor.top()),
                     true,
-                    Heightmap.Types.WORLD_SURFACE_WG
+                    Optional.of(Heightmap.Types.WORLD_SURFACE_WG),
+                    912,
+                    listOf()
                 )
             )
         }
