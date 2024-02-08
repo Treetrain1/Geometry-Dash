@@ -78,7 +78,6 @@ open class Ring(
         }
     }
 
-    // TODO: double check the names
     enum class RingType(
         val shouldBounce: Boolean = true,
         val bounceStrength: Double = 1.0,

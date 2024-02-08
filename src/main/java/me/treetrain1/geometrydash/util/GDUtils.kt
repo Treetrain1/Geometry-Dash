@@ -110,10 +110,6 @@ fun Player.dash(ring: Ring) {
     this.deltaMovement = ring.forward
 }
 
-fun Player.mirrorView() {
-    // TODO: implement mirror view
-}
-
 // these are for respecting gravity when setting movement
 inline fun LivingEntity.setRelativeDelta(x: Double, y: Double, z: Double) {
     this.setRelativeDelta(Vec3(x, y, z))

@@ -3,7 +3,6 @@ package me.treetrain1.geometrydash.entity
 import me.treetrain1.geometrydash.data.GDData
 import me.treetrain1.geometrydash.data.GDMode
 import me.treetrain1.geometrydash.util.gdData
-import me.treetrain1.geometrydash.util.mirrorView
 import me.treetrain1.geometrydash.util.setRelativeGravity
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.syncher.EntityDataAccessor
@@ -44,7 +43,7 @@ open class Portal(
             player.setRelativeGravity(true)
 
         if (type.shouldMirror)
-            player.mirrorView()
+            data.mirrorCamera()
 
         if (scale != null)
             data.scale = scale

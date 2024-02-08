@@ -9,12 +9,14 @@ import org.spongepowered.asm.mixin.Mixin;
 @Mixin(LevelRenderer.class)
 public class LevelRendererMixin {
 
-	/*
 	@Inject(method = "renderLevel", at = @At("HEAD"))
 	private void flipCam(PoseStack poseStack, float partialTick, long finishNanoTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightTexture lightTexture, Matrix4f projectionMatrix, CallbackInfo ci) {
-		// TODO: Mirror everything properly, then use it when gravity is flipped
-		poseStack.scale(-1, 1, 1);
-		projectionMatrix.scale(-1, 1, 1);
+		// TODO: Mirror everything properly, then use it after going through a mirror portal
+		//poseStack.scale(-1, 1, 1);
+		if (Minecraft.getInstance().player instanceof PlayerDuck duck) {
+			GDData data = duck.geometryDash$getGDData();
+			if (data.getPlayingGD())
+				projectionMatrix.scale(data.mirrorProgress, 1, 1);
+		}
 	}
-	 */
 }

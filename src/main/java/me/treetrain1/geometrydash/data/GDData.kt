@@ -35,7 +35,9 @@ open class GDData @JvmOverloads constructor(
         private const val SCALE_TAG = "Scale"
         private const val CHECKPOINTS_TAG = "Checkpoints"
         private const val PREV_GAME_TYPE_TAG = "PrevGameType"
+        private const val PREV_GRAVITY_TAG = "PrevGravity"
         private const val DASH_RING_TAG = "DashRingID"
+        private const val CAMERA_MIRROR_PROGRESS_TAG = "CameraMirrorProgress"
 
         @JvmField
         val GD_DATA: EntityDataAccessor<in CompoundTag> = SynchedEntityData.defineId(
@@ -117,6 +119,18 @@ open class GDData @JvmOverloads constructor(
 
     inline val isDashing: Boolean get() = dashRingID.isNotEmpty()
 
+    @JvmField
+    var cameraMirrorProgress: Float = 1F
+
+    @JvmField
+    var cameraMirrorDirection: MirrorDirection? = null
+
+    fun mirrorCamera() {
+        if (cameraMirrorProgress > 0) {
+            cameraMirrorDirection = MirrorDirection.LEFT
+        } else cameraMirrorDirection = MirrorDirection.RIGHT
+    }
+
     @PublishedApi
     internal inline val level: Level get() = this.player.level()
 
@@ -176,6 +190,7 @@ open class GDData @JvmOverloads constructor(
 
         if (this.prevGravity == null)
             this.prevGravity = player.gravity
+        player.gravity = Vec3(0.0, 1.0, 0.0)
 
         this.markDirty()
         return true
@@ -196,6 +211,7 @@ open class GDData @JvmOverloads constructor(
         this.bufferLocked = false
         this.ringLocked = false
         this.dashRingID = ""
+        this.cameraMirrorProgress = 1F
 
         val player = this.player
         val prevType = this.prevGameType
@@ -223,6 +239,23 @@ open class GDData @JvmOverloads constructor(
         if (this.gdModeData != null) {
             player.pose = this.gdModeData!!.getPose()
         }
+        when (this.cameraMirrorDirection) {
+            MirrorDirection.LEFT -> {
+                this.cameraMirrorProgress -= 0.08F
+                if (this.cameraMirrorProgress <= -1F) {
+                    this.cameraMirrorProgress = -1F
+                    this.cameraMirrorDirection = null
+                }
+            }
+            MirrorDirection.RIGHT -> {
+                this.cameraMirrorProgress += 0.08F
+                if (this.cameraMirrorProgress >= 1F) {
+                    this.cameraMirrorProgress = 1F
+                    this.cameraMirrorDirection = null
+                }
+            }
+            else {}
+        }
         player.refreshDimensions()
         this.markDirty()
     }
@@ -241,7 +274,9 @@ open class GDData @JvmOverloads constructor(
         checkpoints.addAll(this.checkpoints.map { it.toTag() })
         compound.put(CHECKPOINTS_TAG, checkpoints)
         compound.putInt(PREV_GAME_TYPE_TAG, this.prevGameType?.id ?: -1)
+        compount.putVec(PREV_GRAVITY_TAG, this.prevGravity ?: Vec3(0.0, 1.0, 0.0))
         compound.putString(DASH_RING_TAG, this.dashRingID)
+        compound.putFloat(CAMERA_MIRROR_PROGRESS_TAG, this.cameraMirrorProgress)
         return compound
     }
 
@@ -263,6 +298,8 @@ open class GDData @JvmOverloads constructor(
             .map { tag -> CheckpointSnapshot.fromTag(tag as CompoundTag) }
             .toMutableList()
         this.prevGameType = GameType.byNullableId(compound.getInt(PREV_GAME_TYPE_TAG))
+        this.prevGravity = compound.getVec(PREV_GRAVITY_TAG)
+        this.cameraMirrorProgress = compound.getFloat(CAMERA_MIRROR_PROGRESS_TAG)
         return compound
     }
 
@@ -272,5 +309,13 @@ open class GDData @JvmOverloads constructor(
         this.scale = otherData.scale
         this.checkpoints = otherData.checkpoints
         this.prevGameType = otherData.prevGameType
+        this.prevGravity = otherData.prevGravity
+        this.dashRingID = otherData.dashRingID
+        this.cameraMirrorProgress = otherData.cameraMirrorProgress
+    }
+
+    enum class MirrorDirection {
+        LEFT,
+        RIGHT;
     }
 }
