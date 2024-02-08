@@ -120,7 +120,7 @@ inline fun LivingEntity.setRelativeDelta(vec: Vec3) {
 inline fun Entity.toRelative(x: Double, y: Double, z: Double) = this.toRelative(Vec3(x,y, z))
 inline fun Entity.toRelative(vec: Vec3): Vec3 {
     val gravity = this.gravity.toVector3d()
-    if (gravity.y < 0) return vec.multiply(0.0, -1.0, 1.0)
+    if (gravity.y < 0) return vec.multiply(1.0, -1.0, 1.0)
     return vec
     // TODO: add horizontal gravity support
     val vec3d = vec.toVector3d()
