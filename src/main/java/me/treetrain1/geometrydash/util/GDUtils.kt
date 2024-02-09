@@ -110,6 +110,9 @@ fun Player.dash(ring: Ring) {
     this.deltaMovement = ring.forward
 }
 
+@JvmField
+val DEFAULT_GRAVITY = Vector3d(0.0, 1.0, 0.0)
+
 // these are for respecting gravity when setting movement
 inline fun LivingEntity.setRelativeDelta(x: Double, y: Double, z: Double) {
     this.setRelativeDelta(Vec3(x, y, z))
@@ -120,21 +123,16 @@ inline fun LivingEntity.setRelativeDelta(vec: Vec3) {
 inline fun Entity.toRelative(x: Double, y: Double, z: Double) = this.toRelative(Vec3(x,y, z))
 inline fun Entity.toRelative(vec: Vec3): Vec3 {
     val gravity = this.gravity.toVector3d()
-    if (gravity.y < 0) return vec.multiply(1.0, -1.0, 1.0)
-    return vec
+    //if (gravity.y < 0) return vec.multiply(1.0, -1.0, 1.0)
+    //return vec
     // TODO: add horizontal gravity support
     val vec3d = vec.toVector3d()
 
-    /*val angle = vec3d.angle(gravity)
-    val normal = gravity.normalize()
-    vec3d.rotateAxis(angle, normal.x, normal.y, normal.z)*/
+    val axis = DEFAULT_GRAVITY.cross(gravity, Vector3d())
+    val angle: Double = Math.acos(0.0)
+    val rotation = Quaterniond().rotateAxis(angle, axis)
 
-    /*Matrix4d().translate(gravity)
-        .rotate(Math.toRadians(90.0), 0.0, 1.0, 0.0)
-        .translate(gravity.negate())
-        .transformPosition(vec3d)*/
-
-    return vec3d.toVec3()
+    return rotation.transform(vec3d).toVec3()
 }
 
 inline fun Vec3.toVector3d(): Vector3d = Vector3d(this.x, this.y, this.z)
