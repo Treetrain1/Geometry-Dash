@@ -23,11 +23,32 @@ import net.minecraft.world.phys.Vec3
 import virtuoel.pehkui.api.ScaleTypes
 
 @Suppress("MemberVisibilityCanBePrivate")
-open class GDData @JvmOverloads constructor(
-    @JvmField val player: Player,
-    @JvmField var gdModeData: GDModeData? = null,
-    @JvmField var checkpoints: MutableList<CheckpointSnapshot> = mutableListOf(),
-    @JvmField var cameraData: CameraData = CameraData()
+open class GDData(
+    var mode: GDMode? = null
+        set(value) {
+            field = value
+            val modeDataSupplier = value?.modeData
+            if (modeDataSupplier != null) {
+                val modeData = modeDataSupplier()
+                modeData.gdData = this
+                this.gdModeData = modeData
+            }
+        }
+
+    @JvmField
+    var gdModeData: GDModeData? = null,
+    @JvmField
+    var checkpoints: MutableList<CheckpointSnapshot> = mutableListOf(),
+    @JvmField
+    var cameraData: CameraData = CameraData(),
+    @JvmField
+    var isVisible: Boolean = true,
+    @JvmField
+    var timeMod: Float = 1F,
+    @JvmField
+    protected var prevGameType: GameType? = null,
+    @JvmField
+    protected var prevGravity: Vec3? = null,
 ) {
 
     companion object {
@@ -45,18 +66,19 @@ open class GDData @JvmOverloads constructor(
             Player::class.java, EntityDataSerializers.COMPOUND_TAG
         )
 
+        @JvmField
+        val CODEC: Codec<GDData> = RecordCodecBuilder.create { instance ->
+            instance.group(
+                Codec.
+            ).apply(instance, ::GDData)
+        }
     }
 
-    var mode: GDMode? = null
-        set(value) {
-            field = value
-            val modeDataSupplier = value?.modeData
-            if (modeDataSupplier != null) {
-                val modeData = modeDataSupplier()
-                modeData.gdData = this
-                this.gdModeData = modeData
-            }
-        }
+    constructor(player: Player) : this() {
+        this.player = player
+    }
+
+    lateinit var player: Player
 
     inline var scale: Float
         get() = ScaleTypes.WIDTH.getScaleData(this.player).scale
@@ -68,22 +90,10 @@ open class GDData @JvmOverloads constructor(
         }
 
     @JvmField
-    var isVisible: Boolean = true
-
-    @JvmField
-    var timeMod: Float = 1F
-
-    @JvmField
     var dirty: Boolean = true
 
     inline val playingGD: Boolean
         get() = this.mode != null
-
-    @JvmField
-    protected var prevGameType: GameType? = null
-
-    @JvmField
-    protected var prevGravity: Vec3? = null
 
     /**
      * Whether or not player input is ignored
