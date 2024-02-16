@@ -230,8 +230,6 @@ dependencies {
     else
         modApi("maven.modrinth:frozenlib:$frozenlib_version")?.let { include(it) }
 
-    modApi(files("libs/MassiveStructures-1.0.0-fabric.jar"))
-
     // Gravity Changer
     //api(project(":GravityChanger", configuration = "namedElements"))?.let { include(it) }
 

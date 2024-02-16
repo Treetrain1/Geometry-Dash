@@ -13,9 +13,5 @@ class GDRegistryProvider(output: FabricDataOutput, registriesFuture: Completable
     override fun configure(registries: HolderLookup.Provider, entries: Entries) {
         entries.addAll(registries.lookupOrThrow(Registries.BIOME))
         entries.addAll(registries.lookupOrThrow(Registries.DIMENSION_TYPE))
-
-        entries.addAll(registries.lookupOrThrow(Registries.TEMPLATE_POOL))
-        entries.addAll(registries.lookupOrThrow(Registries.STRUCTURE))
-        entries.addAll(registries.lookupOrThrow(Registries.STRUCTURE_SET))
     }
 }
