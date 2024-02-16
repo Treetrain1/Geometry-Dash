@@ -16,6 +16,11 @@ enum class GDMode(val title: String, val modeData: () -> GDModeData, val isFlyin
     SWING("Swing", { CubeModeData() }, isFlying = true),
     CUBE_3D("Cube 3D", { Cube3DModeData() });
 
+    companion object {
+        @JvmField
+        val CODEC: Codec<GDMode> = TODO()
+    }
+
     @Contract(pure = true)
     override fun toString(): String = this.name
 

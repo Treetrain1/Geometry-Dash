@@ -69,7 +69,7 @@ open class GDData(
         @JvmField
         val CODEC: Codec<GDData> = RecordCodecBuilder.create { instance ->
             instance.group(
-                Codec.
+                GDMode.CODEC.fieldOf("mode").forGetter(GDData::mode)
             ).apply(instance, ::GDData)
         }
     }
