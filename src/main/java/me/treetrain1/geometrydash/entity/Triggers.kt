@@ -1,5 +1,8 @@
+@file:Experimental
+
 package me.treetrain1.geometrydash.entity
 
+import me.treetrain1.geometrydash.util.Experimental
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.level.Level
 
@@ -49,6 +52,11 @@ open class MoveTrigger(
 // stops triggers
 open class StopTrigger(
     type: EntityType<out StopTrigger>,
+    level: Level
+) : Trigger(type, level)
+
+open class ToggleTrigger(
+    type: EntityType<out ToggleTrigger>,
     level: Level
 ) : Trigger(type, level)
 
