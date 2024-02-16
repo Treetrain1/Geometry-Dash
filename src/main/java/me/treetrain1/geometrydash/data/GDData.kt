@@ -26,7 +26,8 @@ import virtuoel.pehkui.api.ScaleTypes
 open class GDData @JvmOverloads constructor(
     @JvmField val player: Player,
     @JvmField var gdModeData: GDModeData? = null,
-    @JvmField var checkpoints: MutableList<CheckpointSnapshot> = mutableListOf()
+    @JvmField var checkpoints: MutableList<CheckpointSnapshot> = mutableListOf(),
+    @JvmField var cameraData: CameraData = CameraData()
 ) {
 
     companion object {
