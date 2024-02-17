@@ -10,6 +10,7 @@ import me.treetrain1.geometrydash.entity.Ring
 import me.treetrain1.geometrydash.network.C2SFailPacket
 import me.treetrain1.geometrydash.registry.*
 import me.treetrain1.geometrydash.util.*
+import me.treetrain1.geometrydash.worldgen.SchematicChunkGenerator
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup
@@ -90,6 +91,8 @@ object GeometryDash : ModInitializer {
             RegisterItems
             RegisterScaleTypes
             RegisterSounds
+
+            BuiltInRegistries.CHUNK_GENERATOR.register("schematic", SchematicChunkGenerator.CODEC)
 
             ArgumentTypeInfos.register(
                 BuiltInRegistries.COMMAND_ARGUMENT_TYPE,
