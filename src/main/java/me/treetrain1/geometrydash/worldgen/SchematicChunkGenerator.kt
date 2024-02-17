@@ -6,6 +6,8 @@ import net.minecraft.Util
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Holder
 import net.minecraft.resources.RegistryOps
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.WorldGenRegion
 import net.minecraft.world.level.LevelHeightAccessor
 import net.minecraft.world.level.NoiseColumn
@@ -31,21 +33,21 @@ import kotlin.jvm.optionals.getOrNull
 // a Sponge V3 Schematic chunk generator
 data class PrebuiltChunkGeneratorSettings(
     @JvmField
-    val schematic: String,
+    val schematic: ResourceLocation,
     @JvmField
     val biome: Holder<Biome>
 ) {
 
-    constructor(schematic: String, biome: Optional<Holder<Biome>>, default: Holder<Biome>) : this(schematic, biome.getOrNull() ?: default)
+    constructor(schematic: ResourceLocation, biome: Optional<Holder<Biome>>, default: Holder<Biome>) : this(schematic, biome.getOrNull() ?: default)
 
     companion object {
         @JvmField
         val CODEC: Codec<PrebuiltChunkGeneratorSettings> = RecordCodecBuilder.create { instance ->
             instance.group(
-                Codec.STRING.fieldOf("schematic").forGetter(PrebuiltChunkGeneratorSettings::schematic),
+                ResourceLocation.CODEC.fieldOf("schematic").forGetter(PrebuiltChunkGeneratorSettings::schematic),
                 Biome.CODEC.optionalFieldOf("biome").forGetter { settings: PrebuiltChunkGeneratorSettings -> Optional.of(settings.biome) },
                 RegistryOps.retrieveElement(Biomes.THE_VOID)
-            ).apply(instance, { schematic: String, biome: Optional<Holder<Biome>>, default: Holder<Biome> ->
+            ).apply(instance, { schematic: ResourceLocation, biome: Optional<Holder<Biome>>, default: Holder<Biome> ->
                 PrebuiltChunkGeneratorSettings(schematic, biome, default)
             })
         }.stable()
@@ -69,6 +71,14 @@ open class PrebuiltChunkGenerator(
         }.stable()
     }
 
+    private lateinit var schematic: Schematic
+
+    fun init(level: ServerLevel) {
+        if (::schematic.isInitialized) return
+        val schematicId = settings.schematic
+        schematic = Schematic.loadFromResource(level, schematicId)
+    }
+
     override fun codec(): Codec<out ChunkGenerator> = CODEC
 
     override fun applyCarvers(
@@ -79,19 +89,25 @@ open class PrebuiltChunkGenerator(
         structureManager: StructureManager,
         chunk: ChunkAccess,
         step: GenerationStep.Carving
-    ) {}
+    ) {
+        init(level.level)
+    }
 
     override fun buildSurface(
         level: WorldGenRegion,
         structureManager: StructureManager,
         random: RandomState,
         chunk: ChunkAccess
-    ) {}
+    ) {
+        init(level.level)
+    }
 
     override fun spawnOriginalMobs(level: WorldGenRegion) {
         // TODO: Add the prebuilt world thing
         val serverLevel = level.level
-        val chunkMap = serverLevel.chunkSource.chunkMap
+        init(serverLevel)
+
+        this.schematic.spawnMobs(level)
     }
 
     override fun getGenDepth(): Int = 384
@@ -103,7 +119,8 @@ open class PrebuiltChunkGenerator(
         structureManager: StructureManager,
         chunk: ChunkAccess
     ): CompletableFuture<ChunkAccess> {
-        // TODO: Implement
+        this.schematic.placeChunk(chunk)
+
         return CompletableFuture.completedFuture(chunk)
     }
 
