@@ -71,7 +71,7 @@ open class Portal(
 
     override fun readAdditionalSaveData(compound: CompoundTag) {
         try {
-            this.type = PortalType.valueOf(compound.getString("Type"))
+            this.type = PortalType.valueOf(compound.getString("Type").uppercase())
         } catch (_: IllegalArgumentException) {
             this.type = PortalType.CUBE
         }

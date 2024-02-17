@@ -72,7 +72,7 @@ open class Ring(
 
     override fun readAdditionalSaveData(compound: CompoundTag) {
         try {
-            this.type = RingType.valueOf(compound.getString("Type"))
+            this.type = RingType.valueOf(compound.getString("Type").uppercase())
         } catch (_: IllegalArgumentException) {
             this.type = RingType.BOUNCE
         }

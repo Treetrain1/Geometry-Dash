@@ -3,6 +3,7 @@ package me.treetrain1.geometrydash
 import me.treetrain1.geometrydash.command.GDCommand
 import me.treetrain1.geometrydash.command.GDModeArgument
 import me.treetrain1.geometrydash.command.GravityCommand
+import me.treetrain1.geometrydash.datafix.GDDataFixer
 import me.treetrain1.geometrydash.entity.Checkpoint
 import me.treetrain1.geometrydash.entity.Portal
 import me.treetrain1.geometrydash.entity.Ring
@@ -13,6 +14,7 @@ import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
+import net.fabricmc.loader.api.FabricLoader
 import net.frozenblock.lib.gravity.api.GravityAPI
 import net.minecraft.commands.synchronization.ArgumentTypeInfos
 import net.minecraft.commands.synchronization.SingletonArgumentInfo
@@ -80,6 +82,7 @@ object GeometryDash : ModInitializer {
     override fun onInitialize() {
         val time = measureNanoTime {
             GDRegistries
+            GDDataFixer.applyDataFixes(FabricLoader.getInstance().getModContainer(MOD_ID).orElseThrow())
 
             RegisterBlocks
             RegisterBlockEntities
