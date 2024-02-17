@@ -31,7 +31,7 @@ import java.util.concurrent.Executor
 import kotlin.jvm.optionals.getOrNull
 
 // a Sponge V3 Schematic chunk generator
-data class PrebuiltChunkGeneratorSettings(
+data class SchematicChunkGeneratorSettings(
     @JvmField
     val schematic: ResourceLocation,
     @JvmField
@@ -42,13 +42,13 @@ data class PrebuiltChunkGeneratorSettings(
 
     companion object {
         @JvmField
-        val CODEC: Codec<PrebuiltChunkGeneratorSettings> = RecordCodecBuilder.create { instance ->
+        val CODEC: Codec<SchematicChunkGeneratorSettings> = RecordCodecBuilder.create { instance ->
             instance.group(
-                ResourceLocation.CODEC.fieldOf("schematic").forGetter(PrebuiltChunkGeneratorSettings::schematic),
-                Biome.CODEC.optionalFieldOf("biome").forGetter { settings: PrebuiltChunkGeneratorSettings -> Optional.of(settings.biome) },
+                ResourceLocation.CODEC.fieldOf("schematic").forGetter(SchematicChunkGeneratorSettings::schematic),
+                Biome.CODEC.optionalFieldOf("biome").forGetter { settings: SchematicChunkGeneratorSettings -> Optional.of(settings.biome) },
                 RegistryOps.retrieveElement(Biomes.THE_VOID)
             ).apply(instance, { schematic: ResourceLocation, biome: Optional<Holder<Biome>>, default: Holder<Biome> ->
-                PrebuiltChunkGeneratorSettings(schematic, biome, default)
+                SchematicChunkGeneratorSettings(schematic, biome, default)
             })
         }.stable()
     }
@@ -58,16 +58,16 @@ data class PrebuiltChunkGeneratorSettings(
     }
 }
 
-open class PrebuiltChunkGenerator(
-    val settings: PrebuiltChunkGeneratorSettings
+open class SchematicChunkGenerator(
+    val settings: SchematicChunkGeneratorSettings
 ) : ChunkGenerator(FixedBiomeSource(settings.biome), Util.memoize(settings::getGenSettings)) {
 
     companion object {
         @JvmField
-        val CODEC: Codec<PrebuiltChunkGenerator> = RecordCodecBuilder.create { instance ->
+        val CODEC: Codec<SchematicChunkGenerator> = RecordCodecBuilder.create { instance ->
             instance.group(
-                PrebuiltChunkGeneratorSettings.CODEC.fieldOf("settings").forGetter(PrebuiltChunkGenerator::settings)
-            ).apply(instance, ::PrebuiltChunkGenerator)
+                SchematicChunkGeneratorSettings.CODEC.fieldOf("settings").forGetter(SchematicChunkGenerator::settings)
+            ).apply(instance, ::SchematicChunkGenerator)
         }.stable()
     }
 
