@@ -3,7 +3,7 @@
   "generator": {
     "type": "geometry_dash:schematic",
     "settings": {
-      "settings": "geometry_dash:stereo_madness",
+      "schematic": "geometry_dash:stereo_madness",
       "biome": "geometry_dash:geometry"
     }
   }
