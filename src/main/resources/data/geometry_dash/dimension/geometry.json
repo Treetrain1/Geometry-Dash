@@ -1,34 +1,9 @@
 {
   "type": "geometry_dash:geometry",
   "generator": {
-    "type": "minecraft:flat",
+    "type": "geometry_dash:schematic",
     "settings": {
-      "layers": [
-        {
-          "height": 0,
-          "block": "minecraft:bedrock"
-        },
-        {
-          "height": 1,
-          "block": "minecraft:stone"
-        },
-        {
-          "height": 2,
-          "block": "minecraft:stone"
-        },
-        {
-          "height": 3,
-          "block": "minecraft:dirt"
-        },
-        {
-          "height": 4,
-          "block": "minecraft:dirt"
-        },
-        {
-          "height": 5,
-          "block": "minecraft:grass_block"
-        }
-      ],
+      "settings": "geometry_dash:stereo_madness",
       "biome": "geometry_dash:geometry"
     }
   }
