@@ -3,9 +3,11 @@ package me.treetrain1.geometrydash.data.mode
 import com.mojang.serialization.Codec
 import me.treetrain1.geometrydash.data.GDData
 import me.treetrain1.geometrydash.registry.GDRegistries
+import me.treetrain1.geometrydash.registry.register
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.minecraft.client.player.Input
+import net.minecraft.core.Registry
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.world.entity.EntityDimensions
 import net.minecraft.world.entity.Pose
@@ -18,6 +20,18 @@ abstract class GDModeData {
         val CODEC: Codec<GDModeData> = GDRegistries.GD_MODE_DATA
             .byNameCodec()
             .dispatch(GDModeData::codec, Function.identity())
+
+        fun bootstrap(registry: Registry<Codec<out GDModeData>>) {
+            registry.register("cube", CubeModeData.CODEC)
+            registry.register("ship", ShipModeData.CODEC)
+            registry.register("ball", BallModeData.CODEC)
+            registry.register("ufo", UFOModeData.CODEC)
+            registry.register("wave", WaveModeData.CODEC)
+            registry.register("robot", RobotModeData.CODEC)
+            registry.register("spider", SpiderModeData.CODEC)
+            registry.register("swing", SwingModeData.CODEC)
+            registry.register("cube_3d", Cube3DModeData.CODEC)
+        }
     }
     @JvmField
     var gdData: GDData? = null
