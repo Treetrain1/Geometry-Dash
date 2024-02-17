@@ -1,5 +1,6 @@
 package me.treetrain1.geometrydash.data.mode
 
+import com.mojang.serialization.Codec
 import me.treetrain1.geometrydash.entity.pose.GDPoses
 import me.treetrain1.geometrydash.util.gravity
 import me.treetrain1.geometrydash.util.setRelativeGravity
@@ -14,6 +15,11 @@ open class SpiderModeData : GDModeData() {
     private var targetCubeRot: Float = 0F
     private var cubeRot: Float = 0F
     private var prevCubeRot: Float = 0F
+
+    companion object {
+        @JvmField
+        val CODEC: Codec<SpiderModeData> = Codec.unit(::SpiderModeData)
+    }
 
     override fun tick() {
         if (this.gdData?.player?.level()?.isClientSide == true) {
@@ -60,6 +66,8 @@ open class SpiderModeData : GDModeData() {
     override fun getModelPitch(tickDelta: Float): Float {
         return Mth.lerp(tickDelta, this.prevCubeRot, this.cubeRot)
     }
+
+    override val codec: Codec<out GDModeData> = CODEC
 
     override fun save(compound: CompoundTag): CompoundTag {
         return compound

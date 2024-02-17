@@ -79,6 +79,8 @@ object GeometryDash : ModInitializer {
 
     override fun onInitialize() {
         val time = measureNanoTime {
+            GDRegistries
+
             RegisterBlocks
             RegisterBlockEntities
             RegisterEntities

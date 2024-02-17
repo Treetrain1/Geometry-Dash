@@ -1,14 +1,24 @@
 package me.treetrain1.geometrydash.data.mode
 
+import com.mojang.serialization.Codec
 import me.treetrain1.geometrydash.data.GDData
+import me.treetrain1.geometrydash.registry.GDRegistries
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.minecraft.client.player.Input
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.world.entity.EntityDimensions
 import net.minecraft.world.entity.Pose
+import java.util.function.Function
 
 abstract class GDModeData {
+
+    companion object {
+        @JvmField
+        val CODEC: Codec<GDModeData> = GDRegistries.GD_MODE_DATA
+            .byNameCodec()
+            .dispatch(GDModeData::codec, Function.identity())
+    }
     @JvmField
     var gdData: GDData? = null
 
@@ -81,6 +91,8 @@ abstract class GDModeData {
     }
 
     abstract fun getModelPitch(tickDelta: Float): Float
+
+    abstract val codec: Codec<out GDModeData>
 
     abstract fun save(compound: CompoundTag): CompoundTag
 

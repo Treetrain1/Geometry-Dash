@@ -1,5 +1,6 @@
 package me.treetrain1.geometrydash.data.mode
 
+import com.mojang.serialization.Codec
 import me.treetrain1.geometrydash.entity.pose.GDPoses
 import me.treetrain1.geometrydash.util.gravity
 import me.treetrain1.geometrydash.util.launch
@@ -15,6 +16,11 @@ open class RobotModeData : GDModeData() {
     private var prevCubeRot: Float = 0F
     private var thrustAmount = 1.0
     private var inProgress: Boolean = false
+
+    companion object {
+        @JvmField
+        val CODEC: Codec<RobotModeData> = Codec.unit(::RobotModeData)
+    }
 
     override fun tick() {
         if (this.gdData?.player?.level()?.isClientSide == true) {
@@ -81,6 +87,8 @@ open class RobotModeData : GDModeData() {
     override fun getModelPitch(tickDelta: Float): Float {
         return Mth.lerp(tickDelta, this.prevCubeRot, this.cubeRot)
     }
+
+    override val codec: Codec<out GDModeData> = CODEC
 
     override fun save(compound: CompoundTag): CompoundTag {
         return compound

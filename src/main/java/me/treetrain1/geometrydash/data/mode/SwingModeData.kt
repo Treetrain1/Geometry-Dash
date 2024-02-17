@@ -4,20 +4,22 @@ import com.mojang.serialization.Codec
 import me.treetrain1.geometrydash.entity.pose.GDPoses
 import me.treetrain1.geometrydash.util.gravity
 import me.treetrain1.geometrydash.util.launch
+import me.treetrain1.geometrydash.util.setRelativeDelta
 import net.minecraft.client.player.Input
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.Mth
 import net.minecraft.world.entity.EntityDimensions
 import net.minecraft.world.entity.Pose
+import net.minecraft.world.phys.Vec3
 
-open class WaveModeData : GDModeData() {
+open class SwingModeData : GDModeData() {
     private var targetCubeRot: Float = 0F
     private var cubeRot: Float = 0F
     private var prevCubeRot: Float = 0F
 
     companion object {
         @JvmField
-        val CODEC: Codec<WaveModeData> = Codec.unit(::WaveModeData)
+        val CODEC: Codec<SwingModeData> = Codec.unit(::SwingModeData)
     }
 
     override fun tick() {
@@ -25,10 +27,10 @@ open class WaveModeData : GDModeData() {
             this.prevCubeRot = this.cubeRot
             this.gdData?.run {
                 if (this.player.onGround()) {
-                    this@WaveModeData.targetCubeRot = Math.round(this@WaveModeData.targetCubeRot / 90F) * 90F
+                    this@SwingModeData.targetCubeRot = Math.round(this@SwingModeData.targetCubeRot / 90F) * 90F
                 } else {
                     val gravity = this.player.gravity
-                    this@WaveModeData.targetCubeRot += if (gravity.y < 0) -20 else 20
+                    this@SwingModeData.targetCubeRot += if (gravity.y < 0) -24 else 24
                 }
             }
             this.cubeRot += (this.targetCubeRot - this.cubeRot) * 0.395F // both 0.395F and 0.45F seem alright, up to you tree
@@ -40,12 +42,10 @@ open class WaveModeData : GDModeData() {
         val player = data.player
         val delta = player.deltaMovement
         if (data.canProcessInput) {
-            player.setDeltaMovement(delta.x, 0.5, delta.z)
+            player.addDeltaMovement(Vec3(0.0, 0.15, 0.0))
             player.hasImpulse = true
             return true
         }
-        player.setDeltaMovement(delta.x, -0.5, delta.z)
-        player.hasImpulse = true
         return false
     }
 

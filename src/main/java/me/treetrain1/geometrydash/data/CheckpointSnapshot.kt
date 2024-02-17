@@ -1,5 +1,8 @@
 package me.treetrain1.geometrydash.data
 
+import com.mojang.serialization.Codec
+import com.mojang.serialization.codecs.RecordCodecBuilder
+import me.treetrain1.geometrydash.data.mode.GDModeData
 import me.treetrain1.geometrydash.util.getVec
 import me.treetrain1.geometrydash.util.putVec
 import net.minecraft.nbt.CompoundTag
@@ -14,7 +17,7 @@ import net.minecraft.world.phys.Vec3
 data class CheckpointSnapshot(
     val entityId: Int,
     val mode: GDMode,
-    val modeData: CompoundTag,
+    val modeData: CompoundTag,//GDModeData,
     val deltaMovement: Vec3,
     val yaw: Float,
     val scale: Float,
@@ -25,6 +28,22 @@ data class CheckpointSnapshot(
 ) {
 
     companion object {
+        /*@JvmField
+        val CODEC: Codec<CheckpointSnapshot> = RecordCodecBuilder.create { instance ->
+            instance.group(
+                Codec.INT.fieldOf("entityId").forGetter(CheckpointSnapshot::entityId),
+                GDMode.CODEC.fieldOf("mode").forGetter(CheckpointSnapshot::mode),
+                GDModeData.CODEC.fieldOf("modeData").forGetter(CheckpointSnapshot::modeData),
+                Vec3.CODEC.fieldOf("deltaMovement").forGetter(CheckpointSnapshot::deltaMovement),
+                Codec.FLOAT.fieldOf("yaw").forGetter(CheckpointSnapshot::yaw),
+                Codec.FLOAT.fieldOf("scale").forGetter(CheckpointSnapshot::scale),
+                Vec3.CODEC.fieldOf("gravity").forGetter(CheckpointSnapshot::gravity),
+                Codec.BOOL.fieldOf("onGround").forGetter(CheckpointSnapshot::onGround),
+                Codec.BOOL.fieldOf("isVisible").forGetter(CheckpointSnapshot::isVisible),
+                Codec.FLOAT.fieldOf("timeMod").forGetter(CheckpointSnapshot::timeMod)
+            ).apply(instance, ::CheckpointSnapshot)
+        }*/
+
         fun fromTag(compound: CompoundTag): CheckpointSnapshot
             = CheckpointSnapshot(
                 compound.getInt("entityId"),

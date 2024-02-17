@@ -46,7 +46,6 @@ open class GDData(
 ) {
     var mode: GDMode? = mode
         set(value) {
-            SurfaceRules.RuleSource.CODEC
             field = value
             val modeDataSupplier = value?.modeData
             if (modeDataSupplier != null) {
