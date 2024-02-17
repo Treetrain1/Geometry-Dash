@@ -1,0 +1,127 @@
+package me.treetrain1.geometrydash.worldgen
+
+import com.mojang.serialization.Codec
+import com.mojang.serialization.codecs.RecordCodecBuilder
+import net.minecraft.Util
+import net.minecraft.core.BlockPos
+import net.minecraft.core.Holder
+import net.minecraft.resources.RegistryOps
+import net.minecraft.server.level.WorldGenRegion
+import net.minecraft.world.level.LevelHeightAccessor
+import net.minecraft.world.level.NoiseColumn
+import net.minecraft.world.level.StructureManager
+import net.minecraft.world.level.biome.Biome
+import net.minecraft.world.level.biome.BiomeGenerationSettings
+import net.minecraft.world.level.biome.BiomeGenerationSettings.PlainBuilder
+import net.minecraft.world.level.biome.BiomeManager
+import net.minecraft.world.level.biome.Biomes
+import net.minecraft.world.level.biome.FixedBiomeSource
+import net.minecraft.world.level.block.Blocks
+import net.minecraft.world.level.chunk.ChunkAccess
+import net.minecraft.world.level.chunk.ChunkGenerator
+import net.minecraft.world.level.levelgen.GenerationStep
+import net.minecraft.world.level.levelgen.Heightmap
+import net.minecraft.world.level.levelgen.RandomState
+import net.minecraft.world.level.levelgen.blending.Blender
+import java.util.Optional
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executor
+import kotlin.jvm.optionals.getOrNull
+
+// a Sponge V3 Schematic chunk generator
+data class PrebuiltChunkGeneratorSettings(
+    @JvmField
+    val schematic: String,
+    @JvmField
+    val biome: Holder<Biome>
+) {
+
+    constructor(schematic: String, biome: Optional<Holder<Biome>>, default: Holder<Biome>) : this(schematic, biome.getOrNull() ?: default)
+
+    companion object {
+        @JvmField
+        val CODEC: Codec<PrebuiltChunkGeneratorSettings> = RecordCodecBuilder.create { instance ->
+            instance.group(
+                Codec.STRING.fieldOf("schematic").forGetter(PrebuiltChunkGeneratorSettings::schematic),
+                Biome.CODEC.optionalFieldOf("biome").forGetter { settings: PrebuiltChunkGeneratorSettings -> Optional.of(settings.biome) },
+                RegistryOps.retrieveElement(Biomes.THE_VOID)
+            ).apply(instance, { schematic: String, biome: Optional<Holder<Biome>>, default: Holder<Biome> ->
+                PrebuiltChunkGeneratorSettings(schematic, biome, default)
+            })
+        }.stable()
+    }
+
+    fun getGenSettings(biome: Holder<Biome>): BiomeGenerationSettings {
+        return if (biome == this.biome) biome.value().generationSettings else PlainBuilder().build()
+    }
+}
+
+open class PrebuiltChunkGenerator(
+    val settings: PrebuiltChunkGeneratorSettings
+) : ChunkGenerator(FixedBiomeSource(settings.biome), Util.memoize(settings::getGenSettings)) {
+
+    companion object {
+        @JvmField
+        val CODEC: Codec<PrebuiltChunkGenerator> = RecordCodecBuilder.create { instance ->
+            instance.group(
+                PrebuiltChunkGeneratorSettings.CODEC.fieldOf("settings").forGetter(PrebuiltChunkGenerator::settings)
+            ).apply(instance, ::PrebuiltChunkGenerator)
+        }.stable()
+    }
+
+    override fun codec(): Codec<out ChunkGenerator> = CODEC
+
+    override fun applyCarvers(
+        level: WorldGenRegion,
+        seed: Long,
+        random: RandomState,
+        biomeManager: BiomeManager,
+        structureManager: StructureManager,
+        chunk: ChunkAccess,
+        step: GenerationStep.Carving
+    ) {}
+
+    override fun buildSurface(
+        level: WorldGenRegion,
+        structureManager: StructureManager,
+        random: RandomState,
+        chunk: ChunkAccess
+    ) {}
+
+    override fun spawnOriginalMobs(level: WorldGenRegion) {
+        // TODO: Add the prebuilt world thing
+        val serverLevel = level.level
+        val chunkMap = serverLevel.chunkSource.chunkMap
+    }
+
+    override fun getGenDepth(): Int = 384
+
+    override fun fillFromNoise(
+        executor: Executor,
+        blender: Blender,
+        random: RandomState,
+        structureManager: StructureManager,
+        chunk: ChunkAccess
+    ): CompletableFuture<ChunkAccess> {
+        // TODO: Implement
+        return CompletableFuture.completedFuture(chunk)
+    }
+
+    override fun getSeaLevel(): Int = -63
+
+    override fun getMinY(): Int = 0
+
+    override fun getBaseHeight(
+        x: Int,
+        z: Int,
+        type: Heightmap.Types,
+        level: LevelHeightAccessor,
+        random: RandomState
+    ): Int = 5
+
+    override fun getBaseColumn(x: Int, z: Int, height: LevelHeightAccessor, random: RandomState): NoiseColumn {
+        return NoiseColumn(height.minBuildHeight, arrayOf(Blocks.STONE.defaultBlockState()))
+    }
+
+    override fun addDebugScreenInfo(info: MutableList<String>, random: RandomState, pos: BlockPos) {}
+}
