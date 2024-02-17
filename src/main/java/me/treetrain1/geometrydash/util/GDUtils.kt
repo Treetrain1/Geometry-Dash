@@ -122,14 +122,16 @@ inline fun LivingEntity.setRelativeDelta(vec: Vec3) {
 }
 inline fun Entity.toRelative(x: Double, y: Double, z: Double) = this.toRelative(Vec3(x,y, z))
 inline fun Entity.toRelative(vec: Vec3): Vec3 {
-    val gravity = this.gravity.toVector3d()
+    val gravity = this.gravity
+    return if (gravity.y < 0) vec.multiply(1.0, -1.0, 1.0) else vec
+    /*val gravity = this.gravity.toVector3d()
     val vec3d = vec.toVector3d()
 
     val axis = DEFAULT_GRAVITY.cross(gravity, Vector3d())
-    val angle: Double = Math.acos(0.0)
+    val angle: Double = acos(0.0)
     val rotation = Quaterniond().rotateAxis(angle, axis)
 
-    return rotation.transform(vec3d).toVec3()
+    return rotation.transform(vec3d).toVec3()*/
 }
 
 inline fun Vec3.toVector3d(): Vector3d = Vector3d(this.x, this.y, this.z)
