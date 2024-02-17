@@ -1,7 +1,5 @@
 package me.treetrain1.geometrydash.datagen
 
-import me.treetrain1.geometrydash.biome.GeometryBiome
-import me.treetrain1.geometrydash.tag.GDBiomeTags
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
 import net.frozenblock.lib.datagen.api.FrozenBiomeTagProvider
 import net.minecraft.core.HolderLookup

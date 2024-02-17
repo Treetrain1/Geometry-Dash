@@ -1,17 +1,20 @@
 package me.treetrain1.geometrydash.data
 
+import com.mojang.serialization.Codec
+import com.mojang.serialization.codecs.RecordCodecBuilder
+
 data class CameraData(
     @JvmField
-    var pitch: Float,
+    var pitch: Float = 0F,
 
     @JvmField
-    var yaw: Float,
+    var yaw: Float = 0F,
 
     @JvmField
-    var roll: Float,
+    var roll: Float = 0F,
 
     @JvmField
-    var playerOffset: Float,
+    var playerOffset: Float = 0F,
 ) {
 
     companion object {

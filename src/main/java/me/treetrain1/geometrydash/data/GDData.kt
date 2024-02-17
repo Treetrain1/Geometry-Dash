@@ -1,10 +1,13 @@
 package me.treetrain1.geometrydash.data
 
-import it.unimi.dsi.fastutil.ints.IntArrayList
+import com.mojang.serialization.Codec
+import com.mojang.serialization.codecs.RecordCodecBuilder
 import me.treetrain1.geometrydash.data.mode.GDModeData
 import me.treetrain1.geometrydash.duck.PlayerDuck
 import me.treetrain1.geometrydash.entity.Checkpoint
+import me.treetrain1.geometrydash.util.getVec
 import me.treetrain1.geometrydash.util.gravity
+import me.treetrain1.geometrydash.util.putVec
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.minecraft.nbt.CompoundTag
@@ -24,16 +27,7 @@ import virtuoel.pehkui.api.ScaleTypes
 
 @Suppress("MemberVisibilityCanBePrivate")
 open class GDData(
-    var mode: GDMode? = null
-        set(value) {
-            field = value
-            val modeDataSupplier = value?.modeData
-            if (modeDataSupplier != null) {
-                val modeData = modeDataSupplier()
-                modeData.gdData = this
-                this.gdModeData = modeData
-            }
-        }
+    mode: GDMode? = null,
 
     @JvmField
     var gdModeData: GDModeData? = null,
@@ -50,6 +44,17 @@ open class GDData(
     @JvmField
     protected var prevGravity: Vec3? = null,
 ) {
+    var mode: GDMode? = mode
+        set(value) {
+            SurfaceRules.RuleSource.CODEC
+            field = value
+            val modeDataSupplier = value?.modeData
+            if (modeDataSupplier != null) {
+                val modeData = modeDataSupplier()
+                modeData.gdData = this
+                this.gdModeData = modeData
+            }
+        }
 
     companion object {
         private const val MODE_TAG = "Mode"
@@ -265,7 +270,7 @@ open class GDData(
                     this.cameraMirrorDirection = null
                 }
             }
-            else {}
+            else -> {}
         }
         player.refreshDimensions()
         this.markDirty()
@@ -276,7 +281,7 @@ open class GDData(
     }
 
     fun save(compound: CompoundTag): CompoundTag {
-        compound.putString(MODE_TAG, this.mode?.name ?: "")
+        compound.putString(MODE_TAG, this.mode?.serializedName ?: "")
         if (this.gdModeData != null) {
             this.gdModeData?.save(CompoundTag())?.let { compound.put(MODE_DATA_TAG, it) }
         }
@@ -285,7 +290,7 @@ open class GDData(
         checkpoints.addAll(this.checkpoints.map { it.toTag() })
         compound.put(CHECKPOINTS_TAG, checkpoints)
         compound.putInt(PREV_GAME_TYPE_TAG, this.prevGameType?.id ?: -1)
-        compount.putVec(PREV_GRAVITY_TAG, this.prevGravity ?: Vec3(0.0, 1.0, 0.0))
+        compound.putVec(PREV_GRAVITY_TAG, this.prevGravity ?: Vec3(0.0, 1.0, 0.0))
         compound.putString(DASH_RING_TAG, this.dashRingID)
         compound.putFloat(CAMERA_MIRROR_PROGRESS_TAG, this.cameraMirrorProgress)
         return compound

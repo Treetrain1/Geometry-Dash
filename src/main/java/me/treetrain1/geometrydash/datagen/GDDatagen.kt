@@ -1,24 +1,15 @@
 package me.treetrain1.geometrydash.datagen
 
-import com.mojang.datafixers.util.Pair
 import me.treetrain1.geometrydash.GeometryDash
 import me.treetrain1.geometrydash.biome.GeometryBiome
-import me.treetrain1.geometrydash.tag.GDBiomeTags
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator
 import net.minecraft.core.RegistrySetBuilder
 import net.minecraft.core.registries.Registries
-import net.minecraft.data.worldgen.PillagerOutpostPools
-import net.minecraft.data.worldgen.Pools
-import net.minecraft.data.worldgen.ProcessorLists
 import net.minecraft.tags.BlockTags
 import net.minecraft.util.valueproviders.ConstantInt
 import net.minecraft.world.level.dimension.BuiltinDimensionTypes
 import net.minecraft.world.level.dimension.DimensionType
-import net.minecraft.world.level.levelgen.GenerationStep
-import net.minecraft.world.level.levelgen.Heightmap
-import net.minecraft.world.level.levelgen.VerticalAnchor
-import net.minecraft.world.level.levelgen.heightproviders.ConstantHeight
 import java.util.*
 
 

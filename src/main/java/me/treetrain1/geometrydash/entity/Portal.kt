@@ -8,6 +8,7 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializer
 import net.minecraft.network.syncher.SynchedEntityData
+import net.minecraft.util.StringRepresentable
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
@@ -65,7 +66,7 @@ open class Portal(
     }
 
     override fun addAdditionalSaveData(compound: CompoundTag) {
-        compound.putString("Type", this.type.name)
+        compound.putString("Type", this.type.serializedName)
     }
 
     override fun readAdditionalSaveData(compound: CompoundTag) {
@@ -81,7 +82,7 @@ open class Portal(
         val shouldFlipGravity: Boolean = false,
         val shouldMirror: Boolean = false,
         val scale: Float? = null,
-    ) {
+    ) : StringRepresentable {
         CUBE(modeSwitch = GDMode.CUBE),
         SHIP(modeSwitch = GDMode.SHIP),
         BALL(modeSwitch = GDMode.BALL),
@@ -104,6 +105,8 @@ open class Portal(
             @JvmField
             val SERIALIZER: EntityDataSerializer<PortalType> = EntityDataSerializer.simpleEnum(PortalType::class.java)
         }
+
+        override fun getSerializedName(): String = this.name.lowercase()
     }
 
     @PublishedApi

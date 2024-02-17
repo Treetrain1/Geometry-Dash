@@ -6,10 +6,10 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializer
 import net.minecraft.network.syncher.SynchedEntityData
+import net.minecraft.util.StringRepresentable
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
-import net.minecraft.world.phys.Vec3
 
 // Usually called Orbs but in the files I believe it's called Rings
 open class Ring(
@@ -67,7 +67,7 @@ open class Ring(
     }
 
     override fun addAdditionalSaveData(compound: CompoundTag) {
-        compound.putString("Type", this.type.name)
+        compound.putString("Type", this.type.serializedName)
     }
 
     override fun readAdditionalSaveData(compound: CompoundTag) {
@@ -84,7 +84,7 @@ open class Ring(
         val shouldFlipGravity: Boolean = false,
         val shouldTeleport: Boolean = false,
         val shouldDash: Boolean = false,
-    ) {
+    ) : StringRepresentable {
         SMALL_BOUNCE(bounceStrength = 0.5), // purple/pink
         BOUNCE, // yellow
         BIG_BOUNCE(bounceStrength = 2.0), // red
@@ -99,6 +99,8 @@ open class Ring(
             @JvmField
             val SERIALIZER: EntityDataSerializer<RingType> = EntityDataSerializer.simpleEnum(RingType::class.java)
         }
+
+        override fun getSerializedName(): String = this.name.lowercase()
     }
 
     @PublishedApi

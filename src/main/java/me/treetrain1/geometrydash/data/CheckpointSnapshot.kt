@@ -45,7 +45,7 @@ data class CheckpointSnapshot(
 
         fun toBuf(buf: FriendlyByteBuf, snapshot: CheckpointSnapshot): FriendlyByteBuf {
             buf.writeVarInt(snapshot.entityId)
-            buf.writeUtf(snapshot.mode.name)
+            buf.writeUtf(snapshot.mode.serializedName)
             buf.writeNbt(snapshot.modeData)
             val delta = snapshot.deltaMovement
             buf.writeDouble(delta.x)
