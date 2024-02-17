@@ -44,7 +44,7 @@ open class Checkpoint(
         list.add(CheckpointSnapshot(
             this.id,
             gdData.mode ?: return,
-            CompoundTag().apply { gdData.gdModeData!!.save(this) },
+            gdData.modeData,
             player.deltaMovement,
             player.yRot,
             gdData.scale,

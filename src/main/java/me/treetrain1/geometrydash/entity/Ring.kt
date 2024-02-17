@@ -60,7 +60,7 @@ open class Ring(
             val gdData = player.gdData
             if (!gdData.playingGD) continue
 
-            val gdModeData = gdData.gdModeData ?: continue
+            val gdModeData = gdData.modeData ?: continue
             if (gdData.canBounceFromRing)
                 this.onApply(player, gdData)
         }

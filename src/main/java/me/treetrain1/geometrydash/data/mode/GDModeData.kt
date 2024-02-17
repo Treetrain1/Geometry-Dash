@@ -1,6 +1,8 @@
 package me.treetrain1.geometrydash.data.mode
 
+import com.mojang.datafixers.util.Pair
 import com.mojang.serialization.Codec
+import com.mojang.serialization.DataResult
 import me.treetrain1.geometrydash.data.GDData
 import me.treetrain1.geometrydash.registry.GDRegistries
 import me.treetrain1.geometrydash.registry.register
@@ -9,9 +11,32 @@ import net.fabricmc.api.Environment
 import net.minecraft.client.player.Input
 import net.minecraft.core.Registry
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.NbtOps
+import net.minecraft.nbt.Tag
 import net.minecraft.world.entity.EntityDimensions
 import net.minecraft.world.entity.Pose
 import java.util.function.Function
+import kotlin.jvm.optionals.getOrNull
+
+fun CompoundTag.putGDModeData(key: String, value: GDModeData?) {
+    val tag = value?.toTag() ?: return
+    this.put(key, tag)
+}
+
+fun CompoundTag.getGDModeData(key: String): GDModeData? {
+    val compound = this.getCompound(key)
+    return compound.toGDModeData()
+}
+
+fun GDModeData.toTag(): Tag? {
+    val dataResult: DataResult<Tag> = GDModeData.CODEC.encodeStart(NbtOps.INSTANCE, this)
+    return dataResult.result().getOrNull()
+}
+
+fun CompoundTag.toGDModeData(): GDModeData? {
+    val modeDataResult: DataResult<Pair<GDModeData, Tag>> = GDModeData.CODEC.decode(NbtOps.INSTANCE, this)
+    return modeDataResult.result().getOrNull()?.first
+}
 
 abstract class GDModeData {
 
@@ -33,6 +58,7 @@ abstract class GDModeData {
             registry.register("cube_3d", Cube3DModeData.CODEC)
         }
     }
+
     @JvmField
     var gdData: GDData? = null
 

@@ -14,7 +14,9 @@ object GDRegistries {
     val GD_MODE_DATA: Registry<Codec<out GDModeData>> = FabricRegistryBuilder.createDefaulted<Codec<out GDModeData>>(
         ResourceKey.createRegistryKey(id("gd_mode_data")),
         id("cube")
-    ).attribute(RegistryAttribute.SYNCED).buildAndRegister().apply {
-        GDModeData.bootstrap(this)
+    ).attribute(RegistryAttribute.SYNCED).buildAndRegister()
+
+    init {
+        GDModeData.bootstrap(GD_MODE_DATA)
     }
 }

@@ -24,8 +24,8 @@ public class MouseHandlerMixin {
 	private void preventTurningGD(CallbackInfo ci) {
 		if (this.minecraft.player instanceof PlayerDuck duck
 			&& duck.geometryDash$getGDData().getPlayingGD()
-			&& duck.geometryDash$getGDData().gdModeData != null
-			&& duck.geometryDash$getGDData().gdModeData.lockCamera()
+			&& duck.geometryDash$getGDData().modeData != null
+			&& duck.geometryDash$getGDData().modeData.lockCamera()
 		) {
 			ci.cancel();
 		}

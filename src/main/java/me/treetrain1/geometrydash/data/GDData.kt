@@ -24,13 +24,15 @@ import net.minecraft.world.level.GameType
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.Vec3
 import virtuoel.pehkui.api.ScaleTypes
+import java.util.*
+import kotlin.jvm.optionals.getOrNull
 
 @Suppress("MemberVisibilityCanBePrivate")
 open class GDData(
     mode: GDMode? = null,
 
     @JvmField
-    var gdModeData: GDModeData? = null,
+    var modeData: GDModeData? = null,
     @JvmField
     var checkpoints: MutableList<CheckpointSnapshot> = mutableListOf(),
     @JvmField
@@ -51,7 +53,7 @@ open class GDData(
             if (modeDataSupplier != null) {
                 val modeData = modeDataSupplier()
                 modeData.gdData = this
-                this.gdModeData = modeData
+                this.modeData = modeData
             }
         }
 
@@ -73,8 +75,17 @@ open class GDData(
         @JvmField
         val CODEC: Codec<GDData> = RecordCodecBuilder.create { instance ->
             instance.group(
-                GDMode.CODEC.fieldOf("mode").forGetter(GDData::mode)
-            ).apply(instance, ::GDData)
+                GDMode.CODEC.fieldOf("mode").forGetter(GDData::mode),
+                GDModeData.CODEC.optionalFieldOf("mode_data").forGetter { Optional.ofNullable(it.modeData) },
+                CheckpointSnapshot.CODEC.listOf().fieldOf("checkpoints").forGetter(GDData::checkpoints),
+                CameraData.CODEC.fieldOf("camera_data").forGetter(GDData::cameraData),
+                Codec.BOOL.fieldOf("isVisible").forGetter(GDData::isVisible),
+                Codec.FLOAT.fieldOf("time_multiplier").forGetter(GDData::timeMod),
+                GameType.CODEC.optionalFieldOf("previous_game_type").forGetter { Optional.ofNullable(it.prevGameType) },
+                Vec3.CODEC.optionalFieldOf("previous_gravity").forGetter { Optional.ofNullable(it.prevGravity) },
+            ).apply(instance) { mode, modeData, checkpoints, cameraData, isVisible, timeMod, prevGameType, prevGravity ->
+                GDData(mode, modeData.getOrNull(), checkpoints, cameraData, isVisible, timeMod, prevGameType.getOrNull(), prevGravity.getOrNull())
+            }
         }
     }
 
@@ -141,9 +152,9 @@ open class GDData(
     var cameraMirrorDirection: MirrorDirection? = null
 
     fun mirrorCamera() {
-        if (cameraMirrorProgress > 0) {
-            cameraMirrorDirection = MirrorDirection.LEFT
-        } else cameraMirrorDirection = MirrorDirection.RIGHT
+        cameraMirrorDirection = if (cameraMirrorProgress > 0) {
+            MirrorDirection.LEFT
+        } else MirrorDirection.RIGHT
     }
 
     @PublishedApi
@@ -219,7 +230,7 @@ open class GDData(
 
         this.mode = null
         this.scale = 1F
-        this.gdModeData = null
+        this.modeData = null
         this.checkpoints.clear()
         this.ignoreInput = false
         this.inputBuffer = false
@@ -250,9 +261,9 @@ open class GDData(
             (this.player as PlayerDuck).`geometryDash$updateSyncedGDData`()
             this.dirty = false
         }
-        this.gdModeData?.tick()
-        if (this.gdModeData != null) {
-            player.pose = this.gdModeData!!.getPose()
+        this.modeData?.tick()
+        if (this.modeData != null) {
+            player.pose = this.modeData!!.getPose()
         }
         when (this.cameraMirrorDirection) {
             MirrorDirection.LEFT -> {
@@ -281,8 +292,8 @@ open class GDData(
 
     fun save(compound: CompoundTag): CompoundTag {
         compound.putString(MODE_TAG, this.mode?.serializedName ?: "")
-        if (this.gdModeData != null) {
-            this.gdModeData?.save(CompoundTag())?.let { compound.put(MODE_DATA_TAG, it) }
+        if (this.modeData != null) {
+            this.modeData?.save(CompoundTag())?.let { compound.put(MODE_DATA_TAG, it) }
         }
         compound.putFloat(SCALE_TAG, this.scale)
         val checkpoints = ListTag()
@@ -299,13 +310,13 @@ open class GDData(
         try {
             this.mode = GDMode.valueOf(compound.getString(MODE_TAG))
             if (compound.contains(MODE_DATA_TAG, Tag.TAG_COMPOUND.toInt())) {
-                this.gdModeData?.load(compound.getCompound(MODE_DATA_TAG))
+                this.modeData?.load(compound.getCompound(MODE_DATA_TAG))
             } else {
-                this.gdModeData = null
+                this.modeData = null
             }
         } catch (e: IllegalArgumentException) {
             this.mode = null
-            this.gdModeData = null
+            this.modeData = null
         }
 
         this.scale = compound.getFloat(SCALE_TAG)
@@ -320,7 +331,7 @@ open class GDData(
 
     fun copyFrom(otherData: GDData) {
         this.mode = otherData.mode
-        this.gdModeData = otherData.gdModeData
+        this.modeData = otherData.modeData
         this.scale = otherData.scale
         this.checkpoints = otherData.checkpoints
         this.prevGameType = otherData.prevGameType

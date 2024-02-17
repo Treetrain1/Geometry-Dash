@@ -13,7 +13,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.phys.Vec3;
 import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -58,7 +57,7 @@ public class LocalPlayerMixin {
 	@Inject(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/tutorial/Tutorial;onInput(Lnet/minecraft/client/player/Input;)V", shift = At.Shift.AFTER))
 	private void gdInputTick(CallbackInfo ci) {
 		GDData gdData = ((PlayerDuck) this).geometryDash$getGDData();
-		GDModeData gdModeData = gdData.gdModeData;
+		GDModeData gdModeData = gdData.modeData;
 		long window = Minecraft.getInstance().getWindow().getWindow();
 		boolean jumping = InputConstants.isKeyDown(window, InputConstants.KEY_SPACE)
 			|| InputConstants.isKeyDown(window, InputConstants.KEY_W)

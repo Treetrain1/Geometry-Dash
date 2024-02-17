@@ -2,7 +2,6 @@ package me.treetrain1.geometrydash.mixin.client;
 
 import me.treetrain1.geometrydash.data.mode.GDModeData;
 import me.treetrain1.geometrydash.duck.PlayerDuck;
-import me.treetrain1.geometrydash.util.GDSharedConstantsKt;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.KeyboardInput;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,9 +18,9 @@ public class KeyboardInputMixin {
 		KeyboardInput input = KeyboardInput.class.cast(this);
 		if (Minecraft.getInstance().player instanceof PlayerDuck duck
 			&& duck.geometryDash$getGDData().getPlayingGD()
-			&& duck.geometryDash$getGDData().gdModeData != null
+			&& duck.geometryDash$getGDData().modeData != null
 		) {
-			GDModeData gdModeData = duck.geometryDash$getGDData().gdModeData;
+			GDModeData gdModeData = duck.geometryDash$getGDData().modeData;
 			if (gdModeData.lockForwardsMovement()) {
 				input.forwardImpulse = 1F;
 			}

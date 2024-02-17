@@ -33,6 +33,6 @@ open class BallPlayerModel<T : AbstractClientPlayer>(
     override fun prepareMobModel(player: T, limbSwing: Float, limbSwingAmount: Float, partialTick: Float) {
         super.prepareMobModel(player, limbSwing, limbSwingAmount, partialTick)
         this.xRot =
-            (player.gdData.gdModeData!!.getModelPitch(partialTick) % 360F) * Mth.DEG_TO_RAD
+            (player.gdData.modeData!!.getModelPitch(partialTick) % 360F) * Mth.DEG_TO_RAD
     }
 }
