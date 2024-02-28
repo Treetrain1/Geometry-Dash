@@ -14,22 +14,22 @@ import net.minecraft.world.entity.Pose
 import net.minecraft.world.phys.Vec3
 
 open class CubeModeData(
-    private var targetCubeRot: Float = 0F,
-    private var cubeRot: Float = 0F,
-    private var prevCubeRot: Float = 0F,
+    protected var targetCubeRot: Float = 0F,
+    protected var cubeRot: Float = 0F,
+    protected var prevCubeRot: Float = 0F,
 ) : GDModeData() {
 
     override val mode: GDMode = GDMode.CUBE
 
     companion object {
         @JvmField
-        val CODEC: Codec<CubeModeData> = Codec.unit<CubeModeData>(::CubeModeData) /*RecordCodecBuilder.create { instance ->
+        val CODEC: Codec<CubeModeData> = RecordCodecBuilder.create { instance ->
             instance.group(
                 Codec.FLOAT.fieldOf("targetRot").forGetter(CubeModeData::targetCubeRot),
                 Codec.FLOAT.fieldOf("rot").forGetter(CubeModeData::cubeRot),
                 Codec.FLOAT.fieldOf("prevRot").forGetter(CubeModeData::prevCubeRot)
             ).apply(instance, ::CubeModeData)
-        }*/
+        }
     }
 
     override fun tick() {

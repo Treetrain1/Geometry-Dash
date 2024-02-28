@@ -11,17 +11,23 @@ import net.minecraft.util.Mth
 import net.minecraft.world.entity.EntityDimensions
 import net.minecraft.world.entity.Pose
 
-open class BallModeData : GDModeData() {
+open class BallModeData(
+    private var targetCubeRot: Float = 0F,
+    private var cubeRot: Float = 0F,
+    private var prevCubeRot: Float = 0F
+) : GDModeData() {
 
     override val mode: GDMode = GDMode.BALL
 
-    private var targetCubeRot: Float = 0F
-    private var cubeRot: Float = 0F
-    private var prevCubeRot: Float = 0F
-
     companion object {
         @JvmField
-        val CODEC: Codec<BallModeData> = Codec.unit(::BallModeData)
+        val CODEC: Codec<BallModeData> = RecordCodecBuilder.create { instance ->
+            instance.group(
+                Codec.FLOAT.fieldOf("targetRot").forGetter(BallModeData::targetCubeRot),
+                Codec.FLOAT.fieldOf("rot").forGetter(BallModeData::cubeRot),
+                Codec.FLOAT.fieldOf("prevRot").forGetter(BallModeData::prevCubeRot)
+            ).apply(instance, ::BallModeData)
+        }
     }
 
     override fun tick() {
