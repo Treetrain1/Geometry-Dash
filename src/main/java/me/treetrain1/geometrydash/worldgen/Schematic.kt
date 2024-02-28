@@ -224,11 +224,11 @@ class Schematic(
             var i = 0
             while (i < blockData.size) {
                 var value = 0
-                var varintLength = 0
+                var variantLength = 0
 
                 while (true) {
-                    value = value or ((blockData[i].toInt() and 127) shl (varintLength++ * 7))
-                    if (varintLength > 5) {
+                    value = value or ((blockData[i].toInt() and 127) shl (variantLength++ * 7))
+                    if (variantLength > 5) {
                         throw RuntimeException("VarInt too big (probably corrupted data)")
                     }
 
@@ -244,8 +244,10 @@ class Schematic(
                         blockDatas[localPos.x][localPos.y][localPos.z] = data
                         break
                     }
-                    ++index
+
+                    ++i
                 }
+                ++index
             }
         }
 
