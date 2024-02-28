@@ -57,7 +57,7 @@ public class LocalPlayerMixin {
 	@Inject(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/tutorial/Tutorial;onInput(Lnet/minecraft/client/player/Input;)V", shift = At.Shift.AFTER))
 	private void gdInputTick(CallbackInfo ci) {
 		GDData gdData = ((PlayerDuck) this).geometryDash$getGDData();
-		GDModeData gdModeData = gdData.modeData;
+		GDModeData gdModeData = gdData.getModeData();
 		long window = Minecraft.getInstance().getWindow().getWindow();
 		boolean jumping = InputConstants.isKeyDown(window, InputConstants.KEY_SPACE)
 			|| InputConstants.isKeyDown(window, InputConstants.KEY_W)

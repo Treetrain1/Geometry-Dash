@@ -43,7 +43,6 @@ open class Checkpoint(
         if (list.map { it.entityId }.contains(this.id)) return
         list.add(CheckpointSnapshot(
             this.id,
-            gdData.mode ?: return,
             gdData.modeData,
             player.deltaMovement,
             player.yRot,

@@ -1,7 +1,7 @@
 package me.treetrain1.geometrydash.data.mode
 
 import com.mojang.serialization.Codec
-import com.mojang.serializations.codecs.RecordCodecBuilder
+import com.mojang.serialization.codecs.RecordCodecBuilder
 import me.treetrain1.geometrydash.data.GDMode
 
 class Cube3DModeData(

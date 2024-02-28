@@ -3,6 +3,8 @@ package me.treetrain1.geometrydash.data
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import me.treetrain1.geometrydash.data.mode.GDModeData
+import me.treetrain1.geometrydash.data.mode.getGDModeData
+import me.treetrain1.geometrydash.data.mode.putGDModeData
 import me.treetrain1.geometrydash.duck.PlayerDuck
 import me.treetrain1.geometrydash.entity.Checkpoint
 import me.treetrain1.geometrydash.util.getVec
@@ -29,8 +31,7 @@ import kotlin.jvm.optionals.getOrNull
 
 @Suppress("MemberVisibilityCanBePrivate")
 open class GDData(
-    @JvmField
-    var modeData: GDModeData? = null,
+    modeData: GDModeData? = null,
     @JvmField
     var checkpoints: MutableList<CheckpointSnapshot> = mutableListOf(),
     @JvmField
@@ -45,8 +46,14 @@ open class GDData(
     protected var prevGravity: Vec3? = null,
 ) {
 
+    var modeData: GDModeData? = modeData?.also { it.gdData = this }
+        set(value) {
+            value?.gdData = this
+            field = value
+        }
+
     constructor(
-        mode: GDMode? = null,
+        mode: GDMode?,
         checkpoints: MutableList<CheckpointSnapshot> = mutableListOf(),
         cameraData: CameraData = CameraData(),
         isVisible: Boolean = true,
@@ -54,7 +61,7 @@ open class GDData(
         prevGameType: GameType? = null,
         prevGravity: Vec3? = null,
     ) : this(
-        mode?.modeData(),
+        mode?.modeData?.invoke(),
         checkpoints,
         cameraData,
         isVisible,
@@ -67,15 +74,11 @@ open class GDData(
         this.player = player
     }
 
-    init {
-        this.modeData?.gdData = this
-    }
-
     inline var mode: GDMode?
         get() = this.modeData?.mode
         set(value) {
-            val modeData = value?.modeData()
-            modeData.gdData = this
+            val modeData = value?.modeData?.invoke()
+            modeData?.gdData = this
             this.modeData = modeData
         }
 
@@ -235,7 +238,7 @@ open class GDData(
             this.prevGravity = player.gravity
         player.gravity = Vec3(0.0, 1.0, 0.0)
 
-        this.markDirty()
+        this.syncData()
         return true
     }
 
@@ -269,7 +272,7 @@ open class GDData(
         }
         player.pose = Pose.STANDING
         player.refreshDimensions()
-        this.markDirty()
+        this.syncData()
         return true
     }
 
@@ -277,7 +280,7 @@ open class GDData(
         val player = this.player
         if (this.dirty) {
             if (player.level().isClientSide)
-                (player as PlayerDuck).`geometryDash$updateSyncedGDData`()
+                this.syncData()
             this.dirty = false
         }
         this.modeData?.tick()
@@ -311,11 +314,7 @@ open class GDData(
     }
 
     fun save(compound: CompoundTag): CompoundTag {
-        compound.putString(MODE_TAG, this.mode?.serializedName ?: "")
-        val modeData = this.modeData
-        if (modeData != null) {
-            modeData.save(CompoundTag()).let { compound.put(MODE_DATA_TAG, it) }
-        }
+        compound.putGDModeData(MODE_DATA_TAG, this.modeData)
         compound.putFloat(SCALE_TAG, this.scale)
         val checkpoints = ListTag()
         checkpoints.addAll(this.checkpoints.map { it.toTag() })
@@ -328,14 +327,9 @@ open class GDData(
     }
 
     fun load(compound: CompoundTag): CompoundTag {
-        try {
-            this.mode = GDMode.valueOf(compound.getString(MODE_TAG))
-            if (compound.contains(MODE_DATA_TAG, Tag.TAG_COMPOUND.toInt())) {
-                this.modeData?.load(compound.getCompound(MODE_DATA_TAG))
-            } else {
-                this.modeData = null
-            }
-        } catch (e: IllegalArgumentException) {
+        if (compound.contains(MODE_DATA_TAG, Tag.TAG_COMPOUND.toInt())) {
+            this.modeData = compound.getGDModeData(MODE_DATA_TAG)
+        } else {
             this.modeData = null
         }
 
@@ -357,6 +351,13 @@ open class GDData(
         this.prevGravity = otherData.prevGravity
         this.dashRingID = otherData.dashRingID
         this.cameraMirrorProgress = otherData.cameraMirrorProgress
+
+        this.syncData()
+    }
+
+    @Suppress("NOTHING_TO_INLINE")
+    private inline fun syncData() {
+        (this.player as? PlayerDuck)?.`geometryDash$updateSyncedGDData`()
     }
 
     enum class MirrorDirection {

@@ -54,15 +54,15 @@ public class PlayerMixin implements PlayerDuck {
 
 	@Inject(method = "getDimensions", at = @At("HEAD"), cancellable = true)
 	public void gd$getDimensions(Pose pose, CallbackInfoReturnable<EntityDimensions> cir) {
-		if (this.gdData != null && this.gdData.getPlayingGD() && this.gdData.modeData != null) {
-			cir.setReturnValue(this.gdData.modeData.getEntityDimensions());
+		if (this.gdData != null && this.gdData.getPlayingGD() && this.gdData.getModeData() != null) {
+			cir.setReturnValue(this.gdData.getModeData().getEntityDimensions());
 		}
 	}
 
 	@Inject(method = "getStandingEyeHeight", at = @At("HEAD"), cancellable = true)
 	public void gd$getStandingEyeHeight(Pose pose, EntityDimensions dimensions, CallbackInfoReturnable<Float> cir) {
-		if (this.gdData != null && this.gdData.getPlayingGD() && this.gdData.modeData != null) {
-			cir.setReturnValue(this.gdData.modeData.getEyeHeight());
+		if (this.gdData != null && this.gdData.getPlayingGD() && this.gdData.getModeData() != null) {
+			cir.setReturnValue(this.gdData.getModeData().getEyeHeight());
 		}
 	}
 

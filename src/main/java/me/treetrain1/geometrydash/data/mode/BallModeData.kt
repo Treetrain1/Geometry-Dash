@@ -1,6 +1,7 @@
 package me.treetrain1.geometrydash.data.mode
 
 import com.mojang.serialization.Codec
+import com.mojang.serialization.codecs.RecordCodecBuilder
 import me.treetrain1.geometrydash.data.GDMode
 import me.treetrain1.geometrydash.entity.pose.GDPoses
 import me.treetrain1.geometrydash.util.gravity

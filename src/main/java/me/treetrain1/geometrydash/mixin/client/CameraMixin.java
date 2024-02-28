@@ -42,8 +42,8 @@ public abstract class CameraMixin {
 	) {
 		if (entity instanceof PlayerDuck duck
 			&& duck.geometryDash$getGDData().getPlayingGD()
-			&& duck.geometryDash$getGDData().modeData != null
-			&& duck.geometryDash$getGDData().modeData.useGDCamera()
+			&& duck.geometryDash$getGDData().getModeData() != null
+			&& duck.geometryDash$getGDData().getModeData().useGDCamera()
 		) {
 			gdYRot.set(yRot);
 			xRot = 0;
@@ -99,8 +99,8 @@ public abstract class CameraMixin {
 	)
 	public float gd$tick(Entity instance, Operation<Float> original) {
 		float value = original.call(instance);
-		if (instance instanceof PlayerDuck duck && duck.geometryDash$getGDData().getPlayingGD() && duck.geometryDash$getGDData().modeData != null) {
-			value += duck.geometryDash$getGDData().modeData.getCameraYOffset();
+		if (instance instanceof PlayerDuck duck && duck.geometryDash$getGDData().getPlayingGD() && duck.geometryDash$getGDData().getModeData() != null) {
+			value += duck.geometryDash$getGDData().getModeData().getCameraYOffset();
 		}
 		return value;
 	}

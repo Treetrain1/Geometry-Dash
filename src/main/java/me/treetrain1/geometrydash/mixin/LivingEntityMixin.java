@@ -41,7 +41,7 @@ public abstract class LivingEntityMixin extends Entity {
 	@Inject(method = "canBreatheUnderwater", at = @At("HEAD"), cancellable = true)
 	private void gd$canBreatheUnderwater(CallbackInfoReturnable<Boolean> cir) {
 		if (LivingEntity.class.cast(this) instanceof PlayerDuck player && player.geometryDash$getGDData().getPlayingGD()) {
-			GDModeData gdModeData = player.geometryDash$getGDData().modeData;
+			GDModeData gdModeData = player.geometryDash$getGDData().getModeData();
 			if (gdModeData != null) {
 				cir.setReturnValue(gdModeData.preventDrowning());
 			}

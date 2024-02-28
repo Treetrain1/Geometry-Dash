@@ -18,9 +18,9 @@ public class KeyboardInputMixin {
 		KeyboardInput input = KeyboardInput.class.cast(this);
 		if (Minecraft.getInstance().player instanceof PlayerDuck duck
 			&& duck.geometryDash$getGDData().getPlayingGD()
-			&& duck.geometryDash$getGDData().modeData != null
+			&& duck.geometryDash$getGDData().getModeData() != null
 		) {
-			GDModeData gdModeData = duck.geometryDash$getGDData().modeData;
+			GDModeData gdModeData = duck.geometryDash$getGDData().getModeData();
 			if (gdModeData.lockForwardsMovement()) {
 				input.forwardImpulse = 1F;
 			}
