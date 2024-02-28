@@ -43,7 +43,7 @@ object GDDatagen : DataGeneratorEntrypoint {
                     1.0,
                     true,
                     false,
-                    0,
+                    -64,
                     1280,
                     1280,
                     BlockTags.INFINIBURN_OVERWORLD,

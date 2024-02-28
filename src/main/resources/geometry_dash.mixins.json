@@ -13,7 +13,8 @@
     "PoseMixin",
     "ServerPlayerMixin",
     "gravity.EntityMixin",
-    "gravity.LivingEntityMixin"
+    "gravity.LivingEntityMixin",
+    "portal.CustomTeleporterMixin"
   ],
   "client": [
     "client.AbstractClientPlayerMixin",

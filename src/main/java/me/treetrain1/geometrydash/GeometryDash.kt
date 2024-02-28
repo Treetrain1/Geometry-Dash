@@ -17,6 +17,8 @@ import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.fabricmc.loader.api.FabricLoader
 import net.frozenblock.lib.gravity.api.GravityAPI
+import net.kyrptonaught.customportalapi.api.CustomPortalBuilder
+import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource
 import net.minecraft.commands.synchronization.ArgumentTypeInfos
 import net.minecraft.commands.synchronization.SingletonArgumentInfo
 import net.minecraft.core.registries.BuiltInRegistries
@@ -30,6 +32,8 @@ import net.minecraft.world.damagesource.DamageType
 import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
+import net.minecraft.world.level.Level
+import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.dimension.DimensionType
 import net.minecraft.world.phys.Vec3
 import kotlin.system.measureNanoTime
@@ -72,6 +76,9 @@ object GeometryDash : ModInitializer {
     val DIMENSION_TYPE: ResourceKey<DimensionType> = ResourceKey.create(Registries.DIMENSION_TYPE, id("geometry"))
 
     @JvmField
+    val DIMENSION: ResourceKey<Level> = ResourceKey.create(Registries.DIMENSION, id("geometry"))
+
+    @JvmField
     val LEVEL_FAIL: ResourceKey<DamageType> = ResourceKey.create(Registries.DAMAGE_TYPE, id("level_fail"))
 
     @JvmField
@@ -93,6 +100,15 @@ object GeometryDash : ModInitializer {
             RegisterSounds
 
             BuiltInRegistries.CHUNK_GENERATOR.register("schematic", SchematicChunkGenerator.CODEC)
+
+            CustomPortalBuilder.beginPortal()
+                .frameBlock(Blocks.REINFORCED_DEEPSLATE)
+                .lightWithItem(Items.ECHO_SHARD)
+                .destDimID(id("geometry"))
+                .returnDim(Level.OVERWORLD.location(), false)
+                .tintColor(45, 65, 101)
+                .forcedSize(20, 6)
+                .registerPortal()
 
             ArgumentTypeInfos.register(
                 BuiltInRegistries.COMMAND_ARGUMENT_TYPE,

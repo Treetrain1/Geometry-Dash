@@ -199,6 +199,7 @@ repositories {
     maven("https://s01.oss.sonatype.org/content/repositories/snapshots/") {
         name = "sonatype-oss-snapshots"
     }
+    maven("https://maven.kyrptonaught.dev")
 }
 
 dependencies {
@@ -223,6 +224,8 @@ dependencies {
 
     // Fabric Language Kotlin. Required for Kotlin support.
     modImplementation("net.fabricmc:fabric-language-kotlin:${fabric_kotlin_version}")
+
+    modImplementation("net.kyrptonaught:customportalapi:0.0.1-beta65-1.20.4")
 
     // FrozenLib
     if (local_frozenlib)
