@@ -1,6 +1,7 @@
 package me.treetrain1.geometrydash.data.mode
 
 import com.mojang.serialization.Codec
+import me.treetrain1.geometrydash.data.GDMode
 import me.treetrain1.geometrydash.entity.pose.GDPoses
 import me.treetrain1.geometrydash.util.gravity
 import me.treetrain1.geometrydash.util.launch
@@ -12,6 +13,9 @@ import net.minecraft.world.entity.Pose
 import net.minecraft.world.phys.Vec3
 
 open class UFOModeData : GDModeData() {
+
+    override val mode: GDMode = GDMode.UFO
+
     private var targetCubeRot: Float = 0F
     private var cubeRot: Float = 0F
     private var prevCubeRot: Float = 0F

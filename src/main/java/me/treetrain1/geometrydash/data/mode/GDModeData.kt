@@ -4,6 +4,7 @@ import com.mojang.datafixers.util.Pair
 import com.mojang.serialization.Codec
 import com.mojang.serialization.DataResult
 import me.treetrain1.geometrydash.data.GDData
+import me.treetrain1.geometrydash.data.GDMode
 import me.treetrain1.geometrydash.registry.GDRegistries
 import me.treetrain1.geometrydash.registry.register
 import net.fabricmc.api.EnvType
@@ -61,6 +62,8 @@ abstract class GDModeData {
 
     @JvmField
     var gdData: GDData? = null
+
+    abstract val mode: GDMode
 
     abstract fun tick()
 

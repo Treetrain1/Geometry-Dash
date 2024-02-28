@@ -30,9 +30,6 @@ import kotlin.jvm.optionals.getOrNull
 @Suppress("MemberVisibilityCanBePrivate")
 open class GDData(
     mode: GDMode? = null,
-
-    @JvmField
-    var modeData: GDModeData? = null,
     @JvmField
     var checkpoints: MutableList<CheckpointSnapshot> = mutableListOf(),
     @JvmField
@@ -46,16 +43,20 @@ open class GDData(
     @JvmField
     protected var prevGravity: Vec3? = null,
 ) {
-    var mode: GDMode? = mode
+    @JvmField
+    var modeData: GDModeData? = null
+
+    inline var mode: GDMode?
+        get() = this.modeData?.mode
         set(value) {
-            field = value
-            val modeDataSupplier = value?.modeData
-            if (modeDataSupplier != null) {
-                val modeData = modeDataSupplier()
-                modeData.gdData = this
-                this.modeData = modeData
-            }
+            val modeData = value?.modeData()
+            modeData.gdData = this
+            this.modeData = modeData
         }
+
+    init {
+        this.modeData = mode?.modeData()
+    }
 
     companion object {
         private const val MODE_TAG = "Mode"
@@ -257,8 +258,10 @@ open class GDData(
     }
 
     fun tick() {
+        val player = this.player
         if (this.dirty) {
-            (this.player as PlayerDuck).`geometryDash$updateSyncedGDData`()
+            if (player.level().isClientSide)
+                (player as PlayerDuck).`geometryDash$updateSyncedGDData`()
             this.dirty = false
         }
         this.modeData?.tick()
@@ -283,7 +286,8 @@ open class GDData(
             else -> {}
         }
         player.refreshDimensions()
-        this.markDirty()
+        if (player.level().isClientSide)
+            this.markDirty()
     }
 
     fun markDirty() {

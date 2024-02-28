@@ -16,8 +16,7 @@ import net.minecraft.world.phys.Vec3
  */
 data class CheckpointSnapshot(
     val entityId: Int,
-    val mode: GDMode,
-    val modeData: GDModeData?,//GDModeData,
+    val modeData: GDModeData?,
     val deltaMovement: Vec3,
     val yaw: Float,
     val scale: Float,
@@ -32,7 +31,6 @@ data class CheckpointSnapshot(
         val CODEC: Codec<CheckpointSnapshot> = RecordCodecBuilder.create { instance ->
             instance.group(
                 Codec.INT.fieldOf("entityId").forGetter(CheckpointSnapshot::entityId),
-                GDMode.CODEC.fieldOf("mode").forGetter(CheckpointSnapshot::mode),
                 GDModeData.CODEC.fieldOf("modeData").forGetter(CheckpointSnapshot::modeData),
                 Vec3.CODEC.fieldOf("deltaMovement").forGetter(CheckpointSnapshot::deltaMovement),
                 Codec.FLOAT.fieldOf("yaw").forGetter(CheckpointSnapshot::yaw),
@@ -47,11 +45,6 @@ data class CheckpointSnapshot(
         fun fromTag(compound: CompoundTag): CheckpointSnapshot
             = CheckpointSnapshot(
                 compound.getInt("entityId"),
-                try {
-                    GDMode.valueOf(compound.getString("mode"))
-                } catch (_: IllegalArgumentException) {
-                    GDMode.CUBE
-                },
                 compound.getGDModeData("modeData"),
                 compound.getVec("deltaMovement"),
                 compound.getFloat("yaw"),
@@ -64,7 +57,6 @@ data class CheckpointSnapshot(
 
         fun toBuf(buf: FriendlyByteBuf, snapshot: CheckpointSnapshot): FriendlyByteBuf {
             buf.writeVarInt(snapshot.entityId)
-            buf.writeUtf(snapshot.mode.serializedName)
             buf.writeNullable(snapshot.modeData) { buf1, modeData -> buf1.writeNullable(modeData.toTag()) { buf2, tag -> buf2.writeNbt(tag) } }
             val delta = snapshot.deltaMovement
             buf.writeDouble(delta.x)
@@ -83,11 +75,6 @@ data class CheckpointSnapshot(
         fun fromBuf(buf: FriendlyByteBuf): CheckpointSnapshot
             = CheckpointSnapshot(
                 buf.readVarInt(),
-                try {
-                    GDMode.valueOf(buf.readUtf())
-                } catch (_: IllegalArgumentException) {
-                    GDMode.CUBE
-                },
                 buf.readNullable { buf1 -> buf1.readNullable { buf2 -> buf2.readNbt() }?.toGDModeData() },
                 buf.readVec3(),
                 buf.readFloat(),
