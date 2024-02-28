@@ -38,7 +38,11 @@ data class SchematicChunkGeneratorSettings(
     val biome: Holder<Biome>
 ) {
 
-    constructor(schematic: ResourceLocation, biome: Optional<Holder<Biome>>, default: Holder<Biome>) : this(schematic, biome.getOrNull() ?: default)
+    constructor(
+        schematic: ResourceLocation,
+        biome: Optional<Holder<Biome>>,
+        default: Holder<Biome>
+    ) : this(schematic, biome.getOrNull() ?: default)
 
     companion object {
         @JvmField
@@ -68,7 +72,7 @@ open class SchematicChunkGenerator(
             instance.group(
                 SchematicChunkGeneratorSettings.CODEC.fieldOf("settings").forGetter(SchematicChunkGenerator::settings)
             ).apply(instance, ::SchematicChunkGenerator)
-        }.stable()
+        }
     }
 
     private lateinit var schematic: Schematic
