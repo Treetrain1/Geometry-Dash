@@ -1,13 +1,8 @@
 package me.treetrain1.geometrydash.registry
 
-import me.treetrain1.geometrydash.block.CustomPortalBlock
 import me.treetrain1.geometrydash.block.JumpPadBlock
 import me.treetrain1.geometrydash.block.SpikeBlock
-import me.treetrain1.geometrydash.util.id
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
-import net.minecraft.core.registries.Registries
-import net.minecraft.resources.ResourceKey
-import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.Blocks.always
@@ -58,15 +53,6 @@ object RegisterBlocks {
     val TELEPORT_PAD: Block = register(
         "teleport_pad",
         jumpPad(JumpPadBlock.JumpPadType.TELEPORT)
-    )
-
-    @JvmField
-    val GEOMETRY_PORTAL: Block = register(
-        "geometry_portal",
-        CustomPortalBlock(
-            Level.OVERWORLD, ResourceKey.create(Registries.DIMENSION, id("geometry")),
-            Properties.ofFullCopy(Blocks.NETHER_PORTAL)
-        )
     )
 }
 
