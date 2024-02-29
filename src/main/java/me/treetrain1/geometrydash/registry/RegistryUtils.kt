@@ -30,7 +30,7 @@ internal inline fun <T : Any> Registry<T>.register(id: String, `object`: T): T
 internal inline fun <T : Any> Registry<T>.registerForHolder(id: String, `object`: T): Reference<T>
     = Registry.registerForHolder(this, id(id), `object`)
 
-internal inline fun register(id: String, block: Block, registerBlockItem: Boolean = true): Block {
+internal inline fun <T : Block> register(id: String, block: T, registerBlockItem: Boolean = true): T {
     val registered = Registry.register(BuiltInRegistries.BLOCK, id(id), block)
     if (registerBlockItem)
         Registry.register(BuiltInRegistries.ITEM, id(id), BlockItem(block, FabricItemSettings()))
