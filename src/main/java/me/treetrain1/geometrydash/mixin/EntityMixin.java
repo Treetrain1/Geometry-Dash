@@ -8,6 +8,7 @@ import me.treetrain1.geometrydash.data.GDData;
 import me.treetrain1.geometrydash.duck.EntityDuck;
 import me.treetrain1.geometrydash.duck.PlayerDuck;
 import me.treetrain1.geometrydash.network.C2SFailPacket;
+import me.treetrain1.geometrydash.util.GDSharedConstantsKt;
 import me.treetrain1.geometrydash.util.GDUtilsKt;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.core.BlockPos;
@@ -69,7 +70,7 @@ public abstract class EntityMixin implements EntityDuck {
 		Entity entity = Entity.class.cast(this);
 		if (entity.level().isClientSide && this instanceof PlayerDuck duck && entity instanceof Player player) {
 			GDData data = duck.geometryDash$getGDData();
-			if (!player.isDeadOrDying() && data.getPlayingGD() && this.horizontalCollision && !this.minorHorizontalCollision) {
+			if (!player.isDeadOrDying() && data.getPlayingGD() && !data.getModeData().getWithstandsCollisions() && this.horizontalCollision && !this.minorHorizontalCollision) {
 				player.setHealth(0);
 				ClientPlayNetworking.send(new C2SFailPacket());
 			}
@@ -78,7 +79,7 @@ public abstract class EntityMixin implements EntityDuck {
 
 	@Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;defineSynchedData()V"))
 	private void addGravityData(EntityType<?> entityType, Level level, CallbackInfo ci) {
-		this.entityData.define(GRAVITY_DATA, new Vec3(0.0, 1.0, 0.0));
+		this.entityData.define(GRAVITY_DATA, GDSharedConstantsKt.DEFAULT_GRAVITY);
 	}
 
 	@Inject(method = "saveWithoutId", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;addAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V"))

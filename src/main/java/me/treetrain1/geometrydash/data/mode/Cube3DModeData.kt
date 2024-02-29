@@ -23,6 +23,8 @@ class Cube3DModeData(
         }
     }
 
+    override val withstandsCollisions: Boolean = true
+
     override fun useGDCamera(): Boolean {
         return false
     }

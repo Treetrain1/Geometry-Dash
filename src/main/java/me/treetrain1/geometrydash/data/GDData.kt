@@ -7,6 +7,7 @@ import me.treetrain1.geometrydash.data.mode.getGDModeData
 import me.treetrain1.geometrydash.data.mode.putGDModeData
 import me.treetrain1.geometrydash.duck.PlayerDuck
 import me.treetrain1.geometrydash.entity.Checkpoint
+import me.treetrain1.geometrydash.util.DEFAULT_GRAVITY
 import me.treetrain1.geometrydash.util.getVec
 import me.treetrain1.geometrydash.util.gravity
 import me.treetrain1.geometrydash.util.putVec
@@ -236,7 +237,7 @@ open class GDData(
 
         if (this.prevGravity == null)
             this.prevGravity = player.gravity
-        player.gravity = Vec3(0.0, 1.0, 0.0)
+        player.gravity = DEFAULT_GRAVITY
 
         this.syncData()
         return true
@@ -320,7 +321,7 @@ open class GDData(
         checkpoints.addAll(this.checkpoints.map { it.toTag() })
         compound.put(CHECKPOINTS_TAG, checkpoints)
         compound.putInt(PREV_GAME_TYPE_TAG, this.prevGameType?.id ?: -1)
-        compound.putVec(PREV_GRAVITY_TAG, this.prevGravity ?: Vec3(0.0, 1.0, 0.0))
+        compound.putVec(PREV_GRAVITY_TAG, this.prevGravity ?: DEFAULT_GRAVITY)
         compound.putString(DASH_RING_TAG, this.dashRingID)
         compound.putFloat(CAMERA_MIRROR_PROGRESS_TAG, this.cameraMirrorProgress)
         return compound

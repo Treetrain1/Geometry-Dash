@@ -110,9 +110,6 @@ fun Player.dash(ring: Ring) {
     this.deltaMovement = ring.forward
 }
 
-@JvmField
-val DEFAULT_GRAVITY = Vector3d(0.0, 1.0, 0.0)
-
 // these are for respecting gravity when setting movement
 inline fun LivingEntity.setRelativeDelta(x: Double, y: Double, z: Double) {
     this.setRelativeDelta(Vec3(x, y, z))

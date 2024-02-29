@@ -23,5 +23,5 @@ enum class GDMode(val title: String, val isFlying: Boolean, val modeData: () -> 
     }
 
     @Contract(pure = true)
-    override fun getSerializedName(): String = this.name//.lowercase()
+    override fun getSerializedName(): String = this.name.lowercase()
 }

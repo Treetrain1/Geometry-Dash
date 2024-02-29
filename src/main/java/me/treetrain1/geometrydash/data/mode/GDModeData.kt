@@ -105,6 +105,8 @@ abstract class GDModeData {
 
     abstract fun getCameraYOffset(): Float
 
+    open val withstandsCollisions: Boolean = false
+
     open fun preventDrowning(): Boolean {
         return true
     }
