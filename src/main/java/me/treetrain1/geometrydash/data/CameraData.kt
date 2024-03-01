@@ -2,6 +2,11 @@ package me.treetrain1.geometrydash.data
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
+import me.treetrain1.geometrydash.util.getVec
+import me.treetrain1.geometrydash.util.putVec
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.network.FriendlyByteBuf
+import net.minecraft.world.phys.Vec3
 
 data class CameraData(
     @JvmField
@@ -14,7 +19,7 @@ data class CameraData(
     var roll: Float = 0F,
 
     @JvmField
-    var playerOffset: Float = 0F,
+    var playerOffset: Vec3 = Vec3.ZERO,
 ) {
 
     companion object {
@@ -24,8 +29,41 @@ data class CameraData(
                 Codec.FLOAT.fieldOf("pitch").forGetter(CameraData::pitch),
                 Codec.FLOAT.fieldOf("yaw").forGetter(CameraData::yaw),
                 Codec.FLOAT.fieldOf("roll").forGetter(CameraData::roll),
-                Codec.FLOAT.fieldOf("playerOffset").forGetter(CameraData::playerOffset)
+                Vec3.CODEC.fieldOf("playerOffset").forGetter(CameraData::playerOffset)
             ).apply(instance, ::CameraData)
         }
+
+        fun fromTag(compound: CompoundTag): CameraData
+            = CameraData(
+                compound.getFloat("pitch"),
+                compound.getFloat("yaw"),
+                compound.getFloat("roll"),
+                compound.getVec("playerOffset")
+            )
+
+        fun fromBuf(buf: FriendlyByteBuf): CameraData
+            = CameraData(
+                buf.readFloat(),
+                buf.readFloat(),
+                buf.readFloat(),
+                buf.readVec3(),
+            )
+    }
+
+    fun toTag(): CompoundTag {
+        val compound = CompoundTag()
+        compound.putFloat("pitch", this.pitch)
+        compound.putFloat("yaw", this.yaw)
+        compound.putFloat("roll", this.roll)
+        compound.putVec("playerOffset", this.playerOffset)
+        return compound
+    }
+
+    fun toBuf(buf: FriendlyByteBuf): FriendlyByteBuf {
+        buf.writeFloat(this.pitch)
+        buf.writeFloat(this.yaw)
+        buf.writeFloat(this.roll)
+        buf.writeVec3(this.playerOffset)
+        return buf
     }
 }
