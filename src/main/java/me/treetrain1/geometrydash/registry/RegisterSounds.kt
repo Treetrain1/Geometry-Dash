@@ -12,5 +12,8 @@ object RegisterSounds {
     val BACK_ON_TRACK: Reference<SoundEvent> = register("music.back_on_track")
 
     @JvmField
+    val POLARGEIST: Reference<SoundEvent> = register("music.polargeist")
+
+    @JvmField
     val DASH: Reference<SoundEvent> = register("music.dash")
 }
