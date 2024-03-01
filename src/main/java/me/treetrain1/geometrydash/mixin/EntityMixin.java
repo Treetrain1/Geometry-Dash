@@ -77,7 +77,7 @@ public abstract class EntityMixin implements EntityDuck {
 		}
 	}
 
-	@Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;defineSynchedData()V"))
+	@Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;defineSynchedData()V", shift = At.Shift.AFTER))
 	private void addGravityData(EntityType<?> entityType, Level level, CallbackInfo ci) {
 		this.entityData.define(GRAVITY_DATA, GDSharedConstantsKt.DEFAULT_GRAVITY);
 	}
@@ -93,12 +93,14 @@ public abstract class EntityMixin implements EntityDuck {
 		this.entityData.set(GRAVITY_DATA, GDUtilsKt.getVec(compound, "Gravity"));
 	}
 
+	@Unique
 	@Override
 	@NotNull
 	public Vec3 geometryDash$getGravity() {
 		return this.entityData.get(GRAVITY_DATA);
 	}
 
+	@Unique
 	@Override
 	public void geometryDash$setGravity(@NotNull Vec3 gravity) {
 		this.entityData.set(GRAVITY_DATA, gravity, true);

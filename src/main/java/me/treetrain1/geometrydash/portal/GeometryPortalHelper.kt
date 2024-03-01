@@ -1,6 +1,7 @@
 package me.treetrain1.geometrydash.portal
 
 import me.treetrain1.geometrydash.GeometryDash
+import me.treetrain1.geometrydash.duck.PortalDuck
 import me.treetrain1.geometrydash.util.DIMENSION_SPAWN
 import me.treetrain1.geometrydash.util.id
 import net.kyrptonaught.customportalapi.portal.frame.PortalFrameTester
@@ -56,7 +57,7 @@ open class GeometryPortalHelper : VanillaPortalAreaHelper() {
     // should go to ancient city but this is a failsafe to prevent being stuck in the gd dimension
     override fun createPortal(world: Level, pos: BlockPos, frameBlock: BlockState, axis: Direction.Axis) {
         if (isGD(world)) {
-            this.lowerCorner = BlockPos(24, 10, 955)
+            this.lowerCorner = BlockPos(16, 20, 959)
             this.width = 3
             this.height = 3
             this.axis = axis
@@ -72,6 +73,10 @@ open class GeometryPortalHelper : VanillaPortalAreaHelper() {
     ): PortalInfo {
         if (isGD) {
             return PortalInfo(DIMENSION_SPAWN, entity.deltaMovement, entity.yRot, entity.xRot)
+        }
+        val portalPos = (entity as PortalDuck).`geometryDash$getGDPortalPos`()
+        if (portalPos != null) {
+            return PortalInfo(portalPos, entity.deltaMovement, entity.yRot, entity.xRot)
         }
         return super.getTPTargetInPortal(portalRect, portalAxis, prevOffset, entity)
     }

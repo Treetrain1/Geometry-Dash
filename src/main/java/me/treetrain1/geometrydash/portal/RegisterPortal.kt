@@ -1,9 +1,10 @@
 package me.treetrain1.geometrydash.portal
 
-import me.treetrain1.geometrydash.registry.RegisterBlocks
+import me.treetrain1.geometrydash.duck.PortalDuck
 import me.treetrain1.geometrydash.util.id
 import net.kyrptonaught.customportalapi.CustomPortalApiRegistry
 import net.kyrptonaught.customportalapi.api.CustomPortalBuilder
+import net.kyrptonaught.customportalapi.util.SHOULDTP
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Blocks
@@ -21,6 +22,12 @@ object RegisterPortal {
             .tintColor(45, 65, 101)
             .forcedSize(20, 6)
             .customFrameTester(GeometryPortalHelper.ID)
+            .registerBeforeTPEvent { entity ->
+                if (entity.level().dimension() == Level.OVERWORLD) {
+                    (entity as PortalDuck).`geometryDash$setGDPortalPos`()
+                }
+                SHOULDTP.CONTINUE_TP
+            }
             .registerPortal()
     }
 }

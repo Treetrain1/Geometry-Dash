@@ -29,7 +29,7 @@ const val GD_GRAVITY_PULL: Double = -0.1//-0.18
  * The location where portals to the Geometry dimension will lead.
  */
 @JvmField
-val DIMENSION_SPAWN = Vec3(25.0, 11.0, 955.0)
+val DIMENSION_SPAWN = Vec3(25.5, 21.0, 959.5)
 
 @JvmField
 val DEFAULT_GRAVITY = Vec3(0.0, 1.0, 0.0)
