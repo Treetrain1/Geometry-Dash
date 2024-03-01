@@ -55,7 +55,7 @@ public class PlayerListMixin {
 		if (lastCheckpoint != null) {
 			Entity entity = data.getLevel().getEntity(lastCheckpoint.entityId);
 			if (entity instanceof Checkpoint checkpoint) {
-				CheckpointSnapshot.Companion.restoreCheckpoint(player, checkpoint, lastCheckpoint);
+				CheckpointSnapshot.Companion.restoreCheckpoint(player, data, checkpoint, lastCheckpoint);
 			}
 		}
 	}

@@ -25,7 +25,8 @@ open class GeometryPortalHelper : VanillaPortalAreaHelper() {
         val ID: ResourceLocation = id("geometry")
     }
 
-    inline fun isGD(level: LevelAccessor?): Boolean
+    @Suppress("NOTHING_TO_INLINE")
+    private inline fun isGD(level: LevelAccessor?): Boolean
         = level is Level && level.dimension() == GeometryDash.DIMENSION
 
     private inline val isGD: Boolean get() = isGD(this.`access$world`)

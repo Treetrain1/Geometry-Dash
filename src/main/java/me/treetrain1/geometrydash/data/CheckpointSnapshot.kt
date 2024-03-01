@@ -3,10 +3,13 @@ package me.treetrain1.geometrydash.data
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import me.treetrain1.geometrydash.data.mode.*
+import me.treetrain1.geometrydash.entity.Checkpoint
 import me.treetrain1.geometrydash.util.getVec
+import me.treetrain1.geometrydash.util.gravity
 import me.treetrain1.geometrydash.util.putVec
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.FriendlyByteBuf
+import net.minecraft.world.entity.player.Player
 import net.minecraft.world.phys.Vec3
 
 /**

@@ -89,7 +89,7 @@ open class RobotModeData : GDModeData() {
     }
 
     override fun getModelPitch(tickDelta: Float): Float {
-        return Mth.lerp(tickDelta, this.prevCubeRot, this.cubeRot)
+        return Mth.lerp(tickDelta, this.prevRot, this.rot)
     }
 
     override val codec: Codec<out GDModeData> = CODEC

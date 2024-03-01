@@ -340,7 +340,7 @@ open class GDData(
         this.checkpoints = compound.getList(CHECKPOINTS_TAG, CompoundTag.TAG_COMPOUND.toInt())
             .map { tag -> CheckpointSnapshot.fromTag(tag as CompoundTag) }
             .toMutableList()
-        this.cameraData = CameraData.fromTag(compound.get(CAMERA_DATA_TAG))
+        this.cameraData = CameraData.fromTag(compound.getCompound(CAMERA_DATA_TAG))
         this.prevGameType = GameType.byNullableId(compound.getInt(PREV_GAME_TYPE_TAG))
         this.prevGravity = compound.getVec(PREV_GRAVITY_TAG)
         this.cameraMirrorProgress = compound.getFloat(CAMERA_MIRROR_PROGRESS_TAG)
