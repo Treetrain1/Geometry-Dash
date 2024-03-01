@@ -61,6 +61,7 @@ object GeometryDash : ModInitializer {
                 entries.accept(RegisterItems.SPIDER_PORTAL)
                 entries.accept(RegisterItems.SWING_PORTAL)
                 entries.accept(RegisterItems.CUBE_3D_PORTAL)
+                entries.accept(RegisterItems.ROBOT_3D_PORTAL)
                 entries.accept(RegisterItems.GRAVITY_FLIP_PORTAL)
                 entries.accept(RegisterItems.MIRROR_PORTAL)
                 entries.accept(RegisterItems.NORMAL_SCALE_PORTAL)

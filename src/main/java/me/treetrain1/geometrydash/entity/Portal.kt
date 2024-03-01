@@ -92,6 +92,7 @@ open class Portal(
         SPIDER(modeSwitch = GDMode.SPIDER),
         SWING(modeSwitch = GDMode.SWING),
         CUBE_3D(modeSwitch = GDMode.CUBE_3D),
+        ROBOT_3D(modeSwitch = GDMode.ROBOT_3D),
 
         GRAVITY_FLIP(shouldFlipGravity = true),
 

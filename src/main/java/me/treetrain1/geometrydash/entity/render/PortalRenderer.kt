@@ -50,6 +50,9 @@ open class PortalRenderer(ctx: Context) : StaticEntityRenderer<Portal>(ctx) {
             Portal.PortalType.ROBOT -> ROBOT_TEXTURE
             Portal.PortalType.SPIDER -> SPIDER_TEXTURE
             Portal.PortalType.SWING -> SWING_TEXTURE
+
+            Portal.PortalType.CUBE_3D -> CUBE_TEXTURE
+            Portal.PortalType.ROBOT_3D -> ROBOT_TEXTURE
             else -> CUBE_TEXTURE
         }
     }
@@ -64,6 +67,9 @@ open class PortalRenderer(ctx: Context) : StaticEntityRenderer<Portal>(ctx) {
             Portal.PortalType.ROBOT -> ROBOT_LAYER
             Portal.PortalType.SPIDER -> SPIDER_LAYER
             Portal.PortalType.SWING -> SWING_LAYER
+
+            Portal.PortalType.CUBE_3D -> CUBE_LAYER
+            Portal.PortalType.ROBOT_3D -> ROBOT_LAYER
             else -> CUBE_LAYER
         }
     }

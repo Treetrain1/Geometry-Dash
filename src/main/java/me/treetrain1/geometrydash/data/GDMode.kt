@@ -15,7 +15,9 @@ enum class GDMode(val title: String, val isFlying: Boolean, val modeData: () -> 
     ROBOT("Robot", false, { RobotModeData() }),
     SPIDER("Spider", false, { SpiderModeData() }),
     SWING("Swing", true, { SwingModeData() }),
-    CUBE_3D("Cube 3D", false, { Cube3DModeData() });
+
+    CUBE_3D("Cube 3D", false, { Cube3DModeData() }),
+    ROBOT_3D("Robot 3D", false, { Robot3DModeData() });
 
     companion object {
         @JvmField

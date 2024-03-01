@@ -61,6 +61,12 @@ object RegisterItems {
     )
 
     @JvmField
+    val ROBOT_3D_PORTAL: Item = register(
+        "robot_3d_portal",
+        PortalItem(Portal.PortalType.CUBE_3D)
+    )
+
+    @JvmField
     val GRAVITY_FLIP_PORTAL: Item = register(
         "gravity_flip_portal",
         PortalItem(Portal.PortalType.GRAVITY_FLIP)

@@ -67,7 +67,7 @@ public abstract class PlayerRendererMixin extends LivingEntityRenderer<AbstractC
 		this.addLayer(new GDModeLayer(
 			renderer,
 			new RobotPlayerModel<>(context.bakeLayer(GeometryDashClient.ROBOT_PLAYER)),
-			GDMode.ROBOT
+			GDMode.ROBOT, GDMode.ROBOT_3D
 		));
 		this.addLayer(new GDModeLayer(
 			renderer,
