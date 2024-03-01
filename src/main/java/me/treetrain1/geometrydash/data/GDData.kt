@@ -2,6 +2,8 @@ package me.treetrain1.geometrydash.data
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
+import me.treetrain1.geometrydash.data.GDData.MirrorDirection.Companion.getMirrorDirection
+import me.treetrain1.geometrydash.data.GDData.MirrorDirection.Companion.putMirrorDirection
 import me.treetrain1.geometrydash.data.mode.GDModeData
 import me.treetrain1.geometrydash.data.mode.getGDModeData
 import me.treetrain1.geometrydash.data.mode.putGDModeData
@@ -20,6 +22,7 @@ import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.util.StringRepresentable
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.Pose
 import net.minecraft.world.entity.player.Player
@@ -42,6 +45,12 @@ open class GDData(
     @JvmField
     var timeMod: Float = 1F,
     @JvmField
+    var dashRingID: String = "",
+    @JvmField
+    var cameraMirrorProgress: Float = 1F,
+    @JvmField
+    var cameraMirrorDirection: MirrorDirection? = null,
+    @JvmField
     protected var prevGameType: GameType? = null,
     @JvmField
     protected var prevGravity: Vec3? = null,
@@ -59,6 +68,9 @@ open class GDData(
         cameraData: CameraData = CameraData(),
         isVisible: Boolean = true,
         timeMod: Float = 1F,
+        dashRingID: String = "",
+        cameraMirrorProgress: Float = 1F,
+        cameraMirrorDirection: MirrorDirection? = null,
         prevGameType: GameType? = null,
         prevGravity: Vec3? = null,
     ) : this(
@@ -67,6 +79,9 @@ open class GDData(
         cameraData,
         isVisible,
         timeMod,
+        dashRingID,
+        cameraMirrorProgress,
+        cameraMirrorDirection,
         prevGameType,
         prevGravity
     )
@@ -84,15 +99,17 @@ open class GDData(
         }
 
     companion object {
-        private const val MODE_TAG = "Mode"
         private const val MODE_DATA_TAG = "ModeData"
-        private const val SCALE_TAG = "Scale"
         private const val CHECKPOINTS_TAG = "Checkpoints"
         private const val CAMERA_DATA_TAG = "CameraData"
-        private const val PREV_GAME_TYPE_TAG = "PrevGameType"
-        private const val PREV_GRAVITY_TAG = "PrevGravity"
+        private const val IS_VISIBLE_TAG = "IsVisible"
+        private const val SCALE_TAG = "Scale"
+        private const val TIME_MULTIPLIER_TAG = "TimeMultiplier"
         private const val DASH_RING_TAG = "DashRingID"
         private const val CAMERA_MIRROR_PROGRESS_TAG = "CameraMirrorProgress"
+        private const val CAMERA_MIRROR_DIRECTION_TAG = "CameraMirrorDirection"
+        private const val PREV_GAME_TYPE_TAG = "PrevGameType"
+        private const val PREV_GRAVITY_TAG = "PrevGravity"
 
         @JvmField
         val GD_DATA: EntityDataAccessor<in CompoundTag> = SynchedEntityData.defineId(
@@ -102,15 +119,18 @@ open class GDData(
         @JvmField
         val CODEC: Codec<GDData> = RecordCodecBuilder.create { instance ->
             instance.group(
-                GDModeData.CODEC.optionalFieldOf("mode_data").forGetter { Optional.ofNullable(it.modeData) },
-                CheckpointSnapshot.CODEC.listOf().fieldOf("checkpoints").forGetter(GDData::checkpoints),
-                CameraData.CODEC.fieldOf("camera_data").forGetter(GDData::cameraData),
-                Codec.BOOL.fieldOf("isVisible").forGetter(GDData::isVisible),
-                Codec.FLOAT.fieldOf("time_multiplier").forGetter(GDData::timeMod),
-                GameType.CODEC.optionalFieldOf("previous_game_type").forGetter { Optional.ofNullable(it.prevGameType) },
-                Vec3.CODEC.optionalFieldOf("previous_gravity").forGetter { Optional.ofNullable(it.prevGravity) },
-            ).apply(instance) { modeData, checkpoints, cameraData, isVisible, timeMod, prevGameType, prevGravity ->
-                GDData(modeData.getOrNull(), checkpoints, cameraData, isVisible, timeMod, prevGameType.getOrNull(), prevGravity.getOrNull())
+                GDModeData.CODEC.optionalFieldOf(MODE_DATA_TAG).forGetter { Optional.ofNullable(it.modeData) },
+                CheckpointSnapshot.CODEC.listOf().fieldOf(CHECKPOINTS_TAG).forGetter(GDData::checkpoints),
+                CameraData.CODEC.fieldOf(CAMERA_DATA_TAG).forGetter(GDData::cameraData),
+                Codec.BOOL.fieldOf(IS_VISIBLE_TAG).forGetter(GDData::isVisible),
+                Codec.FLOAT.fieldOf(TIME_MULTIPLIER_TAG).forGetter(GDData::timeMod),
+                Codec.STRING.fieldOf(DASH_RING_TAG).forGetter(GDData::dashRingID),
+                Codec.FLOAT.fieldOf(CAMERA_MIRROR_PROGRESS_TAG).forGetter(GDData::cameraMirrorProgress),
+                MirrorDirection.CODEC.fieldOf(CAMERA_MIRROR_DIRECTION_TAG).forGetter(GDData::cameraMirrorDirection),
+                GameType.CODEC.optionalFieldOf(PREV_GAME_TYPE_TAG).forGetter { Optional.ofNullable(it.prevGameType) },
+                Vec3.CODEC.optionalFieldOf(PREV_GRAVITY_TAG).forGetter { Optional.ofNullable(it.prevGravity) },
+            ).apply(instance) { modeData, checkpoints, cameraData, isVisible, timeMod, dashRingID, cameraMirrorProgress, cameraMirrorDirection, prevGameType, prevGravity ->
+                GDData(modeData.getOrNull(), checkpoints, cameraData, isVisible, timeMod, dashRingID, cameraMirrorProgress, cameraMirrorDirection, prevGameType.getOrNull(), prevGravity.getOrNull())
             }
         }
     }
@@ -162,16 +182,7 @@ open class GDData(
     @JvmField
     var ringLocked: Boolean = false
 
-    @JvmField
-    var dashRingID: String = ""
-
     inline val isDashing: Boolean get() = dashRingID.isNotEmpty()
-
-    @JvmField
-    var cameraMirrorProgress: Float = 1F
-
-    @JvmField
-    var cameraMirrorDirection: MirrorDirection? = null
 
     fun mirrorCamera() {
         cameraMirrorDirection = if (cameraMirrorProgress > 0) {
@@ -322,10 +333,13 @@ open class GDData(
         checkpoints.addAll(this.checkpoints.map { it.toTag() })
         compound.put(CHECKPOINTS_TAG, checkpoints)
         compound.put(CAMERA_DATA_TAG, this.cameraData.toTag())
-        compound.putInt(PREV_GAME_TYPE_TAG, this.prevGameType?.id ?: -1)
-        compound.putVec(PREV_GRAVITY_TAG, this.prevGravity ?: DEFAULT_GRAVITY)
+        compound.putBoolean(IS_VISIBLE_TAG, this.isVisible)
+        compound.putFloat(TIME_MULTIPLIER_TAG, this.timeMod)
         compound.putString(DASH_RING_TAG, this.dashRingID)
         compound.putFloat(CAMERA_MIRROR_PROGRESS_TAG, this.cameraMirrorProgress)
+        compound.putMirrorDirection(CAMERA_MIRROR_DIRECTION_TAG, this.cameraMirrorDirection)
+        compound.putInt(PREV_GAME_TYPE_TAG, this.prevGameType?.id ?: -1)
+        compound.putVec(PREV_GRAVITY_TAG, this.prevGravity ?: DEFAULT_GRAVITY)
         return compound
     }
 
@@ -341,9 +355,13 @@ open class GDData(
             .map { tag -> CheckpointSnapshot.fromTag(tag as CompoundTag) }
             .toMutableList()
         this.cameraData = CameraData.fromTag(compound.getCompound(CAMERA_DATA_TAG))
+        this.isVisible = compound.getBoolean(IS_VISIBLE_TAG)
+        this.timeMod = compound.getFloat(TIME_MULTIPLIER_TAG)
+        this.dashRingID = compound.getString(DASH_RING_TAG)
+        this.cameraMirrorProgress = compound.getFloat(CAMERA_MIRROR_PROGRESS_TAG)
+        this.cameraMirrorDirection = compound.getMirrorDirection(CAMERA_MIRROR_DIRECTION_TAG)
         this.prevGameType = GameType.byNullableId(compound.getInt(PREV_GAME_TYPE_TAG))
         this.prevGravity = compound.getVec(PREV_GRAVITY_TAG)
-        this.cameraMirrorProgress = compound.getFloat(CAMERA_MIRROR_PROGRESS_TAG)
         return compound
     }
 
@@ -351,10 +369,14 @@ open class GDData(
         this.modeData = otherData.modeData
         this.scale = otherData.scale
         this.checkpoints = otherData.checkpoints
-        this.prevGameType = otherData.prevGameType
-        this.prevGravity = otherData.prevGravity
+        this.cameraData = otherData.cameraData
+        this.isVisible = otherData.isVisible
+        this.timeMod = otherData.timeMod
         this.dashRingID = otherData.dashRingID
         this.cameraMirrorProgress = otherData.cameraMirrorProgress
+        this.cameraMirrorDirection = otherData.cameraMirrorDirection
+        this.prevGameType = otherData.prevGameType
+        this.prevGravity = otherData.prevGravity
 
         this.syncData()
     }
@@ -364,8 +386,31 @@ open class GDData(
         (this.player as? PlayerDuck)?.`geometryDash$updateSyncedGDData`()
     }
 
-    enum class MirrorDirection {
+    enum class MirrorDirection : StringRepresentable {
         LEFT,
         RIGHT;
+
+        companion object {
+            @JvmField
+            val CODEC: Codec<MirrorDirection> = StringRepresentable.fromEnum(::values)
+
+            fun CompoundTag.getMirrorDirection(key: String): MirrorDirection? {
+                if (!this.contains(key, CompoundTag.TAG_STRING.toInt()))
+                    return null
+                val str: String = this.getString(key)
+                return try {
+                    MirrorDirection.valueOf(str.uppercase())
+                } catch (e: Exception) {
+                    null
+                }
+            }
+
+            fun CompoundTag.putMirrorDirection(key: String, direction: MirrorDirection?): CompoundTag {
+                this.putString(key, direction?.serializedName ?: "")
+                return this
+            }
+        }
+
+        override fun getSerializedName(): String = this.name.lowercase()
     }
 }
