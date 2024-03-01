@@ -88,6 +88,7 @@ open class GDData(
         private const val MODE_DATA_TAG = "ModeData"
         private const val SCALE_TAG = "Scale"
         private const val CHECKPOINTS_TAG = "Checkpoints"
+        private const val CAMERA_DATA_TAG = "CameraData"
         private const val PREV_GAME_TYPE_TAG = "PrevGameType"
         private const val PREV_GRAVITY_TAG = "PrevGravity"
         private const val DASH_RING_TAG = "DashRingID"
@@ -320,6 +321,7 @@ open class GDData(
         val checkpoints = ListTag()
         checkpoints.addAll(this.checkpoints.map { it.toTag() })
         compound.put(CHECKPOINTS_TAG, checkpoints)
+        compound.put(CAMERA_DATA_TAG, this.cameraData.toTag())
         compound.putInt(PREV_GAME_TYPE_TAG, this.prevGameType?.id ?: -1)
         compound.putVec(PREV_GRAVITY_TAG, this.prevGravity ?: DEFAULT_GRAVITY)
         compound.putString(DASH_RING_TAG, this.dashRingID)
@@ -338,6 +340,7 @@ open class GDData(
         this.checkpoints = compound.getList(CHECKPOINTS_TAG, CompoundTag.TAG_COMPOUND.toInt())
             .map { tag -> CheckpointSnapshot.fromTag(tag as CompoundTag) }
             .toMutableList()
+        this.cameraData = CameraData.fromTag(compound.get(CAMERA_DATA_TAG))
         this.prevGameType = GameType.byNullableId(compound.getInt(PREV_GAME_TYPE_TAG))
         this.prevGravity = compound.getVec(PREV_GRAVITY_TAG)
         this.cameraMirrorProgress = compound.getFloat(CAMERA_MIRROR_PROGRESS_TAG)
