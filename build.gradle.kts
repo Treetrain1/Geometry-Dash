@@ -244,9 +244,6 @@ dependencies {
     // Reach Entity Attributes
     modApi("com.github.Treetrain1:reach-entity-attributes:1.20-SNAPSHOT")?.let { include(it) }
 
-    // MixinExtras
-    modApi("io.github.llamalad7:mixinextras-fabric:0.3.1")?.let { annotationProcessor(it) }
-
     // Cloth Config
     modApi("me.shedaniel.cloth:cloth-config-fabric:${cloth_config_version}") {
         exclude(group = "net.fabricmc.fabric-api")
@@ -255,9 +252,6 @@ dependencies {
 
     // Mod Menu
     modImplementation("com.terraformersmc:modmenu:${modmenu_version}")
-
-    // DimLib
-    modImplementation("maven.modrinth:dimlib:1.0.2+mc1.20.4")
 
     // MidnightLib
     modImplementation("maven.modrinth:midnightlib:1.5.3-fabric")

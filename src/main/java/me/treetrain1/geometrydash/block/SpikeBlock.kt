@@ -29,7 +29,7 @@ class SpikeBlock(props: Properties) : Block(props), Fallable, SimpleWaterloggedB
 
     companion object {
         @JvmField
-        internal val TIP_DIRECTION = BlockStateProperties.VERTICAL_DIRECTION
+        internal val FACING = BlockStateProperties.FACING
 
         @JvmField
         internal val SIZE = IntegerProperty.create("size", 1, 3)
@@ -50,14 +50,14 @@ class SpikeBlock(props: Properties) : Block(props), Fallable, SimpleWaterloggedB
     init {
         this.registerDefaultState(
             this.stateDefinition.any()
-                .setValue(TIP_DIRECTION, Direction.UP)
+                .setValue(FACING, Direction.UP)
                 .setValue(SIZE, 3)
                 .setValue(WATERLOGGED, false)
         )
     }
 
     override fun createBlockStateDefinition(builder: StateDefinition.Builder<Block, BlockState>) {
-        builder.add(TIP_DIRECTION, SIZE, WATERLOGGED)
+        builder.add(FACING, SIZE, WATERLOGGED)
     }
 
     override fun updateShape(
