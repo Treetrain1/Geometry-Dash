@@ -20,7 +20,7 @@ public class ServerPlayerMixin {
 		var data = ((PlayerDuck) this).geometryDash$getGDData();
 		CheckpointSnapshot lastCheckpoint = data.getLastValidCheckpoint();
 		if (lastCheckpoint != null) {
-			Entity entity = data.getLevel().getEntity(lastCheckpoint.getEntityId());
+			Entity entity = data.getLevel().getEntity(lastCheckpoint.entityId);
 			if (entity != null) {
 				return entity.blockPosition();
 			}
@@ -33,9 +33,9 @@ public class ServerPlayerMixin {
 		var data = ((PlayerDuck) this).geometryDash$getGDData();
 		CheckpointSnapshot lastCheckpoint = data.getLastValidCheckpoint();
 		if (lastCheckpoint != null) {
-			Entity entity = data.getLevel().getEntity(lastCheckpoint.getEntityId());
+			Entity entity = data.getLevel().getEntity(lastCheckpoint.entityId);
 			if (entity != null) {
-				return lastCheckpoint.getYaw();
+				return lastCheckpoint.yRot;
 			}
 		}
 		return original;

@@ -16,15 +16,15 @@ import net.minecraft.world.phys.Vec3
  * @param entityId The checkpoint entity's ID
  */
 data class CheckpointSnapshot(
-    val entityId: Int,
-    val modeData: GDModeData?,
-    val deltaMovement: Vec3,
-    val yRot: Float,
-    val scale: Float,
-    val gravity: Vec3,
-    val onGround: Boolean,
-    val isVisible: Boolean = true,
-    val timeMod: Float
+    @JvmField val entityId: Int,
+    @JvmField val modeData: GDModeData?,
+    @JvmField val deltaMovement: Vec3,
+    @JvmField val yRot: Float,
+    @JvmField val scale: Float,
+    @JvmField val gravity: Vec3,
+    @JvmField val onGround: Boolean,
+    @JvmField val isVisible: Boolean = true,
+    @JvmField val timeMod: Float
 ) {
 
     companion object {
@@ -43,14 +43,14 @@ data class CheckpointSnapshot(
             ).apply(instance, ::CheckpointSnapshot)
         }
 
-        fun Player.restoreCheckpoint(data: GDData, checkpoint: CheckpointSnapshot) {
+        fun Player.restoreCheckpoint(data: GDData, entity: Checkpoint, checkpoint: CheckpointSnapshot) {
             data.modeData = checkpoint.modeData
             this.deltaMovement = checkpoint.deltaMovement
             this.yRot = checkpoint.yRot
             data.scale = checkpoint.scale
             this.gravity = checkpoint.gravity
 
-            this.moveTo(checkpoint.position())
+            this.moveTo(entity.position())
 
             this.setOnGround(checkpoint.onGround)
             data.isVisible = checkpoint.isVisible

@@ -8,6 +8,7 @@ import java.util.Optional;
 import me.treetrain1.geometrydash.data.CheckpointSnapshot;
 import me.treetrain1.geometrydash.data.GDData;
 import me.treetrain1.geometrydash.duck.PlayerDuck;
+import me.treetrain1.geometrydash.entity.Checkpoint;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -16,6 +17,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(PlayerList.class)
 public class PlayerListMixin {
@@ -25,7 +28,7 @@ public class PlayerListMixin {
 		GDData data = ((PlayerDuck) instance).geometryDash$getGDData();
 		CheckpointSnapshot lastCheckpoint = data.getLastValidCheckpoint();
 		if (lastCheckpoint != null) {
-			Entity entity = data.getLevel().getEntity(lastCheckpoint.getEntityId());
+			Entity entity = data.getLevel().getEntity(lastCheckpoint.entityId);
 			if (entity == null) {
 				isGD.set(false);
 				return original.call(instance);
@@ -43,5 +46,17 @@ public class PlayerListMixin {
 			return Optional.of(Vec3.atBottomCenterOf(spawnBlockPos));
 		}
 		return original.call(serverLevel, spawnBlockPos, playerOrientation, isRespawnForced, respawnAfterWinningTheGame);
+	}
+
+	@Inject(method = "respawn", at = @At("RETURN"))
+	private void restoreCheckpoint(ServerPlayer player, boolean b, CallbackInfoReturnable<ServerPlayer> cir) {
+		GDData data = ((PlayerDuck) player).geometryDash$getGDData();
+		CheckpointSnapshot lastCheckpoint = data.getLastValidCheckpoint();
+		if (lastCheckpoint != null) {
+			Entity entity = data.getLevel().getEntity(lastCheckpoint.entityId);
+			if (entity instanceof Checkpoint checkpoint) {
+				CheckpointSnapshot.Companion.restoreCheckpoint(player, checkpoint, lastCheckpoint);
+			}
+		}
 	}
 }
