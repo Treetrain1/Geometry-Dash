@@ -15,9 +15,9 @@ open class RobotModeData : GDModeData() {
 
     override val mode: GDMode = GDMode.ROBOT
 
-    private var targetCubeRot: Float = 0F
-    private var cubeRot: Float = 0F
-    private var prevCubeRot: Float = 0F
+    private var targetRot: Float = 0F
+    private var rot: Float = 0F
+    private var prevRot: Float = 0F
     private var thrustAmount = 1.0
     private var inProgress: Boolean = false
 
@@ -28,16 +28,16 @@ open class RobotModeData : GDModeData() {
 
     override fun tick() {
         if (this.gdData?.player?.level()?.isClientSide == true) {
-            this.prevCubeRot = this.cubeRot
+            this.prevRot = this.rot
             this.gdData?.run {
                 if (this.player.onGround()) {
-                    this@RobotModeData.targetCubeRot = Math.round(this@RobotModeData.targetCubeRot / 90F) * 90F
+                    this@RobotModeData.targetRot = Math.round(this@RobotModeData.targetRot / 90F) * 90F
                 } else {
                     val gravity = this.player.gravity
-                    this@RobotModeData.targetCubeRot += if (gravity.y < 0) -20 else 20
+                    this@RobotModeData.targetRot += if (gravity.y < 0) -20 else 20
                 }
             }
-            this.cubeRot += (this.targetCubeRot - this.cubeRot) * 0.395F // both 0.395F and 0.45F seem alright, up to you tree
+            this.rot += (this.targetRot - this.rot) * 0.395F // both 0.395F and 0.45F seem alright, up to you tree
         }
     }
 
