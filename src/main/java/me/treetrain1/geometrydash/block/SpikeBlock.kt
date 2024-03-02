@@ -12,6 +12,7 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.LevelAccessor
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.Fallable
+import net.minecraft.world.level.block.HalfTransparentBlock
 import net.minecraft.world.level.block.SimpleWaterloggedBlock
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.StateDefinition
@@ -24,7 +25,7 @@ import net.minecraft.world.phys.shapes.Shapes
 import net.minecraft.world.phys.shapes.VoxelShape
 
 @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
-class SpikeBlock(props: Properties) : Block(props), Fallable, SimpleWaterloggedBlock {
+class SpikeBlock(props: Properties) : HalfTransparentBlock(props), Fallable, SimpleWaterloggedBlock {
 
     companion object {
         @JvmField
