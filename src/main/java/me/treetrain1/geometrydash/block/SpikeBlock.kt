@@ -80,9 +80,9 @@ class SpikeBlock(props: Properties) : Block(props), Fallable, SimpleWaterloggedB
         val dir = context.nearestLookingVerticalDirection.opposite
         val size = 3
         return defaultBlockState()
-            .setValue(PointedDripstoneBlock.TIP_DIRECTION, dir)
+            .setValue(FACING, dir)
             .setValue(SIZE, size)
-            .setValue(PointedDripstoneBlock.WATERLOGGED, level.getFluidState(pos).type === Fluids.WATER)
+            .setValue(WATERLOGGED, level.getFluidState(pos).type === Fluids.WATER)
     }
 
     override fun getFluidState(state: BlockState): FluidState {
