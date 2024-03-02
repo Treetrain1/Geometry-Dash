@@ -32,26 +32,29 @@ class SpikeBlock(props: Properties) : HalfTransparentBlock(props), Fallable, Sim
         internal val FACING = BlockStateProperties.FACING
 
         @JvmField
-        internal val SIZE = IntegerProperty.create("size", 1, 3)
+        internal val SIZE = IntegerProperty.create("size", 1, 4)
 
         @JvmField
         internal val WATERLOGGED = BlockStateProperties.WATERLOGGED
 
         @JvmField
-        val SMALL_SHAPE = box(7.0, 10.0, 7.0, 9.0, 14.5, 9.0);
+        val SMALL_SHAPE = box(7.0, 10.0, 7.0, 9.0, 14.5, 9.0)
 
         @JvmField
-        val MIDDLE_SHAPE = box(5.5, 10.0, 5.5, 10.5, 14.5, 10.5);
+        val LOW_SHAPE = box(4.7, 10.0, 4.7, 11.2, 14.5, 11.2)
 
         @JvmField
-        val LARGE_SHAPE = box(4.0, 10.0, 4.0, 12.0, 14.5, 12.0);
+        val MIDDLE_SHAPE = box(5.5, 10.0, 5.5, 10.5, 14.5, 10.5)
+
+        @JvmField
+        val LARGE_SHAPE = box(4.0, 10.0, 4.0, 12.0, 14.5, 12.0)
     }
 
     init {
         this.registerDefaultState(
             this.stateDefinition.any()
                 .setValue(FACING, Direction.UP)
-                .setValue(SIZE, 3)
+                .setValue(SIZE, 4)
                 .setValue(WATERLOGGED, false)
         )
     }
@@ -78,7 +81,7 @@ class SpikeBlock(props: Properties) : HalfTransparentBlock(props), Fallable, Sim
         val level = context.level
         val pos = context.clickedPos
         val dir = context.nearestLookingVerticalDirection.opposite
-        val size = 3
+        val size = 4
         return defaultBlockState()
             .setValue(FACING, dir)
             .setValue(SIZE, size)
@@ -102,8 +105,9 @@ class SpikeBlock(props: Properties) : HalfTransparentBlock(props), Fallable, Sim
         val size = state.getValue(SIZE)
         val shape = when (size) {
             1 -> SMALL_SHAPE
-            2 -> MIDDLE_SHAPE
-            3 -> LARGE_SHAPE
+            2 -> LOW_SHAPE
+            3 -> MIDDLE_SHAPE
+            4 -> LARGE_SHAPE
             else -> LARGE_SHAPE
         }
 

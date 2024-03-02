@@ -72,6 +72,9 @@ object GeometryDash : ModInitializer {
     ).key!!
 
     @JvmField
+    val SPECIAL_EFFECTS = id("geometry")
+
+    @JvmField
     val DIMENSION_TYPE: ResourceKey<DimensionType> = ResourceKey.create(Registries.DIMENSION_TYPE, id("geometry"))
 
     @JvmField

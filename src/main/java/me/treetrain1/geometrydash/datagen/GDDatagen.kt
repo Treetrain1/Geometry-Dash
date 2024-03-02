@@ -39,15 +39,15 @@ object GDDatagen : DataGeneratorEntrypoint {
                     true,
                     false,
                     false,
-                    true,
+                    false,
                     1.0,
-                    true,
+                    false,
                     false,
                     0,
                     1280,
                     1280,
                     BlockTags.INFINIBURN_OVERWORLD,
-                    BuiltinDimensionTypes.OVERWORLD_EFFECTS,
+                    GeometryDash.SPECIAL_EFFECTS,
                     0.0F,
                     DimensionType.MonsterSettings(true, false, ConstantInt.of(0), 0)
                 )
