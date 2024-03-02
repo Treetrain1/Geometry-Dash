@@ -41,7 +41,7 @@ object GeometryDashClient : ClientModInitializer {
 	@Override
     override fun onInitializeClient() {
         val layerRegistry = BlockRenderLayerMap.INSTANCE
-        layerRegistry.putBlock(RegisterBlocks.SPIKE, RenderType.cutout())
+        layerRegistry.putBlock(RegisterBlocks.SPIKE, RenderType.translucent())
 
         EntityRendererRegistry.register(RegisterEntities.CHECKPOINT, ::CheckpointRenderer)
         EntityRendererRegistry.register(RegisterEntities.RING, ::RingRenderer)
