@@ -4,7 +4,7 @@
       "model": "minecraft:block/pointed_dripstone_down_frustum"
     },
     "size=3,facing=up": {
-      "model": "minecraft:block/pointed_dripstone_up_frustum"
+      "model": "geometry_dash:block/spike_large"
     },
     "size=2,facing=down": {
       "model": "minecraft:block/pointed_dripstone_down_middle"
