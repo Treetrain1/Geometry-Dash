@@ -68,7 +68,7 @@ open class RobotModeData : GDModeData() {
         return false
     }
 
-    override fun onRingUnlock() {
+    override fun onOrbUnlock() {
         this.inProgress = false
     }
 

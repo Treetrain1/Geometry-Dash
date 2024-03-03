@@ -45,7 +45,7 @@ open class GDData(
     @JvmField
     var timeMod: Float = 1F,
     @JvmField
-    var dashRingID: String = "",
+    var dashOrbID: String = "",
     @JvmField
     var cameraMirrorProgress: Float = 1F,
     @JvmField
@@ -68,7 +68,7 @@ open class GDData(
         cameraData: CameraData = CameraData(),
         isVisible: Boolean = true,
         timeMod: Float = 1F,
-        dashRingID: String = "",
+        dashOrbID: String = "",
         cameraMirrorProgress: Float = 1F,
         cameraMirrorDirection: MirrorDirection? = null,
         prevGameType: GameType? = null,
@@ -79,7 +79,7 @@ open class GDData(
         cameraData,
         isVisible,
         timeMod,
-        dashRingID,
+        dashOrbID,
         cameraMirrorProgress,
         cameraMirrorDirection,
         prevGameType,
@@ -105,7 +105,7 @@ open class GDData(
         private const val IS_VISIBLE_TAG = "IsVisible"
         private const val SCALE_TAG = "Scale"
         private const val TIME_MULTIPLIER_TAG = "TimeMultiplier"
-        private const val DASH_RING_TAG = "DashRingID"
+        private const val DASH_ORB_ID = "DashOrbID"
         private const val CAMERA_MIRROR_PROGRESS_TAG = "CameraMirrorProgress"
         private const val CAMERA_MIRROR_DIRECTION_TAG = "CameraMirrorDirection"
         private const val PREV_GAME_TYPE_TAG = "PrevGameType"
@@ -124,13 +124,13 @@ open class GDData(
                 CameraData.CODEC.fieldOf(CAMERA_DATA_TAG).forGetter(GDData::cameraData),
                 Codec.BOOL.fieldOf(IS_VISIBLE_TAG).forGetter(GDData::isVisible),
                 Codec.FLOAT.fieldOf(TIME_MULTIPLIER_TAG).forGetter(GDData::timeMod),
-                Codec.STRING.fieldOf(DASH_RING_TAG).forGetter(GDData::dashRingID),
+                Codec.STRING.fieldOf(DASH_ORB_ID).forGetter(GDData::dashOrbID),
                 Codec.FLOAT.fieldOf(CAMERA_MIRROR_PROGRESS_TAG).forGetter(GDData::cameraMirrorProgress),
                 MirrorDirection.CODEC.fieldOf(CAMERA_MIRROR_DIRECTION_TAG).forGetter(GDData::cameraMirrorDirection),
                 GameType.CODEC.optionalFieldOf(PREV_GAME_TYPE_TAG).forGetter { Optional.ofNullable(it.prevGameType) },
                 Vec3.CODEC.optionalFieldOf(PREV_GRAVITY_TAG).forGetter { Optional.ofNullable(it.prevGravity) },
-            ).apply(instance) { modeData, checkpoints, cameraData, isVisible, timeMod, dashRingID, cameraMirrorProgress, cameraMirrorDirection, prevGameType, prevGravity ->
-                GDData(modeData.getOrNull(), checkpoints, cameraData, isVisible, timeMod, dashRingID, cameraMirrorProgress, cameraMirrorDirection, prevGameType.getOrNull(), prevGravity.getOrNull())
+            ).apply(instance) { modeData, checkpoints, cameraData, isVisible, timeMod, dashOrbID, cameraMirrorProgress, cameraMirrorDirection, prevGameType, prevGravity ->
+                GDData(modeData.getOrNull(), checkpoints, cameraData, isVisible, timeMod, dashOrbID, cameraMirrorProgress, cameraMirrorDirection, prevGameType.getOrNull(), prevGravity.getOrNull())
             }
         }
     }
@@ -176,13 +176,13 @@ open class GDData(
     var bufferLocked: Boolean = false
 
     /**
-     * Whether or not an input release is required for Ring interaction
+     * Whether or not an input release is required for Orb interaction
      */
     @Environment(EnvType.CLIENT)
     @JvmField
-    var ringLocked: Boolean = false
+    var orbLocked: Boolean = false
 
-    inline val isDashing: Boolean get() = dashRingID.isNotEmpty()
+    inline val isDashing: Boolean get() = dashOrbID.isNotEmpty()
 
     fun mirrorCamera() {
         cameraMirrorDirection = if (cameraMirrorProgress > 0) {
@@ -198,7 +198,7 @@ open class GDData(
         return inputBuffer
     }
 
-    inline val canBounceFromRing: Boolean get() = !(ignoreInput || ringLocked || isDashing) && inputBuffer
+    inline val canBounceFromOrb: Boolean get() = !(ignoreInput || orbLocked || isDashing) && inputBuffer
 
     inline val lastValidCheckpoint: CheckpointSnapshot? get() {
         val level = this.level
@@ -268,8 +268,8 @@ open class GDData(
         this.ignoreInput = false
         this.inputBuffer = false
         this.bufferLocked = false
-        this.ringLocked = false
-        this.dashRingID = ""
+        this.orbLocked = false
+        this.dashOrbID = ""
         this.cameraMirrorProgress = 1F
 
         val player = this.player
@@ -335,7 +335,7 @@ open class GDData(
         compound.put(CAMERA_DATA_TAG, this.cameraData.toTag())
         compound.putBoolean(IS_VISIBLE_TAG, this.isVisible)
         compound.putFloat(TIME_MULTIPLIER_TAG, this.timeMod)
-        compound.putString(DASH_RING_TAG, this.dashRingID)
+        compound.putString(DASH_ORB_ID, this.dashOrbID)
         compound.putFloat(CAMERA_MIRROR_PROGRESS_TAG, this.cameraMirrorProgress)
         compound.putMirrorDirection(CAMERA_MIRROR_DIRECTION_TAG, this.cameraMirrorDirection)
         compound.putInt(PREV_GAME_TYPE_TAG, this.prevGameType?.id ?: -1)
@@ -357,7 +357,7 @@ open class GDData(
         this.cameraData = CameraData.fromTag(compound.getCompound(CAMERA_DATA_TAG))
         this.isVisible = compound.getBoolean(IS_VISIBLE_TAG)
         this.timeMod = compound.getFloat(TIME_MULTIPLIER_TAG)
-        this.dashRingID = compound.getString(DASH_RING_TAG)
+        this.dashOrbID = compound.getString(DASH_ORB_ID)
         this.cameraMirrorProgress = compound.getFloat(CAMERA_MIRROR_PROGRESS_TAG)
         this.cameraMirrorDirection = compound.getMirrorDirection(CAMERA_MIRROR_DIRECTION_TAG)
         this.prevGameType = GameType.byNullableId(compound.getInt(PREV_GAME_TYPE_TAG))
@@ -372,7 +372,7 @@ open class GDData(
         this.cameraData = otherData.cameraData
         this.isVisible = otherData.isVisible
         this.timeMod = otherData.timeMod
-        this.dashRingID = otherData.dashRingID
+        this.dashOrbID = otherData.dashOrbID
         this.cameraMirrorProgress = otherData.cameraMirrorProgress
         this.cameraMirrorDirection = otherData.cameraMirrorDirection
         this.prevGameType = otherData.prevGameType

@@ -6,7 +6,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import me.treetrain1.geometrydash.data.GDData;
 import me.treetrain1.geometrydash.data.mode.GDModeData;
 import me.treetrain1.geometrydash.duck.PlayerDuck;
-import me.treetrain1.geometrydash.entity.Ring;
+import me.treetrain1.geometrydash.entity.Orb;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -63,30 +63,30 @@ public class LocalPlayerMixin {
 			|| InputConstants.isKeyDown(window, InputConstants.KEY_W)
 			|| InputConstants.isKeyDown(window, InputConstants.KEY_UP)
 			|| GLFW.glfwGetMouseButton(window, InputConstants.MOUSE_BUTTON_LEFT) == 1;
-		String dashRingID = gdData.dashRingID;
+		String dashRingID = gdData.dashOrbID;
 		boolean isDashing = gdData.isDashing();
 		gdData.inputBuffer = jumping;
 		if (gdModeData != null) {
-			// TODO: bounce from rings
+			// TODO: bounce from orbs
 			if (isDashing) {
 				if (jumping) {
 					LocalPlayer player = LocalPlayer.class.cast(this);
 					Entity entity = player.level().getEntities().get(UUID.fromString(dashRingID));
-					if (entity instanceof Ring ring) {
-						player.setDeltaMovement(ring.getForward());
+					if (entity instanceof Orb orb) {
+						player.setDeltaMovement(orb.getForward());
 						return;
 					}
 				}
 				// returns before getting here, else not necessary
-				gdData.dashRingID = "";
+				gdData.dashOrbID = "";
 			}
 			if (!jumping) {
-				gdData.ringLocked = false;
+				gdData.orbLocked = false;
 				if (gdModeData.unlockOnRelease())
 					gdData.bufferLocked = false;
 			}
 			if (gdModeData.tickInput(this.input)) {
-				gdData.ringLocked = true;
+				gdData.orbLocked = true;
 				if (gdModeData.lockOnSuccess()) gdData.bufferLocked = true;
 			}
 		}

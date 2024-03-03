@@ -6,7 +6,7 @@ import me.treetrain1.geometrydash.command.GravityCommand
 import me.treetrain1.geometrydash.datafix.GDDataFixer
 import me.treetrain1.geometrydash.entity.Checkpoint
 import me.treetrain1.geometrydash.entity.Portal
-import me.treetrain1.geometrydash.entity.Ring
+import me.treetrain1.geometrydash.entity.Orb
 import me.treetrain1.geometrydash.network.C2SFailPacket
 import me.treetrain1.geometrydash.portal.RegisterPortal
 import me.treetrain1.geometrydash.registry.*
@@ -123,7 +123,7 @@ object GeometryDash : ModInitializer {
 
             EntityDataSerializers.registerSerializer(VEC_SERIALIZER)
             EntityDataSerializers.registerSerializer(Checkpoint.CheckpointType.SERIALIZER)
-            EntityDataSerializers.registerSerializer(Ring.RingType.SERIALIZER)
+            EntityDataSerializers.registerSerializer(Orb.OrbType.SERIALIZER)
             EntityDataSerializers.registerSerializer(Portal.PortalType.SERIALIZER)
 
             GravityAPI.MODIFICATIONS.register { ctx ->

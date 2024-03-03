@@ -4,7 +4,7 @@ package me.treetrain1.geometrydash.util
 
 import me.treetrain1.geometrydash.duck.EntityDuck
 import me.treetrain1.geometrydash.duck.PlayerDuck
-import me.treetrain1.geometrydash.entity.Ring
+import me.treetrain1.geometrydash.entity.Orb
 import me.treetrain1.geometrydash.network.C2SFailPacket
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
@@ -17,7 +17,6 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.DoubleTag
 import net.minecraft.nbt.ListTag
 import net.minecraft.resources.ResourceLocation
-import net.minecraft.util.Mth
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.player.Player
@@ -27,9 +26,6 @@ import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec3
 import net.minecraft.world.phys.shapes.CollisionContext
-import org.joml.Matrix4d
-import org.joml.Quaterniond
-import org.joml.Quaternionf
 import org.joml.Vector3d
 
 // GRAVITY
@@ -103,11 +99,11 @@ fun LivingEntity.launch(multiplier: Double) {
     this.hasImpulse = true
 }
 
-fun Player.dash(ring: Ring) {
+fun Player.dash(orb: Orb) {
     val data = this.gdData
-    data.dashRingID = ring.stringUUID
+    data.dashOrbID = orb.stringUUID
 
-    this.deltaMovement = ring.forward
+    this.deltaMovement = orb.forward
 }
 
 // these are for respecting gravity when setting movement

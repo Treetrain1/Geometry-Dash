@@ -15,8 +15,6 @@ internal const val MOD_NAME = "Geometry Dash"
 @JvmField
 internal val LOGGER: Logger = LoggerFactory.getLogger(MOD_NAME)!!
 
-const val DATA_VERSION = 1
-
 @JvmField
 val GD_MOVEMENT_SPEED = AttributeModifier(
     "Geometry Dash speed boost",

@@ -11,28 +11,27 @@ import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
 
-// Usually called Orbs but in the files I believe it's called Rings
-open class Ring(
-    type: EntityType<out Ring>,
+open class Orb(
+    type: EntityType<out Orb>,
     level: Level
 ) : StaticEntity(type, level) {
 
     companion object {
         @PublishedApi
         @JvmField
-        internal val TYPE: EntityDataAccessor<RingType> = SynchedEntityData.defineId(Ring::class.java, RingType.SERIALIZER)
+        internal val TYPE: EntityDataAccessor<OrbType> = SynchedEntityData.defineId(Orb::class.java, OrbType.SERIALIZER)
     }
 
-    inline var type: RingType
+    inline var type: OrbType
         get() = this.`access$entityData`[TYPE]
         set(value) { this.`access$entityData`[TYPE] = value }
 
     override fun defineSynchedData() {
-        this.entityData.define(TYPE, RingType.BOUNCE)
+        this.entityData.define(TYPE, OrbType.BOUNCE)
     }
 
     open fun onApply(player: Player, dat: GDData) {
-        dat.ringLocked = true
+        dat.orbLocked = true
 
         val type = this.type
         if (type.shouldBounce) {
@@ -61,7 +60,7 @@ open class Ring(
             if (!gdData.playingGD) continue
 
             val gdModeData = gdData.modeData ?: continue
-            if (gdData.canBounceFromRing)
+            if (gdData.canBounceFromOrb)
                 this.onApply(player, gdData)
         }
     }
@@ -72,13 +71,13 @@ open class Ring(
 
     override fun readAdditionalSaveData(compound: CompoundTag) {
         try {
-            this.type = RingType.valueOf(compound.getString("Type").uppercase())
+            this.type = OrbType.valueOf(compound.getString("Type").uppercase())
         } catch (_: IllegalArgumentException) {
-            this.type = RingType.BOUNCE
+            this.type = OrbType.BOUNCE
         }
     }
 
-    enum class RingType(
+    enum class OrbType(
         val shouldBounce: Boolean = true,
         val bounceStrength: Double = 1.0,
         val shouldFlipGravity: Boolean = false,
@@ -97,7 +96,7 @@ open class Ring(
 
         companion object {
             @JvmField
-            val SERIALIZER: EntityDataSerializer<RingType> = EntityDataSerializer.simpleEnum(RingType::class.java)
+            val SERIALIZER: EntityDataSerializer<OrbType> = EntityDataSerializer.simpleEnum(OrbType::class.java)
         }
 
         override fun getSerializedName(): String = this.name.lowercase()

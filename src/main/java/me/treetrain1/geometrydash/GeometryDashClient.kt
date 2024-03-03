@@ -2,17 +2,15 @@ package me.treetrain1.geometrydash;
 
 import me.treetrain1.geometrydash.entity.render.CheckpointRenderer;
 import me.treetrain1.geometrydash.entity.render.PortalRenderer
-import me.treetrain1.geometrydash.entity.render.RingRenderer
+import me.treetrain1.geometrydash.entity.render.OrbRenderer
 import me.treetrain1.geometrydash.entity.render.model.*
 import me.treetrain1.geometrydash.registry.RegisterBlocks
 import me.treetrain1.geometrydash.registry.RegisterEntities
-import me.treetrain1.geometrydash.util.gdData
 import me.treetrain1.geometrydash.util.id
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry
 import net.minecraft.client.model.geom.ModelLayerLocation
@@ -44,7 +42,7 @@ object GeometryDashClient : ClientModInitializer {
         layerRegistry.putBlock(RegisterBlocks.SPIKE, RenderType.translucent())
 
         EntityRendererRegistry.register(RegisterEntities.CHECKPOINT, ::CheckpointRenderer)
-        EntityRendererRegistry.register(RegisterEntities.RING, ::RingRenderer)
+        EntityRendererRegistry.register(RegisterEntities.ORB, ::OrbRenderer)
         EntityRendererRegistry.register(RegisterEntities.PORTAL, ::PortalRenderer)
 
         EntityModelLayerRegistry.registerModelLayer(

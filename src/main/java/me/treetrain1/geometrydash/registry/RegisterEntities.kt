@@ -2,7 +2,7 @@ package me.treetrain1.geometrydash.registry
 
 import me.treetrain1.geometrydash.entity.Checkpoint
 import me.treetrain1.geometrydash.entity.Portal
-import me.treetrain1.geometrydash.entity.Ring
+import me.treetrain1.geometrydash.entity.Orb
 import net.fabricmc.fabric.api.`object`.builder.v1.entity.FabricEntityTypeBuilder
 import net.minecraft.world.entity.EntityDimensions
 import net.minecraft.world.entity.EntityType
@@ -22,9 +22,9 @@ object RegisterEntities {
     )
 
     @JvmField
-    val RING: EntityType<Ring> = register(
-        "ring",
-        FabricEntityTypeBuilder.create(MobCategory.MISC, ::Ring)
+    val ORB: EntityType<Orb> = register(
+        "orb",
+        FabricEntityTypeBuilder.create(MobCategory.MISC, ::Orb)
             .fireImmune()
             .dimensions(EntityDimensions.scalable(0.9F, 0.9F))
             .trackRangeBlocks(32)
