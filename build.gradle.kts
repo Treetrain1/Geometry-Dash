@@ -233,8 +233,8 @@ dependencies {
     else
         modApi("maven.modrinth:frozenlib:$frozenlib_version")?.let { include(it) }
 
-    // Gravity Changer
-    //api(project(":GravityChanger", configuration = "namedElements"))?.let { include(it) }
+    // Melody
+    modApi("maven.modrinth:melody:v1.0.4-1.20.1-1.20.4-fabric")
 
     // Pehkui
     modApi("com.github.Virtuoel:Pehkui:3.7.12") {
