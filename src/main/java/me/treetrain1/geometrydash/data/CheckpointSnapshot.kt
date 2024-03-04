@@ -22,6 +22,7 @@ data class CheckpointSnapshot(
     @JvmField val entityId: Int,
     @JvmField val modeData: GDModeData?,
     @JvmField val deltaMovement: Vec3,
+    @JvmField val xRot: Float,
     @JvmField val yRot: Float,
     @JvmField val scale: Float,
     @JvmField val gravity: Vec3,
@@ -38,6 +39,7 @@ data class CheckpointSnapshot(
         private const val ENTITY_ID_TAG = "EntityID"
         private const val MODE_DATA_TAG = "ModeData"
         private const val DELTA_MOVEMENT_TAG = "DeltaMovement"
+        private const val XROT_TAG = "XRot"
         private const val YROT_TAG = "YRot"
         private const val SCALE_TAG = "Scale"
         private const val GRAVITY_TAG = "Gravity"
@@ -55,6 +57,7 @@ data class CheckpointSnapshot(
                 Codec.INT.fieldOf(ENTITY_ID_TAG).forGetter(CheckpointSnapshot::entityId),
                 GDModeData.CODEC.fieldOf(MODE_DATA_TAG).forGetter(CheckpointSnapshot::modeData),
                 Vec3.CODEC.fieldOf(DELTA_MOVEMENT_TAG).forGetter(CheckpointSnapshot::deltaMovement),
+                Codec.FLOAT.fieldOf(XROT_TAG).forGetter(CheckpointSnapshot::xRot),
                 Codec.FLOAT.fieldOf(YROT_TAG).forGetter(CheckpointSnapshot::yRot),
                 Codec.FLOAT.fieldOf(SCALE_TAG).forGetter(CheckpointSnapshot::scale),
                 Vec3.CODEC.fieldOf(GRAVITY_TAG).forGetter(CheckpointSnapshot::gravity),
@@ -71,6 +74,7 @@ data class CheckpointSnapshot(
         fun Player.restoreCheckpoint(data: GDData, entity: Checkpoint, checkpoint: CheckpointSnapshot) {
             data.modeData = checkpoint.modeData
             this.deltaMovement = checkpoint.deltaMovement
+            this.xRot = checkpoint.xRot
             this.yRot = checkpoint.yRot
             data.scale = checkpoint.scale
             this.gravity = checkpoint.gravity
@@ -91,6 +95,7 @@ data class CheckpointSnapshot(
                 compound.getInt(ENTITY_ID_TAG),
                 compound.getGDModeData(MODE_DATA_TAG),
                 compound.getVec(DELTA_MOVEMENT_TAG),
+                compound.getFloat(XROT_TAG),
                 compound.getFloat(YROT_TAG),
                 compound.getFloat(SCALE_TAG),
                 compound.getVec(GRAVITY_TAG),
@@ -107,6 +112,7 @@ data class CheckpointSnapshot(
             buf.writeVarInt(snapshot.entityId)
             buf.writeNullable(snapshot.modeData) { buf1, modeData -> buf1.writeNullable(modeData.toTag()) { buf2, tag -> buf2.writeNbt(tag) } }
             buf.writeVec3(snapshot.deltaMovement)
+            buf.writeFloat(snapshot.xRot)
             buf.writeFloat(snapshot.yRot)
             buf.writeFloat(snapshot.scale)
             buf.writeVec3(snapshot.gravity)
@@ -128,6 +134,7 @@ data class CheckpointSnapshot(
                 buf.readVec3(),
                 buf.readFloat(),
                 buf.readFloat(),
+                buf.readFloat(),
                 buf.readVec3(),
                 buf.readBoolean(),
                 CameraData.fromBuf(buf),
@@ -144,6 +151,7 @@ data class CheckpointSnapshot(
         compound.putInt(ENTITY_ID_TAG, this.entityId)
         compound.putGDModeData(MODE_DATA_TAG, this.modeData)
         compound.putVec(DELTA_MOVEMENT_TAG, this.deltaMovement)
+        compound.putFloat(XROT_TAG, this.xRot)
         compound.putFloat(YROT_TAG, this.yRot)
         compound.putFloat(SIZE_TAG, this.scale)
         compound.putVec(GRAVITY_TAG, this.gravity)

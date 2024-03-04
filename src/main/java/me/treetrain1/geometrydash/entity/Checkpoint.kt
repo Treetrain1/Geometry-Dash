@@ -49,8 +49,12 @@ open class Checkpoint(
             gdData.scale,
             player.gravity,
             player.onGround(),
+            gdData.cameraData,
             gdData.isVisible,
             gdData.timeMod,
+            gdData.dashOrbID,
+            gdData.cameraMirrorProgress,
+            gdData.cameraMirrorDirection,
         ))
     }
 
@@ -62,6 +66,7 @@ open class Checkpoint(
             when (this.type) {
                 CheckpointType.START -> {
                     gdData.enterGD()
+                    player.xRot = this.xRot
                     player.yRot = this.yRot
                 }
                 CheckpointType.END -> gdData.exitGD()
