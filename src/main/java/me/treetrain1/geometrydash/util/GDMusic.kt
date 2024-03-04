@@ -13,11 +13,20 @@ import org.apache.commons.io.IOUtils
 import javax.sound.sampled.AudioInputStream
 import javax.sound.sampled.AudioSystem
 import java.io.*
+import java.net.HttpURLConnection
 import java.nio.ByteBuffer
 import java.util.concurrent.CompletableFuture
 
 @Environment(EnvType.CLIENT)
 object GDMusic {
+
+    internal val BASIC_URL_TEXT_VALIDATOR: ConsumingSupplier<String, Boolean> = ConsumingSupplier { consumes ->
+        if (consumes != null && !consumes.replace(" ", "").isEmpty()) {
+            if ((consumes.startsWith("http://") || consumes.startsWith("https://")) && consumes.contains("."))
+                return true
+        }
+        return false
+    }
 
     // TODO: add web
     @Throws(MelodyAudioException::class)
@@ -42,7 +51,7 @@ object GDMusic {
                     try {
                         val input = resource.open()
                         val completableFuture: CompletableFuture<ALAudioClip> = CompletableFuture()
-                        Thread {
+                        Thread() {
                             val ex: Exception? = tryCreateAndSetMp3StaticBuffer(clip, input)
                             if (ex != null) {
                                 completableFuture.completeExceptionally(ex)
@@ -70,7 +79,7 @@ object GDMusic {
                 try {
                     val input = FileInputStream(file)
                     val completableFuture: CompletableFuture<ALAudioClip> = CompletableFuture()
-                    Thread {
+                    Thread() {
                         val ex: Exception? = tryCreateAndSetMp3StaticBuffer(clip, input)
                         if (ex != null) {
                             completableFuture.completeExceptionally(ex)
@@ -87,6 +96,27 @@ object GDMusic {
             }
             else -> {
                 TODO()
+                if (!BASIC_URL_TEXT_VALIDATOR.get(audioSource)) {
+                    clip.closeQuietly()
+                    throw MelodyAudioException("Failed to create MP3 audio clip! Invalid URL: $audioSource")
+                }
+                try {
+                    val webIn = openWebResourceStream(audioSource)
+                    val completableFuture: CompletableFuture<ALAudioClip> = CompletableFuture()
+                    Thread() {
+                        val ex: Exception? = tryCreateAndSetMp3StaticBuffer(clip, webIn)
+                        if (ex != null) {
+                            completableFuture.completeExceptionally(ex)
+                            clip.closeQuietly()
+                        } else {
+                            completableFuture.complete(clip)
+                        }
+                    }.start()
+                    return completableFuture
+                } catch (ex: Exception) {
+                    clip.closeQuietly()
+                    throw MelodyAudioException("Failed to create MP3 audio clip! Failed to open web input stream: $audioSource").initCause(ex)
+                }
             }
         }
     }
@@ -118,5 +148,16 @@ object GDMusic {
         IOUtils.closeQuietly(`in`)
         IOUtils.closeQuietly(byteIn)
         return exception
+    }
+
+    private fun openWebResourceStream(resourceURL: String): InputStream {
+        val actualURL = URL(resourceURL)
+        val connection = actualURL.openConnection()
+        connection.addRequestProperty("User-Agent", "Mozilla/4.0")
+        return connction.getInputStream()
+    }
+
+    private fun interface ConsumingSupplier<C, R> {
+        fun get(consumes: C): R
     }
 }
