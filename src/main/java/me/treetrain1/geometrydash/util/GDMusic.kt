@@ -28,7 +28,15 @@ object GDMusic {
         return false
     }
 
-    // TODO: add web
+    fun mp3Clip(audioSource: String, sourceType: SourceType): GDAudioClip? {
+        val futureMp3 = mp3(audioSource, sourceType)
+        try {
+            return futureMp3.join()
+        } catch (e: Exception) {
+            return null
+        }
+    }
+
     @Throws(MelodyAudioException::class)
     fun mp3(audioSource: String, sourceType: SourceType): CompletableFuture<ALAudioClip> {
         RenderSystem.assertOnRenderThread()
