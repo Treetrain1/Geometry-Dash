@@ -37,6 +37,8 @@ import kotlin.jvm.optionals.getOrNull
 open class GDData(
     modeData: GDModeData? = null,
     @JvmField
+    var song: SongSource? = null,
+    @JvmField
     var checkpoints: MutableList<CheckpointSnapshot> = mutableListOf(),
     @JvmField
     var cameraData: CameraData = CameraData(),
