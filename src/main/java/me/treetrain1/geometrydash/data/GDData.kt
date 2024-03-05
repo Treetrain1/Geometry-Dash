@@ -2,7 +2,6 @@ package me.treetrain1.geometrydash.data
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import de.keksuccino.melody.resources.audio.SimpleAudioFactory
 import me.treetrain1.geometrydash.data.GDData.MirrorDirection.Companion.getMirrorDirection
 import me.treetrain1.geometrydash.data.GDData.MirrorDirection.Companion.putMirrorDirection
 import me.treetrain1.geometrydash.data.SongSource.Companion.getSongSource
@@ -10,12 +9,12 @@ import me.treetrain1.geometrydash.data.SongSource.Companion.putSongSource
 import me.treetrain1.geometrydash.data.mode.GDModeData
 import me.treetrain1.geometrydash.data.mode.getGDModeData
 import me.treetrain1.geometrydash.data.mode.putGDModeData
-import me.treetrain1.geometrydash.duck.GDClip
 import me.treetrain1.geometrydash.duck.PlayerDuck
 import me.treetrain1.geometrydash.entity.Checkpoint
 import me.treetrain1.geometrydash.util.*
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
+import net.minecraft.core.Direction
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
 import net.minecraft.nbt.Tag
@@ -29,9 +28,6 @@ import net.minecraft.world.entity.Pose
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.GameType
 import net.minecraft.world.level.Level
-import net.minecraft.world.phys.Vec3
-import org.lwjgl.openal.AL10
-import org.lwjgl.openal.AL11
 import virtuoel.pehkui.api.ScaleTypes
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
@@ -58,7 +54,9 @@ open class GDData(
     @JvmField
     protected var prevGameType: GameType? = null,
     @JvmField
-    protected var prevGravity: Vec3? = null,
+    protected var prevGravityStrength: Double? = null,
+    @JvmField
+    protected var prevGravityDirection: Direction? = null,
 ) {
 
     var modeData: GDModeData? = modeData?.also { it.gdData = this }
@@ -78,7 +76,8 @@ open class GDData(
         cameraMirrorProgress: Float = 1F,
         cameraMirrorDirection: MirrorDirection? = null,
         prevGameType: GameType? = null,
-        prevGravity: Vec3? = null,
+        prevGravityStrength: Double? = null,
+        prevGravityDirection: Direction? = null,
     ) : this(
         mode?.modeData?.invoke(),
         song,
@@ -90,7 +89,8 @@ open class GDData(
         cameraMirrorProgress,
         cameraMirrorDirection,
         prevGameType,
-        prevGravity
+        prevGravityStrength,
+        prevGravityDirection,
     )
 
     constructor(player: Player) : this() {
@@ -117,7 +117,8 @@ open class GDData(
         private const val CAMERA_MIRROR_PROGRESS_TAG = "camera_mirror_progress"
         private const val CAMERA_MIRROR_DIRECTION_TAG = "camera_mirror_direction"
         private const val PREV_GAME_TYPE_TAG = "previous_game_type"
-        private const val PREV_GRAVITY_TAG = "previous_gravity"
+        private const val PREV_GRAVITY_STRENGTH_TAG = "previous_gravity_strength"
+        private const val PREV_GRAVITY_DIRECTION_TAG = "previous_gravity_direction"
 
         @JvmField
         val GD_DATA: EntityDataAccessor<in CompoundTag> = SynchedEntityData.defineId(
@@ -137,9 +138,10 @@ open class GDData(
                 Codec.FLOAT.fieldOf(CAMERA_MIRROR_PROGRESS_TAG).forGetter(GDData::cameraMirrorProgress),
                 MirrorDirection.CODEC.fieldOf(CAMERA_MIRROR_DIRECTION_TAG).forGetter(GDData::cameraMirrorDirection),
                 GameType.CODEC.optionalFieldOf(PREV_GAME_TYPE_TAG).forGetter { Optional.ofNullable(it.prevGameType) },
-                Vec3.CODEC.optionalFieldOf(PREV_GRAVITY_TAG).forGetter { Optional.ofNullable(it.prevGravity) },
-            ).apply(instance) { modeData, song, checkpoints, cameraData, isVisible, timeMod, dashOrbID, cameraMirrorProgress, cameraMirrorDirection, prevGameType, prevGravity ->
-                GDData(modeData.getOrNull(), song.getOrNull(), checkpoints, cameraData, isVisible, timeMod, dashOrbID, cameraMirrorProgress, cameraMirrorDirection, prevGameType.getOrNull(), prevGravity.getOrNull())
+                Codec.DOUBLE.optionalFieldOf(PREV_GRAVITY_STRENGTH_TAG).forGetter { Optional.ofNullable(it.prevGravityStrength) },
+                Direction.CODEC.optionalFieldOf(PREV_GRAVITY_DIRECTION_TAG).forGetter { Optional.ofNullable(it.prevGravityDirection) }
+            ).apply(instance) { modeData, song, checkpoints, cameraData, isVisible, timeMod, dashOrbID, cameraMirrorProgress, cameraMirrorDirection, prevGameType, prevGravityStrength, prevGravityDirection ->
+                GDData(modeData.getOrNull(), song.getOrNull(), checkpoints, cameraData, isVisible, timeMod, dashOrbID, cameraMirrorProgress, cameraMirrorDirection, prevGameType.getOrNull(), prevGravityStrength.getOrNull(), prevGravityDirection.getOrNull())
             }
         }
     }
@@ -256,9 +258,12 @@ open class GDData(
             this.prevGameType = player.gameMode.gameModeForPlayer
         player.setGameMode(GameType.ADVENTURE)
 
-        if (this.prevGravity == null)
-            this.prevGravity = player.gravity
-        player.gravity = DEFAULT_GRAVITY
+        if (this.prevGravityStrength == null || this.prevGravityDirection == null) {
+            this.prevGravityStrength = player.gravityStrength
+            this.prevGravityDirection = player.gravityDirection
+        }
+        player.gravityStrength = DEFAULT_GRAVITY_STRENGTH
+        player.gravityDirection = DEFAULT_GRAVITY_DIRECTION
 
         this.syncData()
         return true
@@ -289,10 +294,15 @@ open class GDData(
             player.setGameMode(prevType)
             this.prevGameType = null
         }
-        val prevGravity = this.prevGravity
-        if (prevGravity != null) {
-            player.gravity = prevGravity
-            this.prevGravity = null
+        val prevGravityStrength = this.prevGravityStrength
+        if (prevGravityStrength != null) {
+            player.gravityStrength = prevGravityStrength
+            this.prevGravityStrength = null
+        }
+        val prevGravityDirection = this.prevGravityDirection
+        if (prevGravityDirection != null) {
+            player.gravityDirection = prevGravityDirection
+            this.prevGravityDirection = null
         }
         player.pose = Pose.STANDING
         player.refreshDimensions()
@@ -351,7 +361,12 @@ open class GDData(
         compound.putFloat(CAMERA_MIRROR_PROGRESS_TAG, this.cameraMirrorProgress)
         compound.putMirrorDirection(CAMERA_MIRROR_DIRECTION_TAG, this.cameraMirrorDirection)
         compound.putInt(PREV_GAME_TYPE_TAG, this.prevGameType?.id ?: -1)
-        compound.putVec(PREV_GRAVITY_TAG, this.prevGravity ?: DEFAULT_GRAVITY)
+        val prevStrength = this.prevGravityStrength
+        val prevDir = this.prevGravityDirection
+        if (prevStrength != null)
+            compound.putDouble(PREV_GRAVITY_STRENGTH_TAG, prevStrength)
+        if (prevDir != null)
+            compound.putString(PREV_GRAVITY_DIRECTION_TAG, prevDir.serializedName)
         return compound
     }
 
@@ -374,7 +389,12 @@ open class GDData(
         this.cameraMirrorProgress = compound.getFloat(CAMERA_MIRROR_PROGRESS_TAG)
         this.cameraMirrorDirection = compound.getMirrorDirection(CAMERA_MIRROR_DIRECTION_TAG)
         this.prevGameType = GameType.byNullableId(compound.getInt(PREV_GAME_TYPE_TAG))
-        this.prevGravity = compound.getVec(PREV_GRAVITY_TAG)
+        if (compound.contains(PREV_GRAVITY_STRENGTH_TAG))
+            this.prevGravityStrength = compound.getDouble(PREV_GRAVITY_STRENGTH_TAG)
+        else this.prevGravityStrength = null
+        if (compound.contains(PREV_GRAVITY_DIRECTION_TAG))
+            this.prevGravityDirection = Direction.byName(compound.getString(PREV_GRAVITY_DIRECTION_TAG))
+        else this.prevGravityDirection = null
         return compound
     }
 
@@ -390,7 +410,8 @@ open class GDData(
         this.cameraMirrorProgress = otherData.cameraMirrorProgress
         this.cameraMirrorDirection = otherData.cameraMirrorDirection
         this.prevGameType = otherData.prevGameType
-        this.prevGravity = otherData.prevGravity
+        this.prevGravityStrength = otherData.prevGravityStrength
+        this.prevGravityDirection = otherData.prevGravityDirection
 
         this.syncData()
     }

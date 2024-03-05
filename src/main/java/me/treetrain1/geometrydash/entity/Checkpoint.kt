@@ -4,6 +4,8 @@ import me.treetrain1.geometrydash.data.CheckpointSnapshot
 import me.treetrain1.geometrydash.data.GDData
 import me.treetrain1.geometrydash.util.gdData
 import me.treetrain1.geometrydash.util.gravity
+import me.treetrain1.geometrydash.util.gravityDirection
+import me.treetrain1.geometrydash.util.gravityStrength
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializer
@@ -48,7 +50,8 @@ open class Checkpoint(
             player.xRot,
             player.yRot,
             gdData.scale,
-            player.gravity,
+            player.gravityStrength,
+            player.gravityDirection,
             player.onGround(),
             gdData.cameraData,
             gdData.isVisible,

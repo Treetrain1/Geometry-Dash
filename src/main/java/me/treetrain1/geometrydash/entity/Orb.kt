@@ -38,7 +38,7 @@ open class Orb(
             player.launch(type.bounceStrength)
         }
         if (type.shouldFlipGravity) {
-            player.setRelativeGravity(true)
+            player.gravityDirection = player.gravityDirection.opposite
         }
         if (type.shouldTeleport) {
             player.vertTeleport(this.level())

@@ -5,7 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder
 import me.treetrain1.geometrydash.data.GDMode
 import me.treetrain1.geometrydash.entity.pose.GDPoses
 import me.treetrain1.geometrydash.util.gravity
-import me.treetrain1.geometrydash.util.setRelativeGravity
+import me.treetrain1.geometrydash.util.gravityDirection
 import net.minecraft.client.player.Input
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.Mth
@@ -46,7 +46,7 @@ open class BallModeData(
         val data = this.gdData!!
         val player = data.player
         if (data.canProcessInput && player.onGround()) {
-            player.setRelativeGravity(true)
+            player.gravityDirection = player.gravityDirection.opposite
             return true
         }
         return false

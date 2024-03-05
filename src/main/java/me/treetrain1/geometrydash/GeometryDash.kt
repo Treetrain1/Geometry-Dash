@@ -121,7 +121,7 @@ object GeometryDash : ModInitializer {
                 player.hurt(player.damageSources().source(LEVEL_FAIL), Float.MAX_VALUE)
             }
 
-            EntityDataSerializers.registerSerializer(VEC_SERIALIZER)
+            EntityDataSerializers.registerSerializer(DOUBLE_SERIALIZER)
             EntityDataSerializers.registerSerializer(Checkpoint.CheckpointType.SERIALIZER)
             EntityDataSerializers.registerSerializer(Orb.OrbType.SERIALIZER)
             EntityDataSerializers.registerSerializer(Portal.PortalType.SERIALIZER)

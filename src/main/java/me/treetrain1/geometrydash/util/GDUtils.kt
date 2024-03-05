@@ -13,6 +13,7 @@ import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.client.Minecraft
 import net.minecraft.client.player.Input
 import net.minecraft.core.BlockPos
+import net.minecraft.core.Direction
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.DoubleTag
 import net.minecraft.nbt.ListTag
@@ -29,10 +30,6 @@ import net.minecraft.world.phys.shapes.CollisionContext
 import org.joml.Vector3d
 
 // GRAVITY
-
-inline fun Entity.setRelativeGravity(flip: Boolean) {
-    if (flip) this.gravity = this.gravity.scale(-1.0)
-}
 
 /**
  * Teleports the entity downward
@@ -115,18 +112,14 @@ inline fun LivingEntity.setRelativeDelta(vec: Vec3) {
 }
 inline fun Entity.toRelative(x: Double, y: Double, z: Double) = this.toRelative(Vec3(x,y, z))
 inline fun Entity.toRelative(vec: Vec3): Vec3 {
-    val gravity = this.gravity
-    if (gravity == UP_GRAVITY)
-        return vec.multiply(1.0, -1.0, 1.0)
-    if (gravity == NORTH_GRAVITY)
-        return Vec3(vec.y, vec.x, vec.z)
-    if (gravity == SOUTH_GRAVITY)
-        return Vec3(vec.y * -1, vec.x, vec.z)
-    if (gravity == EAST_GRAVITY)
-        return Vec3(vec.x, vec.z, vec.y)
-    if (gravity == WEST_GRAVITY)
-        return Vec3(vec.x, vec.z, vec.y * -1)
-    return vec
+    return when (this.gravityDirection) {
+        Direction.DOWN -> vec
+        Direction.UP -> vec.multiply(1.0, -1.0, 1.0)
+        Direction.NORTH -> Vec3(vec.y, vec.x, vec.z)
+        Direction.SOUTH -> Vec3(vec.y * -1, vec.x, vec.z)
+        Direction.EAST -> Vec3(vec.x, vec.z, vec.y)
+        Direction.WEST -> Vec3(vec.x, vec.z, vec.y * -1)
+    }
 }
 
 inline fun Vec3.toVector3d(): Vector3d = Vector3d(this.x, this.y, this.z)
@@ -151,7 +144,7 @@ inline val Entity.gravity: Vec3
             Direction.EAST -> EAST_GRAVITY
             Direction.WEST -> WEST_GRAVITY
         }
-        vec.scale(strength)
+        return vec.scale(strength)
     }
 
 inline var Entity.gravityStrength: Double

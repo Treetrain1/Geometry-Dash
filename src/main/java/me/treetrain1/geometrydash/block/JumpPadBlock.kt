@@ -128,7 +128,7 @@ open class JumpPadBlock(val type: JumpPadType, props: Properties) : MultifaceBlo
         if (blockEntity.colliding.contains(entity.id)) return
 
         if (type.shouldFlipGravity) {
-            entity.setRelativeGravity(true)
+            entity.gravityDirection = entity.gravityDirection.opposite
         }
         if (type.shouldJump) {
             entity.applyDelta(type)

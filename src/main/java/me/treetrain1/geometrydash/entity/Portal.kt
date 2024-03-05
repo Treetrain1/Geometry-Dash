@@ -3,7 +3,7 @@ package me.treetrain1.geometrydash.entity
 import me.treetrain1.geometrydash.data.GDData
 import me.treetrain1.geometrydash.data.GDMode
 import me.treetrain1.geometrydash.util.gdData
-import me.treetrain1.geometrydash.util.setRelativeGravity
+import me.treetrain1.geometrydash.util.gravityDirection
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializer
@@ -41,7 +41,7 @@ open class Portal(
             data.mode = mode
 
         if (type.shouldFlipGravity)
-            player.setRelativeGravity(true)
+            player.gravityDirection = player.gravityDirection.opposite
 
         if (type.shouldMirror)
             data.mirrorCamera()

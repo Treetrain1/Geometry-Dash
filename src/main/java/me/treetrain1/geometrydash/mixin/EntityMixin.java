@@ -12,6 +12,7 @@ import me.treetrain1.geometrydash.util.GDSharedConstantsKt;
 import me.treetrain1.geometrydash.util.GDUtilsKt;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.nbt.CompoundTag;
@@ -87,18 +88,20 @@ public abstract class EntityMixin implements EntityDuck {
 		this.entityData.define(GRAVITY_DIRECTION, GDSharedConstantsKt.DEFAULT_GRAVITY_DIRECTION);
 	}
 
+	@SuppressWarnings("ConstantValue")
 	@Inject(method = "saveWithoutId", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;addAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V"))
 	private void saveGravity(CompoundTag compound, CallbackInfoReturnable<CompoundTag> cir) {
 		double gravityStrength = this.entityData.get(GRAVITY_STRENGTH);
 		Direction gravityDirection = this.entityData.get(GRAVITY_DIRECTION);
-		compound.putDouble("GravityStrength", gravityStrength);
-		compound.putDirection("GravityDirection", gravityDirection);
+		if (gravityDirection == null) gravityDirection = Direction.DOWN;
+		compound.putDouble("gravity_strength", gravityStrength);
+		compound.putString("gravity_direction", gravityDirection.getSerializedName());
 	}
 
 	@Inject(method = "load", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;readAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V"))
 	private void loadGravity(CompoundTag compound, CallbackInfo ci) {
-		this.entityData.set(GRAVITY_STRENGTH, compound.getDouble("GravityStrength"));
-		this.entityData.set(GRAVITY_DIRECTION, compound.getDirection("GravityDirection"));
+		this.entityData.set(GRAVITY_STRENGTH, compound.getDouble("gravity_strength"));
+		this.entityData.set(GRAVITY_DIRECTION, Direction.byName(compound.getString("gravity_direction")));
 	}
 
 	@Unique

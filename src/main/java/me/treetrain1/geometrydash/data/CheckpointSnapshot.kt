@@ -6,9 +6,8 @@ import me.treetrain1.geometrydash.data.GDData.MirrorDirection.Companion.getMirro
 import me.treetrain1.geometrydash.data.GDData.MirrorDirection.Companion.putMirrorDirection
 import me.treetrain1.geometrydash.data.mode.*
 import me.treetrain1.geometrydash.entity.Checkpoint
-import me.treetrain1.geometrydash.util.getVec
-import me.treetrain1.geometrydash.util.gravity
-import me.treetrain1.geometrydash.util.putVec
+import me.treetrain1.geometrydash.util.*
+import net.minecraft.core.Direction
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.world.entity.player.Player
@@ -27,7 +26,8 @@ data class CheckpointSnapshot(
     @JvmField val xRot: Float,
     @JvmField val yRot: Float,
     @JvmField val scale: Float,
-    @JvmField val gravity: Vec3,
+    @JvmField val gravityStrength: Double,
+    @JvmField val gravityDirection: Direction,
     @JvmField val onGround: Boolean,
     @JvmField val cameraData: CameraData,
     @JvmField val isVisible: Boolean,
@@ -44,7 +44,8 @@ data class CheckpointSnapshot(
         private const val XROT_TAG = "x_rot"
         private const val YROT_TAG = "y_rot"
         private const val SCALE_TAG = "scale"
-        private const val GRAVITY_TAG = "gravity"
+        private const val GRAVITY_STRENGTH_TAG = "gravity_strength"
+        private const val GRAVITY_DIRECTION_TAG = "gravity_direction"
         private const val ON_GROUND_TAG = "on_ground"
         private const val CAMERA_DATA_TAG = "camera_data"
         private const val IS_VISIBLE_TAG = "is_visible"
@@ -62,7 +63,8 @@ data class CheckpointSnapshot(
                 Codec.FLOAT.fieldOf(XROT_TAG).forGetter(CheckpointSnapshot::xRot),
                 Codec.FLOAT.fieldOf(YROT_TAG).forGetter(CheckpointSnapshot::yRot),
                 Codec.FLOAT.fieldOf(SCALE_TAG).forGetter(CheckpointSnapshot::scale),
-                Vec3.CODEC.fieldOf(GRAVITY_TAG).forGetter(CheckpointSnapshot::gravity),
+                Codec.DOUBLE.fieldOf(GRAVITY_STRENGTH_TAG).forGetter(CheckpointSnapshot::gravityStrength),
+                Direction.CODEC.fieldOf(GRAVITY_DIRECTION_TAG).forGetter(CheckpointSnapshot::gravityDirection),
                 Codec.BOOL.fieldOf(ON_GROUND_TAG).forGetter(CheckpointSnapshot::onGround),
                 CameraData.CODEC.fieldOf(CAMERA_DATA_TAG).forGetter(CheckpointSnapshot::cameraData),
                 Codec.BOOL.fieldOf(IS_VISIBLE_TAG).forGetter(CheckpointSnapshot::isVisible),
@@ -79,7 +81,8 @@ data class CheckpointSnapshot(
             this.xRot = checkpoint.xRot
             this.yRot = checkpoint.yRot
             data.scale = checkpoint.scale
-            this.gravity = checkpoint.gravity
+            this.gravityStrength = checkpoint.gravityStrength
+            this.gravityDirection = checkpoint.gravityDirection
 
             this.moveTo(entity.position())
 
@@ -100,7 +103,8 @@ data class CheckpointSnapshot(
                 compound.getFloat(XROT_TAG),
                 compound.getFloat(YROT_TAG),
                 compound.getFloat(SCALE_TAG),
-                compound.getVec(GRAVITY_TAG),
+                compound.getDouble(GRAVITY_STRENGTH_TAG),
+                Direction.byName(compound.getString(GRAVITY_DIRECTION_TAG)) ?: DEFAULT_GRAVITY_DIRECTION,
                 compound.getBoolean(ON_GROUND_TAG),
                 CameraData.fromTag(compound.getCompound(CAMERA_DATA_TAG)),
                 compound.getBoolean(IS_VISIBLE_TAG),
@@ -117,7 +121,8 @@ data class CheckpointSnapshot(
             buf.writeFloat(snapshot.xRot)
             buf.writeFloat(snapshot.yRot)
             buf.writeFloat(snapshot.scale)
-            buf.writeVec3(snapshot.gravity)
+            buf.writeDouble(snapshot.gravityStrength)
+            buf.writeUtf(snapshot.gravityDirection.serializedName)
             buf.writeBoolean(snapshot.onGround)
             snapshot.cameraData.toBuf(buf)
             buf.writeBoolean(snapshot.isVisible)
@@ -137,7 +142,8 @@ data class CheckpointSnapshot(
                 buf.readFloat(),
                 buf.readFloat(),
                 buf.readFloat(),
-                buf.readVec3(),
+                buf.readDouble(),
+                Direction.byName(buf.readUtf()) ?: DEFAULT_GRAVITY_DIRECTION,
                 buf.readBoolean(),
                 CameraData.fromBuf(buf),
                 buf.readBoolean(),
@@ -160,7 +166,8 @@ data class CheckpointSnapshot(
         compound.putFloat(XROT_TAG, this.xRot)
         compound.putFloat(YROT_TAG, this.yRot)
         compound.putFloat(SCALE_TAG, this.scale)
-        compound.putVec(GRAVITY_TAG, this.gravity)
+        compound.putDouble(GRAVITY_STRENGTH_TAG, this.gravityStrength)
+        compound.putString(GRAVITY_DIRECTION_TAG, this.gravityDirection.serializedName)
         compound.putBoolean(ON_GROUND_TAG, this.onGround)
         compound.put(CAMERA_DATA_TAG, this.cameraData.toTag())
         compound.putBoolean(IS_VISIBLE_TAG, this.isVisible)
