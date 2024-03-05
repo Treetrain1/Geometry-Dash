@@ -40,10 +40,10 @@ object GDMusic {
 
     fun mp3Clip(audioSource: String, sourceType: SourceType): ALAudioClip? {
         val futureMp3 = mp3(audioSource, sourceType)
-        try {
-            return futureMp3.join()
+        return try {
+            futureMp3.join()
         } catch (e: Exception) {
-            return null
+            null
         }
     }
 
