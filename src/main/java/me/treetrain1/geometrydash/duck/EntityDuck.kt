@@ -1,11 +1,15 @@
 package me.treetrain1.geometrydash.duck
 
-import net.minecraft.world.phys.Vec3
+import net.minecraft.core.Direction
 
 @Suppress("FunctionName")
 interface EntityDuck {
 
-    fun `geometryDash$getGravity`(): Vec3
+    fun `geometryDash$getGravityStrength`(): Double
 
-    fun `geometryDash$setGravity`(gravity: Vec3)
+    fun `geometryDash$setGravityStrength`(strength: Double)
+
+    fun `geometryDash$getGravityDirection`(): Direction
+
+    fun `geometryDash$setGravityDirection`(direction: Direction)
 }

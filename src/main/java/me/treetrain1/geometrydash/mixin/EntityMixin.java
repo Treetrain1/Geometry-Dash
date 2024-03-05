@@ -16,6 +16,7 @@ import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -39,7 +40,10 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 public abstract class EntityMixin implements EntityDuck {
 
 	@Unique
-	private static final EntityDataAccessor<Vec3> GRAVITY_DATA = SynchedEntityData.defineId(Entity.class, GeometryDash.VEC_SERIALIZER);
+	private static final EntityDataAccessor<Double> GRAVITY_STRENGTH = SynchedEntityData.defineId(Entity.class, GeometryDash.DOUBLE_SERIALIZER);
+
+	@Unique
+	private static final EntityDataAccessor<Direction> GRAVITY_DIRECTION = SynchedEntityData.defineId(Entity.class, EntityDataSerializers.DIRECTION);
 
 	@Shadow
 	public boolean horizontalCollision;
@@ -79,30 +83,46 @@ public abstract class EntityMixin implements EntityDuck {
 
 	@Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;defineSynchedData()V", shift = At.Shift.AFTER))
 	private void addGravityData(EntityType<?> entityType, Level level, CallbackInfo ci) {
-		this.entityData.define(GRAVITY_DATA, GDSharedConstantsKt.DEFAULT_GRAVITY);
+		this.entityData.define(GRAVITY_STRENGTH, GDSharedConstantsKt.DEFAULT_GRAVITY_STRENGTH);
+		this.entityData.define(GRAVITY_DIRECTION, GDSharedConstantsKt.DEFAULT_GRAVITY_DIRECTION);
 	}
 
 	@Inject(method = "saveWithoutId", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;addAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V"))
 	private void saveGravity(CompoundTag compound, CallbackInfoReturnable<CompoundTag> cir) {
-		Vec3 gravity = this.entityData.get(GRAVITY_DATA);
-		GDUtilsKt.putVec(compound, "Gravity", gravity);
+		double gravityStrength = this.entityData.get(GRAVITY_STRENGTH);
+		Direction gravityDirection = this.entityData.get(GRAVITY_DIRECTION);
+		compound.putDouble("GravityStrength", gravityStrength);
+		compound.putDirection("GravityDirection", gravityDirection);
 	}
 
 	@Inject(method = "load", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;readAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V"))
 	private void loadGravity(CompoundTag compound, CallbackInfo ci) {
-		this.entityData.set(GRAVITY_DATA, GDUtilsKt.getVec(compound, "Gravity"));
+		this.entityData.set(GRAVITY_STRENGTH, compound.getDouble("GravityStrength"));
+		this.entityData.set(GRAVITY_DIRECTION, compound.getDirection("GravityDirection"));
+	}
+
+	@Unique
+	@Override
+	public double geometryDash$getGravityStrength() {
+		return this.entityData.get(GRAVITY_STRENGTH);
+	}
+
+	@Unique
+	@Override
+	public void geometryDash$setGravityStrength(double strength) {
+		this.entityData.set(GRAVITY_STRENGTH, strength, true);
 	}
 
 	@Unique
 	@Override
 	@NotNull
-	public Vec3 geometryDash$getGravity() {
-		return this.entityData.get(GRAVITY_DATA);
+	public Direction geometryDash$getGravityDirection() {
+		return this.entityData.get(GRAVITY_DIRECTION);
 	}
 
 	@Unique
 	@Override
-	public void geometryDash$setGravity(@NotNull Vec3 gravity) {
-		this.entityData.set(GRAVITY_DATA, gravity, true);
+	public void geometryDash$setGravityDirection(@NotNull Direction direction) {
+		this.entityData.set(GRAVITY_DIRECTION, direction, true);
 	}
 }

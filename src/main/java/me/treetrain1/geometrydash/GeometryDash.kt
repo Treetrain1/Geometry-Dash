@@ -84,9 +84,9 @@ object GeometryDash : ModInitializer {
     val LEVEL_FAIL: ResourceKey<DamageType> = ResourceKey.create(Registries.DAMAGE_TYPE, id("level_fail"))
 
     @JvmField
-    val VEC_SERIALIZER: EntityDataSerializer<Vec3> = EntityDataSerializer.simple(
-        FriendlyByteBuf::writeVec3,
-        FriendlyByteBuf::readVec3
+    val DOUBLE_SERIALIZER: EntityDataSerializer<Double> = EntityDataSerializer.simple(
+        FriendlyByteBuf::writeDouble,
+        FriendlyByteBuf::readDouble
     )
 
     override fun onInitialize() {

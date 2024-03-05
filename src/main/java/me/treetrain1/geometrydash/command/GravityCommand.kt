@@ -30,7 +30,8 @@ object GravityCommand {
 
     private fun set(source: CommandSourceStack, gravity: Vec3, targets: Collection<Entity>): Int {
         targets.forEach {
-            it.gravity = gravity
+            // TODO: set gravity
+            //it.gravity = gravity
         }
 
         if (targets.size == 1) {

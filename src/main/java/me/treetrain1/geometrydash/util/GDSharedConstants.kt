@@ -1,6 +1,7 @@
 package me.treetrain1.geometrydash.util
 
 import net.minecraft.core.BlockPos
+import net.minecraft.core.Direction
 import net.minecraft.world.entity.ai.attributes.AttributeModifier
 import net.minecraft.world.phys.Vec3
 import org.slf4j.Logger
@@ -28,6 +29,11 @@ const val GD_GRAVITY_PULL: Double = -0.1//-0.18
  */
 @JvmField
 val DIMENSION_SPAWN = Vec3(25.5, 21.0, 959.5)
+
+const val DEFAULT_GRAVITY_STRENGTH = 1.0
+
+@JvmField
+val DEFAULT_GRAVITY_DIRECTION = Direction.DOWN
 
 @JvmField
 val DEFAULT_GRAVITY = Vec3(0.0, 1.0, 0.0)

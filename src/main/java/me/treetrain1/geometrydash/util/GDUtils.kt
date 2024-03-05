@@ -116,15 +116,17 @@ inline fun LivingEntity.setRelativeDelta(vec: Vec3) {
 inline fun Entity.toRelative(x: Double, y: Double, z: Double) = this.toRelative(Vec3(x,y, z))
 inline fun Entity.toRelative(vec: Vec3): Vec3 {
     val gravity = this.gravity
-    return if (gravity.y < 0) vec.multiply(1.0, -1.0, 1.0) else vec
-    /*val gravity = this.gravity.toVector3d()
-    val vec3d = vec.toVector3d()
-
-    val axis = DEFAULT_GRAVITY.cross(gravity, Vector3d())
-    val angle: Double = acos(0.0)
-    val rotation = Quaterniond().rotateAxis(angle, axis)
-
-    return rotation.transform(vec3d).toVec3()*/
+    if (gravity == UP_GRAVITY)
+        return vec.multiply(1.0, -1.0, 1.0)
+    if (gravity == NORTH_GRAVITY)
+        return Vec3(vec.y, vec.x, vec.z)
+    if (gravity == SOUTH_GRAVITY)
+        return Vec3(vec.y * -1, vec.x, vec.z)
+    if (gravity == EAST_GRAVITY)
+        return Vec3(vec.x, vec.z, vec.y)
+    if (gravity == WEST_GRAVITY)
+        return Vec3(vec.x, vec.z, vec.y * -1)
+    return vec
 }
 
 inline fun Vec3.toVector3d(): Vector3d = Vector3d(this.x, this.y, this.z)
@@ -137,9 +139,28 @@ inline fun input(): Input? = Minecraft.getInstance().player?.input
 
 inline val Player.gdData get() = (this as PlayerDuck).`geometryDash$getGDData`()
 
-inline var Entity.gravity: Vec3
-    get() = (this as EntityDuck).`geometryDash$getGravity`()
-    set(value) = (this as EntityDuck).`geometryDash$setGravity`(value)
+inline val Entity.gravity: Vec3
+    get() {
+        val strength = this.gravityStrength
+        val direction = this.gravityDirection
+        val vec = when (direction) {
+            Direction.DOWN -> DEFAULT_GRAVITY
+            Direction.UP -> UP_GRAVITY
+            Direction.NORTH -> NORTH_GRAVITY
+            Direction.SOUTH -> SOUTH_GRAVITY
+            Direction.EAST -> EAST_GRAVITY
+            Direction.WEST -> WEST_GRAVITY
+        }
+        vec.scale(strength)
+    }
+
+inline var Entity.gravityStrength: Double
+    get() = (this as EntityDuck).`geometryDash$getGravityStrength`()
+    set(value) = (this as EntityDuck).`geometryDash$setGravityStrength`(value)
+
+inline var Entity.gravityDirection: Direction
+    get() = (this as EntityDuck).`geometryDash$getGravityDirection`()
+    set(value) = (this as EntityDuck).`geometryDash$setGravityDirection`(value)
 
 inline fun CompoundTag.putVec(key: String, vec: Vec3) {
     val list = ListTag()
