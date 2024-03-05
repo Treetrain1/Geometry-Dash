@@ -148,15 +148,17 @@ object GDMusic {
             stream = MpegAudioFileReader().getAudioInputStream(byteIn)
             val format = stream.format
             val decodedFormat = AudioFormat( // PCM
+                Encoding.PCM_SIGNED,
                 format.sampleRate,
                 16,
                 format.channels,
-                true,
+                format.channels * 2,
+                format.sampleRate,
                 false
             )
             decodedStream = AudioSystem.getAudioInputStream(decodedFormat, stream)
             val byteBuffer: ByteBuffer = ALUtils.readStreamIntoBuffer(decodedStream!!)
-            val audioBuffer = ALAudioBuffer(byteBuffer, decodedStream.format)
+            val audioBuffer = ALAudioBuffer(byteBuffer, decodedFormat)
             setTo.setStaticBuffer(audioBuffer)
         } catch (ex: Exception) {
             exception = ex
