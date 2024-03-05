@@ -7,12 +7,50 @@
       "model": "geometry_dash:block/spike_large",
       "x": 180
     },
+    "size=4,facing=north": {
+      "model": "geometry_dash:block/spike_large",
+      "x": 90
+    },
+    "size=4,facing=south": {
+      "model": "geometry_dash:block/spike_large",
+      "x": 90,
+      "y": 180
+    },
+    "size=4,facing=east": {
+      "model": "geometry_dash:block/spike_large",
+      "x": 90,
+      "y": 90
+    },
+    "size=4,facing=west": {
+      "model": "geometry_dash:block/spike_large",
+      "x": 90,
+      "y": 270
+    },
     "size=3,facing=up": {
       "model": "geometry_dash:block/spike_medium"
     },
     "size=3,facing=down": {
       "model": "geometry_dash:block/spike_medium",
       "x": 180
+    },
+    "size=3,facing=north": {
+      "model": "geometry_dash:block/spike_medium",
+      "x": 90
+    },
+    "size=3,facing=south": {
+      "model": "geometry_dash:block/spike_medium",
+      "x": 90,
+      "y": 180
+    },
+    "size=3,facing=east": {
+      "model": "geometry_dash:block/spike_medium",
+      "x": 90,
+      "y": 90
+    },
+    "size=3,facing=west": {
+      "model": "geometry_dash:block/spike_medium",
+      "x": 90,
+      "y": 270
     },
     "size=2,facing=up": {
       "model": "geometry_dash:block/spike_low"
@@ -21,12 +59,50 @@
       "model": "geometry_dash:block/spike_low",
       "x": 180
     },
+    "size=2,facing=north": {
+      "model": "geometry_dash:block/spike_low",
+      "x": 90
+    },
+    "size=2,facing=south": {
+      "model": "geometry_dash:block/spike_low",
+      "x": 90,
+      "y": 180
+    },
+    "size=2,facing=east": {
+      "model": "geometry_dash:block/spike_low",
+      "x": 90,
+      "y": 90
+    },
+    "size=2,facing=west": {
+      "model": "geometry_dash:block/spike_low",
+      "x": 90,
+      "y": 270
+    },
     "size=1,facing=up": {
       "model": "geometry_dash:block/spike_small"
     },
     "size=1,facing=down": {
       "model": "geometry_dash:block/spike_small",
       "x": 180
+    },
+    "size=1,facing=north": {
+      "model": "geometry_dash:block/spike_small",
+      "x": 90
+    },
+    "size=1,facing=south": {
+      "model": "geometry_dash:block/spike_small",
+      "x": 90,
+      "y": 180
+    },
+    "size=1,facing=east": {
+      "model": "geometry_dash:block/spike_small",
+      "x": 90,
+      "y": 90
+    },
+    "size=1,facing=west": {
+      "model": "geometry_dash:block/spike_small",
+      "x": 90,
+      "y": 270
     }
   }
 }

@@ -2,6 +2,8 @@ package me.treetrain1.geometrydash.data
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
+import me.treetrain1.geometrydash.data.GDData.MirrorDirection.Companion.getMirrorDirection
+import me.treetrain1.geometrydash.data.GDData.MirrorDirection.Companion.putMirrorDirection
 import me.treetrain1.geometrydash.data.mode.*
 import me.treetrain1.geometrydash.entity.Checkpoint
 import me.treetrain1.geometrydash.util.getVec
@@ -142,7 +144,11 @@ data class CheckpointSnapshot(
                 buf.readFloat(),
                 buf.readUtf(),
                 buf.readFloat(),
-                buf.readNullable { buf1 -> buf1.readUtf() },
+                buf.readNullable { buf1 -> try {
+                    GDData.MirrorDirection.valueOf(buf1.readUtf())
+                } catch (e: Exception) {
+                    null
+                } },
             )
     }
 
@@ -153,7 +159,7 @@ data class CheckpointSnapshot(
         compound.putVec(DELTA_MOVEMENT_TAG, this.deltaMovement)
         compound.putFloat(XROT_TAG, this.xRot)
         compound.putFloat(YROT_TAG, this.yRot)
-        compound.putFloat(SIZE_TAG, this.scale)
+        compound.putFloat(SCALE_TAG, this.scale)
         compound.putVec(GRAVITY_TAG, this.gravity)
         compound.putBoolean(ON_GROUND_TAG, this.onGround)
         compound.put(CAMERA_DATA_TAG, this.cameraData.toTag())

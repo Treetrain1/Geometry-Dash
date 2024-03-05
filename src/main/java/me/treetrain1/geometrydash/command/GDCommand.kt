@@ -4,7 +4,9 @@ import com.mojang.brigadier.CommandDispatcher
 import me.treetrain1.geometrydash.data.GDData
 import me.treetrain1.geometrydash.data.GDMode
 import me.treetrain1.geometrydash.duck.PlayerDuck
+import me.treetrain1.geometrydash.network.S2CSoundPacket
 import me.treetrain1.geometrydash.util.gdData
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.Commands
 import net.minecraft.commands.arguments.EntityArgument
@@ -96,6 +98,8 @@ object GDCommand {
             val data = player.gdData
             data.exitGD()
             data.markDirty()
+            // TODO: remove, this is purely for testing
+            ServerPlayNetworking.send(player, S2CSoundPacket())
         }
 
         if (players.size == 1) {

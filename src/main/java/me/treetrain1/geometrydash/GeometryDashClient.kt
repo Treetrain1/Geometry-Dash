@@ -1,20 +1,26 @@
 package me.treetrain1.geometrydash;
 
-import me.treetrain1.geometrydash.entity.render.CheckpointRenderer;
-import me.treetrain1.geometrydash.entity.render.PortalRenderer
+import de.keksuccino.melody.resources.audio.SimpleAudioFactory
+import me.treetrain1.geometrydash.duck.GDClip
+import me.treetrain1.geometrydash.entity.render.CheckpointRenderer
 import me.treetrain1.geometrydash.entity.render.OrbRenderer
+import me.treetrain1.geometrydash.entity.render.PortalRenderer
 import me.treetrain1.geometrydash.entity.render.model.*
+import me.treetrain1.geometrydash.network.S2CSoundPacket
 import me.treetrain1.geometrydash.registry.RegisterBlocks
 import me.treetrain1.geometrydash.registry.RegisterEntities
+import me.treetrain1.geometrydash.util.GDMusic
 import me.treetrain1.geometrydash.util.id
-import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.fabricmc.api.ClientModInitializer
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry
 import net.minecraft.client.model.geom.ModelLayerLocation
 import net.minecraft.client.renderer.RenderType
+import org.lwjgl.openal.AL11
 
 @Environment(EnvType.CLIENT)
 object GeometryDashClient : ClientModInitializer {
@@ -77,5 +83,14 @@ object GeometryDashClient : ClientModInitializer {
             SWING_PLAYER,
             SwingPlayerModel.Companion::createBodyLayer
         )
+
+        // TODO: remove, this is purely for testing
+        ClientPlayNetworking.registerGlobalReceiver(S2CSoundPacket.TYPE) { packet, player, sender ->
+            val clip = GDMusic.mp3Clip("https://audio-download.ngfiles.com/467000/467339_At_the_Speed_of_Light_FINA.mp3", SimpleAudioFactory.SourceType.WEB_FILE)
+            if (clip != null && clip.isValidOpenAlSource) {
+                val source = (clip as GDClip).`geometryDash$source`
+                AL11.alSourcePlay(source)
+            }
+        }
     }
 }

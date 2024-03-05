@@ -2,17 +2,18 @@ package me.treetrain1.geometrydash.data
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
+import de.keksuccino.melody.resources.audio.SimpleAudioFactory
 import me.treetrain1.geometrydash.data.GDData.MirrorDirection.Companion.getMirrorDirection
 import me.treetrain1.geometrydash.data.GDData.MirrorDirection.Companion.putMirrorDirection
+import me.treetrain1.geometrydash.data.SongSource.Companion.getSongSource
+import me.treetrain1.geometrydash.data.SongSource.Companion.putSongSource
 import me.treetrain1.geometrydash.data.mode.GDModeData
 import me.treetrain1.geometrydash.data.mode.getGDModeData
 import me.treetrain1.geometrydash.data.mode.putGDModeData
+import me.treetrain1.geometrydash.duck.GDClip
 import me.treetrain1.geometrydash.duck.PlayerDuck
 import me.treetrain1.geometrydash.entity.Checkpoint
-import me.treetrain1.geometrydash.util.DEFAULT_GRAVITY
-import me.treetrain1.geometrydash.util.getVec
-import me.treetrain1.geometrydash.util.gravity
-import me.treetrain1.geometrydash.util.putVec
+import me.treetrain1.geometrydash.util.*
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.minecraft.nbt.CompoundTag
@@ -29,6 +30,8 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.GameType
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.Vec3
+import org.lwjgl.openal.AL10
+import org.lwjgl.openal.AL11
 import virtuoel.pehkui.api.ScaleTypes
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
@@ -66,6 +69,7 @@ open class GDData(
 
     constructor(
         mode: GDMode?,
+        song: SongSource? = null,
         checkpoints: MutableList<CheckpointSnapshot> = mutableListOf(),
         cameraData: CameraData = CameraData(),
         isVisible: Boolean = true,
@@ -77,6 +81,7 @@ open class GDData(
         prevGravity: Vec3? = null,
     ) : this(
         mode?.modeData?.invoke(),
+        song,
         checkpoints,
         cameraData,
         isVisible,
@@ -102,6 +107,7 @@ open class GDData(
 
     companion object {
         private const val MODE_DATA_TAG = "ModeData"
+        private const val SONG_TAG = "Song"
         private const val CHECKPOINTS_TAG = "Checkpoints"
         private const val CAMERA_DATA_TAG = "CameraData"
         private const val IS_VISIBLE_TAG = "IsVisible"
@@ -122,6 +128,7 @@ open class GDData(
         val CODEC: Codec<GDData> = RecordCodecBuilder.create { instance ->
             instance.group(
                 GDModeData.CODEC.optionalFieldOf(MODE_DATA_TAG).forGetter { Optional.ofNullable(it.modeData) },
+                SongSource.CODEC.optionalFieldOf(SONG_TAG).forGetter { Optional.ofNullable(it.song) },
                 CheckpointSnapshot.CODEC.listOf().fieldOf(CHECKPOINTS_TAG).forGetter(GDData::checkpoints),
                 CameraData.CODEC.fieldOf(CAMERA_DATA_TAG).forGetter(GDData::cameraData),
                 Codec.BOOL.fieldOf(IS_VISIBLE_TAG).forGetter(GDData::isVisible),
@@ -131,8 +138,8 @@ open class GDData(
                 MirrorDirection.CODEC.fieldOf(CAMERA_MIRROR_DIRECTION_TAG).forGetter(GDData::cameraMirrorDirection),
                 GameType.CODEC.optionalFieldOf(PREV_GAME_TYPE_TAG).forGetter { Optional.ofNullable(it.prevGameType) },
                 Vec3.CODEC.optionalFieldOf(PREV_GRAVITY_TAG).forGetter { Optional.ofNullable(it.prevGravity) },
-            ).apply(instance) { modeData, checkpoints, cameraData, isVisible, timeMod, dashOrbID, cameraMirrorProgress, cameraMirrorDirection, prevGameType, prevGravity ->
-                GDData(modeData.getOrNull(), checkpoints, cameraData, isVisible, timeMod, dashOrbID, cameraMirrorProgress, cameraMirrorDirection, prevGameType.getOrNull(), prevGravity.getOrNull())
+            ).apply(instance) { modeData, song, checkpoints, cameraData, isVisible, timeMod, dashOrbID, cameraMirrorProgress, cameraMirrorDirection, prevGameType, prevGravity ->
+                GDData(modeData.getOrNull(), song.getOrNull(), checkpoints, cameraData, isVisible, timeMod, dashOrbID, cameraMirrorProgress, cameraMirrorDirection, prevGameType.getOrNull(), prevGravity.getOrNull())
             }
         }
     }
@@ -264,6 +271,7 @@ open class GDData(
         if (!this.playingGD) return false
 
         this.modeData = null
+        this.song = null
         this.scale = 1F
         this.modeData = null
         this.checkpoints.clear()
@@ -273,6 +281,7 @@ open class GDData(
         this.orbLocked = false
         this.dashOrbID = ""
         this.cameraMirrorProgress = 1F
+        this.cameraMirrorDirection = null
 
         val player = this.player
         val prevType = this.prevGameType
@@ -334,6 +343,7 @@ open class GDData(
         val checkpoints = ListTag()
         checkpoints.addAll(this.checkpoints.map { it.toTag() })
         compound.put(CHECKPOINTS_TAG, checkpoints)
+        compound.putSongSource(SONG_TAG, this.song)
         compound.put(CAMERA_DATA_TAG, this.cameraData.toTag())
         compound.putBoolean(IS_VISIBLE_TAG, this.isVisible)
         compound.putFloat(TIME_MULTIPLIER_TAG, this.timeMod)
@@ -352,6 +362,7 @@ open class GDData(
             this.modeData = null
         }
 
+        this.song = compound.getSongSource(SONG_TAG)
         this.scale = compound.getFloat(SCALE_TAG)
         this.checkpoints = compound.getList(CHECKPOINTS_TAG, CompoundTag.TAG_COMPOUND.toInt())
             .map { tag -> CheckpointSnapshot.fromTag(tag as CompoundTag) }
@@ -369,6 +380,7 @@ open class GDData(
 
     fun copyFrom(otherData: GDData) {
         this.modeData = otherData.modeData
+        this.song = otherData.song
         this.scale = otherData.scale
         this.checkpoints = otherData.checkpoints
         this.cameraData = otherData.cameraData

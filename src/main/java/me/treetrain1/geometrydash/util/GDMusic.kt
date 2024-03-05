@@ -6,29 +6,39 @@ import de.keksuccino.melody.resources.audio.SimpleAudioFactory.SourceType
 import de.keksuccino.melody.resources.audio.openal.ALAudioBuffer
 import de.keksuccino.melody.resources.audio.openal.ALAudioClip
 import de.keksuccino.melody.resources.audio.openal.ALUtils
+import javazoom.spi.mpeg.sampled.convert.MpegFormatConversionProvider
+import javazoom.spi.mpeg.sampled.file.MpegAudioFileReader
+import me.treetrain1.geometrydash.util.GDMusic.ConsumingSupplier
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 import net.minecraft.client.Minecraft
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.packs.resources.Resource
 import org.apache.commons.io.IOUtils
-import javax.sound.sampled.AudioInputStream
-import javax.sound.sampled.AudioSystem
 import java.io.*
 import java.net.HttpURLConnection
+import java.net.URL
 import java.nio.ByteBuffer
 import java.util.concurrent.CompletableFuture
+import javax.sound.sampled.AudioFormat
+import javax.sound.sampled.AudioFormat.Encoding
+import javax.sound.sampled.AudioInputStream
+import javax.sound.sampled.AudioSystem
+import kotlin.jvm.optionals.getOrNull
+
 
 @Environment(EnvType.CLIENT)
 object GDMusic {
 
-    internal val BASIC_URL_TEXT_VALIDATOR: ConsumingSupplier<String, Boolean> = ConsumingSupplier { consumes ->
-        if (consumes != null && !consumes.replace(" ", "").isEmpty()) {
+    private val BASIC_URL_TEXT_VALIDATOR: ConsumingSupplier<String, Boolean> = ConsumingSupplier { consumes ->
+        if (consumes != null && consumes.replace(" ", "").isNotEmpty()) {
             if ((consumes.startsWith("http://") || consumes.startsWith("https://")) && consumes.contains("."))
-                return true
+                return@ConsumingSupplier true
         }
-        return false
+        return@ConsumingSupplier false
     }
 
-    fun mp3Clip(audioSource: String, sourceType: SourceType): GDAudioClip? {
+    fun mp3Clip(audioSource: String, sourceType: SourceType): ALAudioClip? {
         val futureMp3 = mp3(audioSource, sourceType)
         try {
             return futureMp3.join()
@@ -93,7 +103,7 @@ object GDMusic {
                             completableFuture.completeExceptionally(ex)
                             clip.closeQuietly()
                         } else {
-                            copmletableFuture.complete(clip)
+                            completableFuture.complete(clip)
                         }
                     }.start()
                     return completableFuture
@@ -103,7 +113,6 @@ object GDMusic {
                 }
             }
             else -> {
-                TODO()
                 if (!BASIC_URL_TEXT_VALIDATOR.get(audioSource)) {
                     clip.closeQuietly()
                     throw MelodyAudioException("Failed to create MP3 audio clip! Invalid URL: $audioSource")
@@ -111,7 +120,7 @@ object GDMusic {
                 try {
                     val webIn = openWebResourceStream(audioSource)
                     val completableFuture: CompletableFuture<ALAudioClip> = CompletableFuture()
-                    Thread() {
+                    Thread {
                         val ex: Exception? = tryCreateAndSetMp3StaticBuffer(clip, webIn)
                         if (ex != null) {
                             completableFuture.completeExceptionally(ex)
@@ -130,24 +139,24 @@ object GDMusic {
     }
 
     fun tryCreateAndSetMp3StaticBuffer(setTo: ALAudioClip, `in`: InputStream): Exception? {
-        val stream: AudioInputStream? = null
-        val byteIn: ByteArrayInputStream? = null
-        val exception: Exception? = null
+        var stream: AudioInputStream? = null
+        var byteIn: ByteArrayInputStream? = null
+        var exception: Exception? = null
         try {
             byteIn = ByteArrayInputStream(`in`.readAllBytes())
-            stream = AudioSystem.getAudioInputStream(byteIn!!)
+            stream = MpegAudioFileReader().getAudioInputStream(byteIn)
             val byteBuffer: ByteBuffer = ALUtils.readStreamIntoBuffer(stream!!)
-            val format = stream!!.getFormat()
+            val format = stream.format
             val decodedFormat = AudioFormat(
-                AudioFormat.Encoding.PCM_SIGNED,
-                format.getSampleRate(),
+                Encoding.PCM_SIGNED,
+                format.sampleRate,
                 16,
-                format.getChannels(),
-                format.getChannels() * 2,
-                format.getSampleRate(),
+                format.channels,
+                format.channels * 2,
+                format.sampleRate,
                 false
             )
-            val audioBuffer = AlAudioBuffer(byteBuffer, decodedFormat)
+            val audioBuffer = ALAudioBuffer(byteBuffer, decodedFormat)
             setTo.setStaticBuffer(audioBuffer)
         } catch (ex: Exception) {
             exception = ex
@@ -158,11 +167,12 @@ object GDMusic {
         return exception
     }
 
+    @Throws(IOException::class)
     private fun openWebResourceStream(resourceURL: String): InputStream {
         val actualURL = URL(resourceURL)
         val connection = actualURL.openConnection()
         connection.addRequestProperty("User-Agent", "Mozilla/4.0")
-        return connction.getInputStream()
+        return connection.inputStream
     }
 
     private fun interface ConsumingSupplier<C, R> {

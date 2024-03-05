@@ -45,6 +45,7 @@ open class Checkpoint(
             this.id,
             gdData.modeData,
             player.deltaMovement,
+            player.xRot,
             player.yRot,
             gdData.scale,
             player.gravity,

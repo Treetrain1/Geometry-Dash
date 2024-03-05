@@ -18,12 +18,11 @@ buildscript {
 }
 
 plugins {
-    alias(libs.plugins.kotlin)
-    alias(libs.plugins.fabric.loom)
-    alias(libs.plugins.quilt.licenser)
-    alias(libs.plugins.grgit)
-    alias(libs.plugins.minotaur)
-    // id("com.matthewprenger.cursegradle") version("+")
+    kotlin("jvm") version("+")
+    id("fabric-loom") version("+")
+    id("org.quiltmc.gradle.licenser") version("+")
+    id("org.ajoberstar.grgit") version("+")
+    id("com.modrinth.minotaur") version("+")
     eclipse
     idea
     `java-library`
@@ -163,13 +162,6 @@ repositories {
         url = uri("https://maven.shedaniel.me/")
     }
     maven {
-        url = uri("https://cursemaven.com")
-
-        content {
-            includeGroup("curse.maven")
-        }
-    }
-    maven {
         url = uri("https://maven.flashyreese.me/releases")
     }
     maven {
@@ -234,7 +226,10 @@ dependencies {
         modApi("maven.modrinth:frozenlib:$frozenlib_version")?.let { include(it) }
 
     // Melody
-    modApi("maven.modrinth:melody:v1.0.4-1.20.1-1.20.4-fabric")
+    modApi("maven.modrinth:melody:1.0.4-1.20.1-1.20.4-fabric")
+
+    // mp3spi
+    api("com.github.umjammer:mp3spi:1.9.15")?.let { include(it) }
 
     // Pehkui
     modApi("com.github.Virtuoel:Pehkui:3.7.12") {
@@ -459,9 +454,7 @@ extra {
 }
 
 val modrinth_id: String by extra
-val curseforge_id: String by extra
 val release_type: String by extra
-val curseforge_minecraft_version: String by extra
 val changelog_file: String by extra
 
 val modrinth_version = makeModrinthVersion(mod_version)
@@ -498,31 +491,6 @@ fun getBranch(): String {
     branch = grgit.branch.current().name
     return branch.substring(branch.lastIndexOf("/") + 1)
 }
-
-/*curseforge {
-    val token = System.getenv("CURSEFORGE_TOKEN")
-    apiKey = if (token == null || token.isEmpty()) "unset" else token
-    val gameVersion = if (curseforge_minecraft_version != "null") curseforge_minecraft_version else minecraft_version
-    project(closureOf<CurseProject> {
-        id = curseforge_id
-        changelog = changelog_text
-        releaseType = release_type
-        addGameVersion("Fabric")
-        addGameVersion("Quilt")
-        addGameVersion(gameVersion)
-        relations(closureOf<CurseRelation> {
-            requiredDependency("fabric-api")
-            embeddedLibrary("frozenlib")
-        })
-        mainArtifact(file("build/libs/${tasks.remapJar.get().archiveBaseName.get()}-${version}.jar"), closureOf<CurseArtifact> {
-            displayName = display_name
-        })
-        afterEvaluate {
-            uploadTask.dependsOn(remapJar)
-        }
-    })
-    curseGradleOptions.forgeGradleIntegration = false
-}*/
 
 modrinth {
     token.set(System.getenv("MODRINTH_TOKEN"))
@@ -573,6 +541,5 @@ val github by tasks.register("github") {
 val publishMod by tasks.register("publishMod") {
     dependsOn(tasks.publish)
     dependsOn(github)
-    //dependsOn(tasks.curseforge)
     dependsOn(tasks.modrinth)
 }

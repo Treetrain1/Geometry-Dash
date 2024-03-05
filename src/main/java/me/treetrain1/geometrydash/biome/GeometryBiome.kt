@@ -15,7 +15,7 @@ object GeometryBiome : FrozenBiome() {
 
     override fun biomeID(): String = "geometry"
 
-    override fun temperature(): Float = 0F
+    override fun temperature(): Float = 1F
 
     override fun downfall(): Float = 0F
 
