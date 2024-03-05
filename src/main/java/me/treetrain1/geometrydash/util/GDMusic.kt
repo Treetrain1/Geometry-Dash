@@ -140,28 +140,29 @@ object GDMusic {
 
     fun tryCreateAndSetMp3StaticBuffer(setTo: ALAudioClip, `in`: InputStream): Exception? {
         var stream: AudioInputStream? = null
+        var decodedStream: AudioInputStream? = null
         var byteIn: ByteArrayInputStream? = null
         var exception: Exception? = null
         try {
             byteIn = ByteArrayInputStream(`in`.readAllBytes())
             stream = MpegAudioFileReader().getAudioInputStream(byteIn)
-            val byteBuffer: ByteBuffer = ALUtils.readStreamIntoBuffer(stream!!)
             val format = stream.format
-            val decodedFormat = AudioFormat(
-                Encoding.PCM_SIGNED,
+            val decodedFormat = AudioFormat( // PCM
                 format.sampleRate,
                 16,
                 format.channels,
-                format.channels * 2,
-                format.sampleRate,
+                true,
                 false
             )
-            val audioBuffer = ALAudioBuffer(byteBuffer, decodedFormat)
+            decodedStream = AudioSystem.getAudioInputStream(decodedFormat, stream)
+            val byteBuffer: ByteBuffer = ALUtils.readStreamIntoBuffer(decodedStream!!)
+            val audioBuffer = ALAudioBuffer(byteBuffer, decodedStream.format)
             setTo.setStaticBuffer(audioBuffer)
         } catch (ex: Exception) {
             exception = ex
         }
         IOUtils.closeQuietly(stream)
+        IOUtils.closeQuietly(decodedStream)
         IOUtils.closeQuietly(`in`)
         IOUtils.closeQuietly(byteIn)
         return exception
