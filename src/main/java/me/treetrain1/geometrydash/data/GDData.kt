@@ -106,18 +106,18 @@ open class GDData(
         }
 
     companion object {
-        private const val MODE_DATA_TAG = "ModeData"
-        private const val SONG_TAG = "Song"
-        private const val CHECKPOINTS_TAG = "Checkpoints"
-        private const val CAMERA_DATA_TAG = "CameraData"
-        private const val IS_VISIBLE_TAG = "IsVisible"
-        private const val SCALE_TAG = "Scale"
-        private const val TIME_MULTIPLIER_TAG = "TimeMultiplier"
-        private const val DASH_ORB_ID = "DashOrbID"
-        private const val CAMERA_MIRROR_PROGRESS_TAG = "CameraMirrorProgress"
-        private const val CAMERA_MIRROR_DIRECTION_TAG = "CameraMirrorDirection"
-        private const val PREV_GAME_TYPE_TAG = "PrevGameType"
-        private const val PREV_GRAVITY_TAG = "PrevGravity"
+        private const val MODE_DATA_TAG = "mode_data"
+        private const val SONG_TAG = "song"
+        private const val CHECKPOINTS_TAG = "checkpoints"
+        private const val CAMERA_DATA_TAG = "camera_data"
+        private const val IS_VISIBLE_TAG = "is_visible"
+        private const val SCALE_TAG = "scale"
+        private const val TIME_MULTIPLIER_TAG = "time_multiplier"
+        private const val DASH_ORB_ID = "dash_orb_id"
+        private const val CAMERA_MIRROR_PROGRESS_TAG = "camera_mirror_progress"
+        private const val CAMERA_MIRROR_DIRECTION_TAG = "camera_mirror_direction"
+        private const val PREV_GAME_TYPE_TAG = "previous_game_type"
+        private const val PREV_GRAVITY_TAG = "previous_gravity"
 
         @JvmField
         val GD_DATA: EntityDataAccessor<in CompoundTag> = SynchedEntityData.defineId(

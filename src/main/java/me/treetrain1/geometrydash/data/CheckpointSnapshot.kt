@@ -38,20 +38,20 @@ data class CheckpointSnapshot(
 ) {
 
     companion object {
-        private const val ENTITY_ID_TAG = "EntityID"
-        private const val MODE_DATA_TAG = "ModeData"
-        private const val DELTA_MOVEMENT_TAG = "DeltaMovement"
-        private const val XROT_TAG = "XRot"
-        private const val YROT_TAG = "YRot"
-        private const val SCALE_TAG = "Scale"
-        private const val GRAVITY_TAG = "Gravity"
-        private const val ON_GROUND_TAG = "OnGround"
-        private const val CAMERA_DATA_TAG = "CameraData"
-        private const val IS_VISIBLE_TAG = "IsVisible"
-        private const val TIME_MULTIPLIER_TAG = "TimeMultiplier"
-        private const val DASH_ORB_TAG = "DashOrbID"
-        private const val CAMERA_MIRROR_PROGRESS_TAG = "CameraMirrorProgress"
-        private const val CAMERA_MIRROR_DIRECTION_TAG = "CameraMirrorDirection"
+        private const val ENTITY_ID_TAG = "entity_id"
+        private const val MODE_DATA_TAG = "mode_data"
+        private const val DELTA_MOVEMENT_TAG = "delta_movement"
+        private const val XROT_TAG = "x_rot"
+        private const val YROT_TAG = "y_rot"
+        private const val SCALE_TAG = "scale"
+        private const val GRAVITY_TAG = "gravity"
+        private const val ON_GROUND_TAG = "on_ground"
+        private const val CAMERA_DATA_TAG = "camera_data"
+        private const val IS_VISIBLE_TAG = "is_visible"
+        private const val TIME_MULTIPLIER_TAG = "time_multiplier"
+        private const val DASH_ORB_TAG = "dash_orb_id"
+        private const val CAMERA_MIRROR_PROGRESS_TAG = "camera_mirror_progress"
+        private const val CAMERA_MIRROR_DIRECTION_TAG = "camera_mirror_direction"
 
         @JvmField
         val CODEC: Codec<CheckpointSnapshot> = RecordCodecBuilder.create { instance ->

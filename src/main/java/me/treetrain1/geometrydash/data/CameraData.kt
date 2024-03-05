@@ -29,7 +29,7 @@ data class CameraData(
                 Codec.FLOAT.fieldOf("pitch").forGetter(CameraData::pitch),
                 Codec.FLOAT.fieldOf("yaw").forGetter(CameraData::yaw),
                 Codec.FLOAT.fieldOf("roll").forGetter(CameraData::roll),
-                Vec3.CODEC.fieldOf("playerOffset").forGetter(CameraData::playerOffset)
+                Vec3.CODEC.fieldOf("player_offset").forGetter(CameraData::playerOffset)
             ).apply(instance, ::CameraData)
         }
 
@@ -38,7 +38,7 @@ data class CameraData(
                 compound.getFloat("pitch"),
                 compound.getFloat("yaw"),
                 compound.getFloat("roll"),
-                compound.getVec("playerOffset")
+                compound.getVec("player_offset")
             )
 
         fun fromBuf(buf: FriendlyByteBuf): CameraData
@@ -55,7 +55,7 @@ data class CameraData(
         compound.putFloat("pitch", this.pitch)
         compound.putFloat("yaw", this.yaw)
         compound.putFloat("roll", this.roll)
-        compound.putVec("playerOffset", this.playerOffset)
+        compound.putVec("player_offset", this.playerOffset)
         return compound
     }
 

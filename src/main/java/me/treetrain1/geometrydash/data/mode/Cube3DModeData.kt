@@ -16,9 +16,9 @@ class Cube3DModeData(
         @JvmField
         val CODEC: Codec<Cube3DModeData> = RecordCodecBuilder.create { instance ->
             instance.group(
-                Codec.FLOAT.fieldOf("targetRot").forGetter(Cube3DModeData::targetCubeRot),
+                Codec.FLOAT.fieldOf("target_rot").forGetter(Cube3DModeData::targetCubeRot),
                 Codec.FLOAT.fieldOf("rot").forGetter(Cube3DModeData::cubeRot),
-                Codec.FLOAT.fieldOf("prevRot").forGetter(Cube3DModeData::prevCubeRot)
+                Codec.FLOAT.fieldOf("prev_rot").forGetter(Cube3DModeData::prevCubeRot)
             ).apply(instance, ::Cube3DModeData)
         }
     }

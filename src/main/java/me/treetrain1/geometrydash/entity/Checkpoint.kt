@@ -80,12 +80,12 @@ open class Checkpoint(
     }
 
     override fun addAdditionalSaveData(compound: CompoundTag) {
-        compound.putString("Type", this.type.serializedName)
+        compound.putString("type", this.type.serializedName)
     }
 
     override fun readAdditionalSaveData(compound: CompoundTag) {
         try {
-            this.type = CheckpointType.valueOf(compound.getString("Type").uppercase())
+            this.type = CheckpointType.valueOf(compound.getString("type").uppercase())
         } catch (_: IllegalArgumentException) {
             this.type = CheckpointType.STANDARD
         }

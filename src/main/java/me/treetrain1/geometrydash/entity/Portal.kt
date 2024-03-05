@@ -66,12 +66,12 @@ open class Portal(
     }
 
     override fun addAdditionalSaveData(compound: CompoundTag) {
-        compound.putString("Type", this.type.serializedName)
+        compound.putString("type", this.type.serializedName)
     }
 
     override fun readAdditionalSaveData(compound: CompoundTag) {
         try {
-            this.type = PortalType.valueOf(compound.getString("Type").uppercase())
+            this.type = PortalType.valueOf(compound.getString("type").uppercase())
         } catch (_: IllegalArgumentException) {
             this.type = PortalType.CUBE
         }

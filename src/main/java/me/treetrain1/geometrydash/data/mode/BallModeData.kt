@@ -24,9 +24,9 @@ open class BallModeData(
         @JvmField
         val CODEC: Codec<BallModeData> = RecordCodecBuilder.create { instance ->
             instance.group(
-                Codec.FLOAT.fieldOf("targetRot").forGetter(BallModeData::targetCubeRot),
+                Codec.FLOAT.fieldOf("target_rot").forGetter(BallModeData::targetCubeRot),
                 Codec.FLOAT.fieldOf("rot").forGetter(BallModeData::cubeRot),
-                Codec.FLOAT.fieldOf("prevRot").forGetter(BallModeData::prevCubeRot)
+                Codec.FLOAT.fieldOf("prev_rot").forGetter(BallModeData::prevCubeRot)
             ).apply(instance, ::BallModeData)
         }
     }
