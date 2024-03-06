@@ -44,8 +44,7 @@ data class SongSource(
 
 enum class SongSourceType(val melodySource: SourceType) : StringRepresentable {
     RESOURCE_LOCATION(SourceType.RESOURCE_LOCATION),
-    LOCAL_FILE(SourceType.LOCAL_FILE),
-    WEB(SourceType.WEB_FILE);
+    LOCAL_FILE(SourceType.LOCAL_FILE);
 
     companion object {
         @JvmField
@@ -70,6 +69,10 @@ enum class SongSourceType(val melodySource: SourceType) : StringRepresentable {
 
     override fun getSerializedName(): String
         = this.name.lowercase()
+}
 
-    fun toMelody(): SourceType = this.melodySource
+fun SourceType.toGD(): SongSourceType = when(this) {
+    SourceType.RESOURCE_LOCATION -> SongSourceType.RESOURCE_LOCATION
+    SourceType.LOCAL_FILE -> SongSourceType.LOCAL_FILE
+    SourceType.WEB_FILE -> SongSourceType.LOCAL_FILE // it should get downloaded
 }
