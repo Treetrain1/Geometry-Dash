@@ -111,7 +111,11 @@ inline fun LivingEntity.setRelativeDelta(vec: Vec3) {
     this.deltaMovement = this.toRelative(vec)
 }
 inline fun Entity.toRelative(x: Double, y: Double, z: Double) = this.toRelative(Vec3(x,y, z))
+@Suppress("SENSELESS_COMPARISON")
 inline fun Entity.toRelative(vec: Vec3): Vec3 {
+    if (this.gravityDirection === null) // failsafe
+        this.gravityDirection = DEFAULT_GRAVITY_DIRECTION
+
     return when (this.gravityDirection) {
         Direction.DOWN -> vec
         Direction.UP -> vec.multiply(1.0, -1.0, 1.0)

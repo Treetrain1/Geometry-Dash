@@ -1,4 +1,4 @@
-package me.treetrain1.geometrydash.mixin;
+package me.treetrain1.geometrydash.mixin.audio;
 
 import de.keksuccino.melody.resources.audio.openal.ALAudioClip;
 import me.treetrain1.geometrydash.duck.GDClip;

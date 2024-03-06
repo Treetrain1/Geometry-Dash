@@ -86,10 +86,12 @@ object GeometryDashClient : ClientModInitializer {
 
         // TODO: remove, this is purely for testing
         ClientPlayNetworking.registerGlobalReceiver(S2CSoundPacket.TYPE) { packet, player, sender ->
-            val clip = GDMusic.mp3Clip("https://audio-download.ngfiles.com/467000/467339_At_the_Speed_of_Light_FINA.mp3", SimpleAudioFactory.SourceType.WEB_FILE)
-            if (clip != null && clip.isValidOpenAlSource) {
-                val source = (clip as GDClip).`geometryDash$source`
-                AL11.alSourcePlay(source)
+            val file = GDMusic.downloadMp3(467339) // 467339 is at the speed of light
+            if (file != null) {
+                val clip = GDMusic.mp3Clip(file.path, SimpleAudioFactory.SourceType.LOCAL_FILE)
+                if (clip != null && clip.isValidOpenAlSource) {
+                    clip.play()
+                }
             }
         }
     }

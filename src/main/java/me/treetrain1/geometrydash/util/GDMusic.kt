@@ -6,7 +6,6 @@ import de.keksuccino.melody.resources.audio.SimpleAudioFactory.SourceType
 import de.keksuccino.melody.resources.audio.openal.ALAudioBuffer
 import de.keksuccino.melody.resources.audio.openal.ALAudioClip
 import de.keksuccino.melody.resources.audio.openal.ALUtils
-import javazoom.spi.mpeg.sampled.convert.MpegFormatConversionProvider
 import javazoom.spi.mpeg.sampled.file.MpegAudioFileReader
 import me.treetrain1.geometrydash.util.GDMusic.ConsumingSupplier
 import net.fabricmc.api.EnvType
@@ -16,7 +15,6 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.packs.resources.Resource
 import org.apache.commons.io.IOUtils
 import java.io.*
-import java.net.HttpURLConnection
 import java.net.URL
 import java.nio.ByteBuffer
 import java.util.concurrent.CompletableFuture
@@ -47,6 +45,28 @@ object GDMusic {
         }
     }
 
+    /**
+     * Downloads an MP3 file from Newgrounds
+     * @return The output file, or null if an error occurred
+     */
+    fun downloadMp3(id: Int): File? {
+        val file: File = MUSIC_DIRECTORY.resolve("$id.mp3").toFile()
+        if (file.exists()) return file
+
+        val input = openWebResourceStream("https://newgrounds.com/audio/download/$id")
+        try {
+            val buffer = convertToBuffer(input)
+            FileOutputStream(file).use { it.channel.use { output ->
+                output.write(buffer)
+            } }
+        } catch (e: Exception) {
+            logError("Failed to download audio $id", e)
+            return null
+        }
+
+        return file
+    }
+
     @Throws(MelodyAudioException::class)
     fun mp3(audioSource: String, sourceType: SourceType): CompletableFuture<ALAudioClip> {
         RenderSystem.assertOnRenderThread()
@@ -64,12 +84,12 @@ object GDMusic {
                     throw MelodyAudioException("Failed to create MP3 audio clip! ResourceLocation parsing failed: $audioSource")
                 }
 
-                val resource: Resource? = Minecraft.getInstance().getResourceManager().getResource(location).getOrNull()
+                val resource: Resource? = Minecraft.getInstance().resourceManager.getResource(location).getOrNull()
                 if (resource != null) {
                     try {
                         val input = resource.open()
                         val completableFuture: CompletableFuture<ALAudioClip> = CompletableFuture()
-                        Thread() {
+                        Thread {
                             val ex: Exception? = tryCreateAndSetMp3StaticBuffer(clip, input)
                             if (ex != null) {
                                 completableFuture.completeExceptionally(ex)
@@ -97,7 +117,7 @@ object GDMusic {
                 try {
                     val input = FileInputStream(file)
                     val completableFuture: CompletableFuture<ALAudioClip> = CompletableFuture()
-                    Thread() {
+                    Thread {
                         val ex: Exception? = tryCreateAndSetMp3StaticBuffer(clip, input)
                         if (ex != null) {
                             completableFuture.completeExceptionally(ex)
@@ -138,11 +158,30 @@ object GDMusic {
         }
     }
 
-    fun tryCreateAndSetMp3StaticBuffer(setTo: ALAudioClip, `in`: InputStream): Exception? {
+    fun convertToBuffer(`in`: InputStream): ByteBuffer? {
+        var stream: AudioInputStream? = null
+        var byteIn: ByteArrayInputStream? = null
+        var buffer: ByteBuffer? = null
+        try {
+            byteIn = ByteArrayInputStream(`in`.readAllBytes())
+            stream = MpegAudioFileReader().getAudioInputStream(byteIn)
+            buffer = ALUtils.readStreamIntoBuffer(stream)
+        } catch (_: Exception) {
+        }
+
+        IOUtils.closeQuietly(stream)
+        IOUtils.closeQuietly(`in`)
+        IOUtils.closeQuietly(byteIn)
+        return buffer
+    }
+
+    @Throws(Exception::class)
+    fun tryCreateStaticBuffer(`in`: InputStream): ALAudioBuffer? {
         var stream: AudioInputStream? = null
         var decodedStream: AudioInputStream? = null
         var byteIn: ByteArrayInputStream? = null
         var exception: Exception? = null
+        var audioBuffer: ALAudioBuffer? = null
         try {
             byteIn = ByteArrayInputStream(`in`.readAllBytes())
             stream = MpegAudioFileReader().getAudioInputStream(byteIn)
@@ -158,8 +197,7 @@ object GDMusic {
             )
             decodedStream = AudioSystem.getAudioInputStream(decodedFormat, stream)
             val byteBuffer: ByteBuffer = ALUtils.readStreamIntoBuffer(decodedStream!!)
-            val audioBuffer = ALAudioBuffer(byteBuffer, decodedFormat)
-            setTo.setStaticBuffer(audioBuffer)
+            audioBuffer = ALAudioBuffer(byteBuffer, decodedFormat)
         } catch (ex: Exception) {
             exception = ex
         }
@@ -167,6 +205,18 @@ object GDMusic {
         IOUtils.closeQuietly(decodedStream)
         IOUtils.closeQuietly(`in`)
         IOUtils.closeQuietly(byteIn)
+        if (exception != null) throw exception
+        return audioBuffer
+    }
+
+    fun tryCreateAndSetMp3StaticBuffer(setTo: ALAudioClip, `in`: InputStream): Exception? {
+        var exception: Exception? = null
+        try {
+            val audioBuffer = tryCreateStaticBuffer(`in`)
+            setTo.setStaticBuffer(audioBuffer!!)
+        } catch (ex: Exception) {
+            exception = ex
+        }
         return exception
     }
 

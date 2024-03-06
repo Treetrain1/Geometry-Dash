@@ -1,11 +1,13 @@
 package me.treetrain1.geometrydash.util
 
+import net.minecraft.FileUtil
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.world.entity.ai.attributes.AttributeModifier
 import net.minecraft.world.phys.Vec3
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import kotlin.io.path.Path
 
 @PublishedApi
 internal const val MOD_ID = "geometry_dash"
@@ -15,6 +17,11 @@ internal const val MOD_NAME = "Geometry Dash"
 
 @JvmField
 internal val LOGGER: Logger = LoggerFactory.getLogger(MOD_NAME)!!
+
+@JvmField
+val MUSIC_DIRECTORY = Path("./.$MOD_ID/music/").apply {
+    FileUtil.createDirectoriesSafe(this)
+}
 
 @JvmField
 val GD_MOVEMENT_SPEED = AttributeModifier(
