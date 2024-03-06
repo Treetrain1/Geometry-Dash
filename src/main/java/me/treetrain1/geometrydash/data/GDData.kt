@@ -2,6 +2,7 @@ package me.treetrain1.geometrydash.data
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
+import de.keksuccino.melody.resources.audio.openal.ALAudioClip
 import me.treetrain1.geometrydash.data.GDData.MirrorDirection.Companion.getMirrorDirection
 import me.treetrain1.geometrydash.data.GDData.MirrorDirection.Companion.putMirrorDirection
 import me.treetrain1.geometrydash.data.SongSource.Companion.getSongSource
@@ -9,6 +10,7 @@ import me.treetrain1.geometrydash.data.SongSource.Companion.putSongSource
 import me.treetrain1.geometrydash.data.mode.GDModeData
 import me.treetrain1.geometrydash.data.mode.getGDModeData
 import me.treetrain1.geometrydash.data.mode.putGDModeData
+import me.treetrain1.geometrydash.duck.GDClip
 import me.treetrain1.geometrydash.duck.PlayerDuck
 import me.treetrain1.geometrydash.entity.Checkpoint
 import me.treetrain1.geometrydash.util.*
@@ -28,6 +30,7 @@ import net.minecraft.world.entity.Pose
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.GameType
 import net.minecraft.world.level.Level
+import org.lwjgl.openal.AL11
 import virtuoel.pehkui.api.ScaleTypes
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
@@ -103,6 +106,33 @@ open class GDData(
             val modeData = value?.modeData?.invoke()
             modeData?.gdData = this
             this.modeData = modeData
+        }
+
+    @Environment(EnvType.CLIENT)
+    var audioClip: ALAudioClip? = null
+        set(value) {
+            val cur = field
+            if (cur != null && cur.isValidOpenAlSource) {
+                cur.stop()
+            }
+            field = value
+        }
+
+    @get:Environment(EnvType.CLIENT)
+    @set:Environment(EnvType.CLIENT)
+    inline var timestamp: Float?
+        get() {
+            val source = (this.audioClip as? GDClip)?.`geometryDash$source`
+            if (source != null)
+                return AL11.alGetSourcef(source, AL11.AL_SEC_OFFSET)
+            return null
+        }
+        set(value) {
+            if (value == null) return
+            val source = (this.audioClip as? GDClip)?.`geometryDash$source`
+            if (source != null) {
+                AL11.alSourcef(source, AL11.AL_SEC_OFFSET, value)
+            }
         }
 
     companion object {
