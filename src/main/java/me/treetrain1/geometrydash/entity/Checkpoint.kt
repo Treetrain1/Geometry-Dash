@@ -1,7 +1,6 @@
 package me.treetrain1.geometrydash.entity
 
-import me.treetrain1.geometrydash.data.CheckpointSnapshot
-import me.treetrain1.geometrydash.data.GDData
+import me.treetrain1.geometrydash.data.*
 import me.treetrain1.geometrydash.util.gdData
 import me.treetrain1.geometrydash.util.gravity
 import me.treetrain1.geometrydash.util.gravityDirection
@@ -30,6 +29,8 @@ open class Checkpoint(
     inline var type: CheckpointType
         get() = this.`access$entityData`[CHECKPOINT_TYPE]
         set(value) { this.`access$entityData`[CHECKPOINT_TYPE] = value }
+
+    var song: SongSource? = null
 
     override fun defineSynchedData() {
         this.entityData.define(CHECKPOINT_TYPE, CheckpointType.STANDARD)
@@ -69,7 +70,7 @@ open class Checkpoint(
             val gdData = player.gdData
             when (this.type) {
                 CheckpointType.START -> {
-                    gdData.enterGD()
+                    gdData.enterGD(song = this.song)
                     player.xRot = this.xRot
                     player.yRot = this.yRot
                 }
@@ -84,10 +85,14 @@ open class Checkpoint(
 
     override fun addAdditionalSaveData(compound: CompoundTag) {
         compound.putString("type", this.type.serializedName)
+        if (this.type == CheckpointType.START)
+            compound.putSongSource("song", this.song)
     }
 
     override fun readAdditionalSaveData(compound: CompoundTag) {
         this.type = CheckpointType.CODEC.byName(compound.getString("type")) ?: CheckpointType.STANDARD
+        if (this.type == Checkpoint.START)
+            this.song = compound.getSongSource("song")
     }
 
     enum class CheckpointType(val shouldAddSpawn: Boolean = true) : StringRepresentable {

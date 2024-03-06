@@ -38,8 +38,7 @@ import kotlin.jvm.optionals.getOrNull
 @Suppress("MemberVisibilityCanBePrivate")
 open class GDData(
     modeData: GDModeData? = null,
-    @JvmField
-    var song: SongSource? = null,
+    song: SongSource? = null,
     @JvmField
     var checkpoints: MutableList<CheckpointSnapshot> = mutableListOf(),
     @JvmField
@@ -66,6 +65,14 @@ open class GDData(
         set(value) {
             value?.gdData = this
             field = value
+        }
+
+    var song: SongSource? = song
+        set(value) {
+            val prev = field
+            field = value
+            if (prev != field && this.level.isClientSide)
+                this.updateAudioClip()
         }
 
     constructor(
@@ -279,23 +286,24 @@ open class GDData(
         toggleGD()
     }
 
-    fun setGD(mode: GDMode?, scale: Float? = 1F): Boolean {
+    fun setGD(mode: GDMode?, scale: Float? = 1F, song: SongSource? = this.song): Boolean {
         if (mode == null) {
             return this.exitGD()
         }
-        return this.enterGD(mode, scale)
+        return this.enterGD(mode, scale, source)
     }
 
     /**
      * Must only be directly called on server due to setting game mode to adventure
      * @return if not already in GD mode
      */
-    fun enterGD(mode: GDMode = GDMode.CUBE, scale: Float? = 1F): Boolean {
+    fun enterGD(mode: GDMode = GDMode.CUBE, scale: Float? = 1F, song: SongSource? = this.song): Boolean {
         val noChange: Boolean = this.playingGD && this.mode == mode
         this.mode = mode
         if (scale != null) {
             this.scale = scale
         }
+        this.song = source
 
         val player = this.player
         if (noChange || player !is ServerPlayer) return false
@@ -429,9 +437,6 @@ open class GDData(
         }
 
         this.song = compound.getSongSource(SONG_TAG)
-        if (this.level.isClientSide) {
-            this.updateAudioClip()
-        }
         this.scale = compound.getFloat(SCALE_TAG)
         this.checkpoints = compound.getList(CHECKPOINTS_TAG, CompoundTag.TAG_COMPOUND.toInt())
             .map { tag -> CheckpointSnapshot.fromTag(tag as CompoundTag) }
