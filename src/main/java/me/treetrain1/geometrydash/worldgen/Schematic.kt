@@ -303,11 +303,7 @@ class Schematic(
                 tag.remove("Pos")
                 tag.putString("id", id)
                 val newPos = pos.subtract(offset.x.toDouble(), offset.y.toDouble(), offset.z.toDouble())
-                tag.put("Pos", ListTag().also { list ->
-                    list.add(DoubleTag.valueOf(newPos.x))
-                    list.add(DoubleTag.valueOf(newPos.y))
-                    list.add(DoubleTag.valueOf(newPos.z))
-                })
+                tag.putVec("Pos", newPos)
                 entities.add(tag)
             }
 

@@ -114,6 +114,7 @@ open class GDData(
             val cur = field
             if (cur != null && cur.isValidOpenAlSource) {
                 cur.stop()
+                cur.closeQuietly()
             }
             field = value
         }
@@ -317,6 +318,9 @@ open class GDData(
         this.dashOrbID = ""
         this.cameraMirrorProgress = 1F
         this.cameraMirrorDirection = null
+        if (this.level.isClientSide) {
+            this.audioClip = null
+        }
 
         val player = this.player
         val prevType = this.prevGameType
@@ -463,11 +467,7 @@ open class GDData(
                 if (!this.contains(key, CompoundTag.TAG_STRING.toInt()))
                     return null
                 val str: String = this.getString(key)
-                return try {
-                    MirrorDirection.valueOf(str.uppercase())
-                } catch (e: Exception) {
-                    null
-                }
+                return CODEC.byName(str)
             }
 
             fun CompoundTag.putMirrorDirection(key: String, direction: MirrorDirection?): CompoundTag {

@@ -11,7 +11,7 @@ import net.minecraft.util.StringRepresentable
 data class SongSource(
     @JvmField val audioSource: String,
     @JvmField val sourceType: SongSourceType,
-    @JvmField val startTimestamp: Float
+    @JvmField var startTimestamp: Float = 0F
 ) {
 
     companion object {
@@ -58,11 +58,7 @@ enum class SongSourceType(val melodySource: SourceType) : StringRepresentable {
             if (!this.contains(key, CompoundTag.TAG_STRING.toInt()))
                 return null
             val str: String = this.getString(key)
-            return try {
-                SongSourceType.valueOf(str.uppercase())
-            } catch (e: Exception) {
-                null
-            }
+            return SongSourceType.CODEC.byName(str)
         }
 
         fun CompoundTag.putSongSourceType(key: String, type: SongSourceType?): CompoundTag {

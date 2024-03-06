@@ -70,11 +70,7 @@ open class Orb(
     }
 
     override fun readAdditionalSaveData(compound: CompoundTag) {
-        try {
-            this.type = OrbType.valueOf(compound.getString("type").uppercase())
-        } catch (_: IllegalArgumentException) {
-            this.type = OrbType.BOUNCE
-        }
+        this.type = OrbType.CODEC.byName(compound.getString("type")) ?: OrbType.BOUNCE
     }
 
     enum class OrbType(

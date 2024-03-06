@@ -70,11 +70,7 @@ open class Portal(
     }
 
     override fun readAdditionalSaveData(compound: CompoundTag) {
-        try {
-            this.type = PortalType.valueOf(compound.getString("type").uppercase())
-        } catch (_: IllegalArgumentException) {
-            this.type = PortalType.CUBE
-        }
+        this.type = PortalType.CODEC.byName(compound.getString("type")) ?: PortalType.CUBE
     }
 
     enum class PortalType(

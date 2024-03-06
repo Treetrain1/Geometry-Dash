@@ -87,11 +87,7 @@ open class Checkpoint(
     }
 
     override fun readAdditionalSaveData(compound: CompoundTag) {
-        try {
-            this.type = CheckpointType.valueOf(compound.getString("type").uppercase())
-        } catch (_: IllegalArgumentException) {
-            this.type = CheckpointType.STANDARD
-        }
+        this.type = CheckpointType.CODEC.byName(compound.getString("type")) ?: CheckpointType.STANDARD
     }
 
     enum class CheckpointType(val shouldAddSpawn: Boolean = true) : StringRepresentable {
