@@ -77,7 +77,7 @@ class SpikeBlock(props: Properties) : HalfTransparentBlock(props), Fallable, Sim
     override fun getStateForPlacement(context: BlockPlaceContext): BlockState? {
         val level = context.level
         val pos = context.clickedPos
-        val dir = context.nearestLookingDirection.opposite
+        val dir = context.clickedFace
         val size = 4
         return defaultBlockState()
             .setValue(FACING, dir)
