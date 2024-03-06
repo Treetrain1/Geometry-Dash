@@ -84,4 +84,18 @@ public abstract class LivingEntityMixin extends Entity {
 			original.call(instance, modifier);
 		}
 	}
+
+	@ModifyExpressionValue(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;onGround()Z", ordinal = 2))
+	private boolean fixGDFriction(boolean original) {
+		if (this instanceof PlayerDuck duck && duck.geometryDash$getGDData().getPlayingGD())
+			return false;
+		return original;
+	}
+
+	@ModifyExpressionValue(method = "getFrictionInfluencedSpeed", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;onGround()Z"))
+	private boolean fixGDFrictionSpeed(boolean original) {
+		if (this instanceof PlayerDuck duck && duck.geometryDash$getGDData().getPlayingGD())
+			return false;
+		return original;
+	}
 }
