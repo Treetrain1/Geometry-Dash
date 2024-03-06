@@ -111,11 +111,7 @@ inline fun LivingEntity.setRelativeDelta(vec: Vec3) {
     this.deltaMovement = this.toRelative(vec)
 }
 inline fun Entity.toRelative(x: Double, y: Double, z: Double) = this.toRelative(Vec3(x,y, z))
-@Suppress("SENSELESS_COMPARISON")
 inline fun Entity.toRelative(vec: Vec3): Vec3 {
-    if (this.gravityDirection === null) // failsafe
-        this.gravityDirection = DEFAULT_GRAVITY_DIRECTION
-
     return when (this.gravityDirection) {
         Direction.DOWN -> vec
         Direction.UP -> vec.multiply(1.0, -1.0, 1.0)
@@ -151,12 +147,14 @@ inline val Entity.gravity: Vec3
         return vec.scale(strength)
     }
 
+@Suppress("USELESS_ELVIS")
 inline var Entity.gravityStrength: Double
-    get() = (this as EntityDuck).`geometryDash$getGravityStrength`()
+    get() = (this as EntityDuck).`geometryDash$getGravityStrength`() ?: DEFAULT_GRAVITY_STRENGTH
     set(value) = (this as EntityDuck).`geometryDash$setGravityStrength`(value)
 
+@Suppress("USELESS_ELVIS")
 inline var Entity.gravityDirection: Direction
-    get() = (this as EntityDuck).`geometryDash$getGravityDirection`()
+    get() = (this as EntityDuck).`geometryDash$getGravityDirection`() ?: DEFAULT_GRAVITY_DIRECTION
     set(value) = (this as EntityDuck).`geometryDash$setGravityDirection`(value)
 
 inline fun CompoundTag.putVec(key: String, vec: Vec3) {
