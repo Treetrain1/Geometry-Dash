@@ -11,6 +11,7 @@ import net.minecraft.util.StringRepresentable
 data class SongSource(
     @JvmField val audioSource: String,
     @JvmField val sourceType: SongSourceType,
+    @JvmField val timestamp: Float
 ) {
 
     companion object {
@@ -18,7 +19,8 @@ data class SongSource(
         val CODEC: Codec<SongSource> = RecordCodecBuilder.create { instance ->
             instance.group(
                 Codec.STRING.fieldOf("audio_source").forGetter(SongSource::audioSource),
-                SongSourceType.CODEC.fieldOf("source_type").forGetter(SongSource::sourceType)
+                SongSourceType.CODEC.fieldOf("source_type").forGetter(SongSource::sourceType),
+                Codec.FLOAT.fieldOf("timestamp").forGetter(SongSource::timestamp),
             ).apply(instance, ::SongSource)
         }
 
@@ -28,7 +30,8 @@ data class SongSource(
             val song: CompoundTag = this.getCompound(key)
             val source = song.getString("audio_source")
             val sourceType = song.getSongSourceType("source_type") ?: return null
-            return SongSource(source, sourceType)
+            val timestamp = song.getFloat("timestamp")
+            return SongSource(source, sourceType, timestamp)
         }
 
         fun CompoundTag.putSongSource(key: String, source: SongSource?): CompoundTag {
@@ -36,6 +39,7 @@ data class SongSource(
             val comp = CompoundTag()
             comp.putString("audio_source", source.audioSource)
             comp.putSongSourceType("source_type", source.sourceType)
+            comp.putFloat("timestamp", source.timestamp)
             this.put(key, comp)
             return this
         }
