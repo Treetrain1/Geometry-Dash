@@ -25,6 +25,7 @@ import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.util.StringRepresentable
+import net.minecraft.util.StringRepresentable.EnumCodec
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.Pose
 import net.minecraft.world.entity.player.Player
@@ -290,7 +291,7 @@ open class GDData(
         if (mode == null) {
             return this.exitGD()
         }
-        return this.enterGD(mode, scale, source)
+        return this.enterGD(mode, scale, song)
     }
 
     /**
@@ -303,7 +304,7 @@ open class GDData(
         if (scale != null) {
             this.scale = scale
         }
-        this.song = source
+        this.song = song
 
         val player = this.player
         if (noChange || player !is ServerPlayer) return false
@@ -369,7 +370,7 @@ open class GDData(
 
     fun tick() {
         if (this.level.isClientSide)
-            this.song?.startTimestamp = this.timestamp
+            this.timestamp?.let { this.song?.startTimestamp = it }
         val player = this.player
         if (this.dirty) {
             if (player.level().isClientSide)
@@ -485,8 +486,9 @@ open class GDData(
         RIGHT;
 
         companion object {
+            @Suppress("DEPRECATION")
             @JvmField
-            val CODEC: Codec<MirrorDirection> = StringRepresentable.fromEnum(::values)
+            val CODEC: EnumCodec<MirrorDirection> = StringRepresentable.fromEnum(::values)
 
             fun CompoundTag.getMirrorDirection(key: String): MirrorDirection? {
                 if (!this.contains(key, CompoundTag.TAG_STRING.toInt()))

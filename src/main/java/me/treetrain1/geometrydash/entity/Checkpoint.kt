@@ -1,8 +1,13 @@
+@file:Suppress("DEPRECATION")
+
 package me.treetrain1.geometrydash.entity
 
-import me.treetrain1.geometrydash.data.*
+import me.treetrain1.geometrydash.data.CheckpointSnapshot
+import me.treetrain1.geometrydash.data.GDData
+import me.treetrain1.geometrydash.data.SongSource
+import me.treetrain1.geometrydash.data.SongSource.Companion.getSongSource
+import me.treetrain1.geometrydash.data.SongSource.Companion.putSongSource
 import me.treetrain1.geometrydash.util.gdData
-import me.treetrain1.geometrydash.util.gravity
 import me.treetrain1.geometrydash.util.gravityDirection
 import me.treetrain1.geometrydash.util.gravityStrength
 import net.minecraft.nbt.CompoundTag
@@ -11,6 +16,7 @@ import net.minecraft.network.syncher.EntityDataSerializer
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.util.StringRepresentable
+import net.minecraft.util.StringRepresentable.EnumCodec
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
@@ -91,7 +97,7 @@ open class Checkpoint(
 
     override fun readAdditionalSaveData(compound: CompoundTag) {
         this.type = CheckpointType.CODEC.byName(compound.getString("type")) ?: CheckpointType.STANDARD
-        if (this.type == Checkpoint.START)
+        if (this.type == CheckpointType.START)
             this.song = compound.getSongSource("song")
     }
 
@@ -101,6 +107,9 @@ open class Checkpoint(
         END(false);
 
         companion object {
+            @JvmField
+            val CODEC: EnumCodec<CheckpointType> = StringRepresentable.fromEnum(::values)
+
             @JvmField
             val SERIALIZER: EntityDataSerializer<CheckpointType> = EntityDataSerializer.simpleEnum(CheckpointType::class.java)
         }

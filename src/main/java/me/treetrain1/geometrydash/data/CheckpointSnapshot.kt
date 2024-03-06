@@ -150,7 +150,7 @@ data class CheckpointSnapshot(
                 buf.readFloat(),
                 buf.readUtf(),
                 buf.readFloat(),
-                buf.readNullable { buf1 -> GDData.MirrorDirection.CODEC.byName(buf1.readUtf() },
+                buf.readNullable { buf1 -> GDData.MirrorDirection.CODEC.byName(buf1.readUtf()) },
             )
     }
 

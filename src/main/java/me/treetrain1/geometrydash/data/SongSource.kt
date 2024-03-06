@@ -2,11 +2,7 @@ package me.treetrain1.geometrydash.data
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import de.keksuccino.melody.resources.audio.SimpleAudioFactory.SourceType
-import me.treetrain1.geometrydash.data.SongSourceType.Companion.getSongSourceType
-import me.treetrain1.geometrydash.data.SongSourceType.Companion.putSongSourceType
 import net.minecraft.nbt.CompoundTag
-import net.minecraft.util.StringRepresentable
 
 data class SongSource(
     @JvmField val audioSource: String,

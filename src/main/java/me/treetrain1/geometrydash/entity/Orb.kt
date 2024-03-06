@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package me.treetrain1.geometrydash.entity
 
 import me.treetrain1.geometrydash.data.GDData
@@ -7,6 +9,7 @@ import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializer
 import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.util.StringRepresentable
+import net.minecraft.util.StringRepresentable.EnumCodec
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
@@ -59,7 +62,6 @@ open class Orb(
             val gdData = player.gdData
             if (!gdData.playingGD) continue
 
-            val gdModeData = gdData.modeData ?: continue
             if (gdData.canBounceFromOrb)
                 this.onApply(player, gdData)
         }
@@ -91,6 +93,9 @@ open class Orb(
         TELEPORT(shouldBounce = false, shouldFlipGravity = true, shouldTeleport = true); // pink with arrows
 
         companion object {
+            @JvmField
+            val CODEC: EnumCodec<OrbType> = StringRepresentable.fromEnum(::values)
+
             @JvmField
             val SERIALIZER: EntityDataSerializer<OrbType> = EntityDataSerializer.simpleEnum(OrbType::class.java)
         }

@@ -1,5 +1,6 @@
 package me.treetrain1.geometrydash.worldgen
 
+import me.treetrain1.geometrydash.util.putVec
 import net.minecraft.core.BlockPos
 import net.minecraft.core.BlockPos.MutableBlockPos
 import net.minecraft.core.registries.BuiltInRegistries

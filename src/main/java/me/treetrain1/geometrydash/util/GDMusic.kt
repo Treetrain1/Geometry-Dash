@@ -28,6 +28,7 @@ import kotlin.jvm.optionals.getOrNull
 @Environment(EnvType.CLIENT)
 object GDMusic {
 
+    @Suppress("SENSELESS_COMPARISON")
     private val BASIC_URL_TEXT_VALIDATOR: ConsumingSupplier<String, Boolean> = ConsumingSupplier { consumes ->
         if (consumes != null && consumes.replace(" ", "").isNotEmpty()) {
             if ((consumes.startsWith("http://") || consumes.startsWith("https://")) && consumes.contains("."))
@@ -50,8 +51,17 @@ object GDMusic {
      */
     fun getMp3(source: String?): ALAudioClip? {
         if (source == null) return null
-        val resource = mp3Clip(source, SourceType.RESOURCE_LOCATION)
-        if (resource != null) return resource
+        try {
+            val isGDResource = source.contains(':')
+            val resourceLocation = ResourceLocation.tryParse(source)?.let {
+                ResourceLocation(if (isGDResource) MOD_ID else it.namespace, it.path)
+            }
+            if (resourceLocation != null) {
+                val newResource = ResourceLocation(resourceLocation.namespace, "sounds/music/${resourceLocation.path}.ogg")
+                val resource = mp3Clip(newResource.toString(), SourceType.RESOURCE_LOCATION)
+                if (resource != null) return resource
+            }
+        } catch (_: Exception) {}
 
         try {
             val file = downloadMp3(source.toInt())
