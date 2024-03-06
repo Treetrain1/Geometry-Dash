@@ -23,13 +23,8 @@ val MUSIC_DIRECTORY = Path("./.$MOD_ID/music/").apply {
     FileUtil.createDirectoriesSafe(this)
 }
 
-@JvmField
-val GD_MOVEMENT_SPEED = AttributeModifier(
-    "Geometry Dash speed boost",
-    1.25,//1.25,
-    AttributeModifier.Operation.MULTIPLY_TOTAL
-)
-const val GD_GRAVITY_PULL: Double = -0.1//-0.18
+const val GD_MOVEMENT_SPEED: Float = 2.25F
+const val GD_GRAVITY_PULL: Double = -0.13//-0.18
 
 /**
  * The location where portals to the Geometry dimension will lead.

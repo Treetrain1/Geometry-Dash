@@ -28,6 +28,7 @@ import net.minecraft.util.StringRepresentable
 import net.minecraft.util.StringRepresentable.EnumCodec
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.Pose
+import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.GameType
 import net.minecraft.world.level.Level
@@ -299,7 +300,8 @@ open class GDData(
      * @return if not already in GD mode
      */
     fun enterGD(mode: GDMode = GDMode.CUBE, scale: Float? = 1F, song: SongSource? = this.song): Boolean {
-        val noChange: Boolean = this.playingGD && this.mode == mode
+        val alreadyPlaying = this.playingGD
+        val noChange: Boolean = alreadyPlaying && this.mode == mode
         this.mode = mode
         if (scale != null) {
             this.scale = scale

@@ -1,8 +1,8 @@
 package me.treetrain1.geometrydash.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import com.llamalad7.mixinextras.injector.WrapWithCondition;
 import me.treetrain1.geometrydash.data.GDData;
 import me.treetrain1.geometrydash.data.mode.GDModeData;
 import me.treetrain1.geometrydash.duck.PlayerDuck;
@@ -18,14 +18,20 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import java.util.UUID;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity {
+
+	@Shadow
+	public abstract float getSpeed();
+
+	@Shadow
+	protected abstract float getFlyingSpeed();
 
 	private LivingEntityMixin(EntityType<?> entityType, Level level) {
 		super(entityType, level);
@@ -68,21 +74,9 @@ public abstract class LivingEntityMixin extends Entity {
 		}
 	}
 
-	@WrapOperation(method = "setSprinting", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/ai/attributes/AttributeInstance;removeModifier(Ljava/util/UUID;)V"))
-	private void removeGDSpeed(AttributeInstance instance, UUID identifier, Operation<Void> original) {
-		original.call(instance, identifier);
-		if (this instanceof PlayerDuck duck && duck.geometryDash$getGDData().getPlayingGD()) {
-			original.call(instance, GDSharedConstantsKt.GD_MOVEMENT_SPEED.getId());
-		}
-	}
-
-	@WrapOperation(method = "setSprinting", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/ai/attributes/AttributeInstance;addTransientModifier(Lnet/minecraft/world/entity/ai/attributes/AttributeModifier;)V"))
-	private void setGDSpeed(AttributeInstance instance, AttributeModifier modifier, Operation<Void> original) {
-		if (this instanceof PlayerDuck duck && duck.geometryDash$getGDData().getPlayingGD()) {
-			original.call(instance, GDSharedConstantsKt.GD_MOVEMENT_SPEED);
-		} else {
-			original.call(instance, modifier);
-		}
+	@WrapWithCondition(method = "setSprinting", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/ai/attributes/AttributeInstance;addTransientModifier(Lnet/minecraft/world/entity/ai/attributes/AttributeModifier;)V"))
+	private boolean setGDSpeed(AttributeInstance instance, AttributeModifier modifier) {
+		return !(this instanceof PlayerDuck duck) || !duck.geometryDash$getGDData().getPlayingGD();
 	}
 
 	@ModifyExpressionValue(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;onGround()Z", ordinal = 2))
@@ -92,10 +86,10 @@ public abstract class LivingEntityMixin extends Entity {
 		return original;
 	}
 
-	@ModifyExpressionValue(method = "getFrictionInfluencedSpeed", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;onGround()Z"))
-	private boolean fixGDFrictionSpeed(boolean original) {
+	@ModifyReturnValue(method = "getFrictionInfluencedSpeed", at = @At("RETURN"))
+	private float fixGDFrictionSpeed(float original) {
 		if (this instanceof PlayerDuck duck && duck.geometryDash$getGDData().getPlayingGD())
-			return false;
+			return this.getFlyingSpeed() * GDSharedConstantsKt.GD_MOVEMENT_SPEED;
 		return original;
 	}
 }
