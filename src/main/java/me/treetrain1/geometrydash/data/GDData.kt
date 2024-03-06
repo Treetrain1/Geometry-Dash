@@ -112,12 +112,27 @@ open class GDData(
     var audioClip: ALAudioClip? = null
         set(value) {
             val cur = field
-            if (cur != null && cur.isValidOpenAlSource) {
+            if (cur != null && cur != value && cur.isValidOpenAlSource) {
                 cur.stop()
                 cur.closeQuietly()
             }
             field = value
         }
+
+    @Environment(EnvType.CLIENT)
+    private fun updateAudioClip() {
+        this.audioClip = GDMusic.getMp3(this.song?.audioSource)
+        this.playAudio()
+        this.timestamp = this.song?.startTimestamp
+    }
+
+    @Environment(EnvType.CLIENT)
+    fun playAudio() {
+        this.audioClip?.apply {
+            if (this.isValidOpenAlSource)
+                this.play()
+        }
+    }
 
     @get:Environment(EnvType.CLIENT)
     @set:Environment(EnvType.CLIENT)
@@ -345,6 +360,8 @@ open class GDData(
     }
 
     fun tick() {
+        if (this.level.isClientSide)
+            this.song?.startTimestamp = this.timestamp
         val player = this.player
         if (this.dirty) {
             if (player.level().isClientSide)
@@ -412,6 +429,9 @@ open class GDData(
         }
 
         this.song = compound.getSongSource(SONG_TAG)
+        if (this.level.isClientSide) {
+            this.updateAudioClip()
+        }
         this.scale = compound.getFloat(SCALE_TAG)
         this.checkpoints = compound.getList(CHECKPOINTS_TAG, CompoundTag.TAG_COMPOUND.toInt())
             .map { tag -> CheckpointSnapshot.fromTag(tag as CompoundTag) }

@@ -10,7 +10,6 @@ import net.minecraft.util.StringRepresentable
 
 data class SongSource(
     @JvmField val audioSource: String,
-    @JvmField val sourceType: SongSourceType,
     @JvmField var startTimestamp: Float = 0F
 ) {
 
@@ -19,7 +18,6 @@ data class SongSource(
         val CODEC: Codec<SongSource> = RecordCodecBuilder.create { instance ->
             instance.group(
                 Codec.STRING.fieldOf("audio_source").forGetter(SongSource::audioSource),
-                SongSourceType.CODEC.fieldOf("source_type").forGetter(SongSource::sourceType),
                 Codec.FLOAT.fieldOf("start_timestamp").forGetter(SongSource::startTimestamp),
             ).apply(instance, ::SongSource)
         }
@@ -29,50 +27,17 @@ data class SongSource(
                 return null
             val song: CompoundTag = this.getCompound(key)
             val source = song.getString("audio_source")
-            val sourceType = song.getSongSourceType("source_type") ?: return null
             val timestamp = song.getFloat("start_timestamp")
-            return SongSource(source, sourceType, timestamp)
+            return SongSource(source, timestamp)
         }
 
         fun CompoundTag.putSongSource(key: String, source: SongSource?): CompoundTag {
             if (source == null) return this
             val comp = CompoundTag()
             comp.putString("audio_source", source.audioSource)
-            comp.putSongSourceType("source_type", source.sourceType)
             comp.putFloat("start_timestamp", source.startTimestamp)
             this.put(key, comp)
             return this
         }
     }
-}
-
-enum class SongSourceType(val melodySource: SourceType) : StringRepresentable {
-    RESOURCE_LOCATION(SourceType.RESOURCE_LOCATION),
-    LOCAL_FILE(SourceType.LOCAL_FILE);
-
-    companion object {
-        @JvmField
-        val CODEC: Codec<SongSourceType> = StringRepresentable.fromEnum(::values)
-
-        fun CompoundTag.getSongSourceType(key: String): SongSourceType? {
-            if (!this.contains(key, CompoundTag.TAG_STRING.toInt()))
-                return null
-            val str: String = this.getString(key)
-            return SongSourceType.CODEC.byName(str)
-        }
-
-        fun CompoundTag.putSongSourceType(key: String, type: SongSourceType?): CompoundTag {
-            this.putString(key, type?.serializedName ?: "")
-            return this
-        }
-    }
-
-    override fun getSerializedName(): String
-        = this.name.lowercase()
-}
-
-fun SourceType.toGD(): SongSourceType = when(this) {
-    SourceType.RESOURCE_LOCATION -> SongSourceType.RESOURCE_LOCATION
-    SourceType.LOCAL_FILE -> SongSourceType.LOCAL_FILE
-    SourceType.WEB_FILE -> SongSourceType.LOCAL_FILE // it should get downloaded
 }

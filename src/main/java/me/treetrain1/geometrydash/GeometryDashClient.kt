@@ -86,12 +86,9 @@ object GeometryDashClient : ClientModInitializer {
 
         // TODO: remove, this is purely for testing
         ClientPlayNetworking.registerGlobalReceiver(S2CSoundPacket.TYPE) { packet, player, sender ->
-            val file = GDMusic.downloadMp3(467339) // 467339 is at the speed of light
-            if (file != null) {
-                val clip = GDMusic.mp3Clip(file.path, SimpleAudioFactory.SourceType.LOCAL_FILE)
-                if (clip != null && clip.isValidOpenAlSource) {
-                    clip.play()
-                }
+            val clip = GDMusic.getMp3("467339") // 467339 is "At the Speed of Light" by Dimrain47
+            if (clip != null && clip.isValidOpenAlSource) {
+                clip.play()
             }
         }
     }

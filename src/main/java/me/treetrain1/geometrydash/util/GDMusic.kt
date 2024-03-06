@@ -46,6 +46,23 @@ object GDMusic {
     }
 
     /**
+     * Gets an audio clip from either a NG id or resource location
+     */
+    fun getMp3(source: String?): ALAudioClip? {
+        if (source == null) return null
+        val resource = mp3Clip(source, SourceType.RESOURCE_LOCATION)
+        if (resource != null) return resource
+
+        try {
+            val file = downloadMp3(source.toInt())
+            if (file != null) {
+                return mp3Clip(file.path, SourceType.LOCAL_FILE)
+            }
+        } catch (_: Exception) {}
+        return null
+    }
+
+    /**
      * Downloads an MP3 file from Newgrounds
      * @return The output file, or null if an error occurred
      */
