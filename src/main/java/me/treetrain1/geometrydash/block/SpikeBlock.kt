@@ -10,10 +10,7 @@ import net.minecraft.world.item.context.BlockPlaceContext
 import net.minecraft.world.level.BlockGetter
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.LevelAccessor
-import net.minecraft.world.level.block.Block
-import net.minecraft.world.level.block.Fallable
-import net.minecraft.world.level.block.HalfTransparentBlock
-import net.minecraft.world.level.block.SimpleWaterloggedBlock
+import net.minecraft.world.level.block.*
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.StateDefinition
 import net.minecraft.world.level.block.state.properties.BlockStateProperties
@@ -80,7 +77,7 @@ class SpikeBlock(props: Properties) : HalfTransparentBlock(props), Fallable, Sim
     override fun getStateForPlacement(context: BlockPlaceContext): BlockState? {
         val level = context.level
         val pos = context.clickedPos
-        val dir = context.nearestLookingVerticalDirection.opposite
+        val dir = context.nearestLookingDirection.opposite
         val size = 4
         return defaultBlockState()
             .setValue(FACING, dir)
@@ -113,6 +110,14 @@ class SpikeBlock(props: Properties) : HalfTransparentBlock(props), Fallable, Sim
 
         val vec3 = state.getOffset(level, pos)
         return shape.move(vec3.x, 0.0, vec3.z)
+    }
+
+    override fun rotate(state: BlockState, rotation: Rotation): BlockState {
+        return state.setValue(FACING, rotation.rotate(state.getValue(FACING)))
+    }
+
+    override fun mirror(state: BlockState, mirror: Mirror): BlockState {
+        return state.rotate(mirror.getRotation(state.getValue(FACING)))
     }
 
     override fun entityInside(state: BlockState, level: Level, pos: BlockPos, entity: Entity) {
