@@ -43,7 +43,6 @@ open class EditTool(props: Properties = Properties().stacksTo(1)) : Item(props) 
                     Type.SPIKE -> {}
                     Type.ORB -> {}
                     Type.PORTAL -> {
-                        // create portal for now
                         val portal = Portal(RegisterEntities.PORTAL, level)
                         portal.type = Portal.PortalType.SHIP
                         portal.setPos(player.position())
@@ -57,13 +56,6 @@ open class EditTool(props: Properties = Properties().stacksTo(1)) : Item(props) 
             else -> {} // TODO: implement
         }
 
-        // copy of portal for now
-        val portal = Portal(RegisterEntities.PORTAL, level)
-        portal.type = Portal.PortalType.SHIP
-        portal.setPos(player.position())
-        if (level.addFreshEntity(portal)) {
-            return InteractionResultHolder.success(stack)
-        }
         return super.use(level, player, usedHand)
     }
 
