@@ -1,7 +1,5 @@
 package me.treetrain1.geometrydash;
 
-import de.keksuccino.melody.resources.audio.SimpleAudioFactory
-import me.treetrain1.geometrydash.duck.GDClip
 import me.treetrain1.geometrydash.entity.render.CheckpointRenderer
 import me.treetrain1.geometrydash.entity.render.OrbRenderer
 import me.treetrain1.geometrydash.entity.render.PortalRenderer
@@ -20,7 +18,6 @@ import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry
 import net.minecraft.client.model.geom.ModelLayerLocation
 import net.minecraft.client.renderer.RenderType
-import org.lwjgl.openal.AL11
 
 @Environment(EnvType.CLIENT)
 object GeometryDashClient : ClientModInitializer {
@@ -86,7 +83,7 @@ object GeometryDashClient : ClientModInitializer {
 
         // TODO: remove, this is purely for testing
         ClientPlayNetworking.registerGlobalReceiver(S2CSoundPacket.TYPE) { packet, player, sender ->
-            val clip = GDMusic.getMp3("467339") // 467339 is "At the Speed of Light" by Dimrain47
+            val clip = GDMusic.getSound("467339") // 467339 is "At the Speed of Light" by Dimrain47
             if (clip != null && clip.isValidOpenAlSource) {
                 clip.play()
             }

@@ -23,8 +23,8 @@ val MUSIC_DIRECTORY = Path("./.$MOD_ID/music/").apply {
     FileUtil.createDirectoriesSafe(this)
 }
 
-const val GD_MOVEMENT_SPEED: Float = 2.25F
-const val GD_GRAVITY_PULL: Double = -0.13//-0.18
+const val GD_MOVEMENT_SPEED: Float = 2.10F
+const val GD_GRAVITY_PULL: Double = -0.21//-0.18
 
 /**
  * The location where portals to the Geometry dimension will lead.

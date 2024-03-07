@@ -2,11 +2,13 @@ package me.treetrain1.geometrydash.mixin;
 
 import me.treetrain1.geometrydash.data.GDData;
 import me.treetrain1.geometrydash.duck.PlayerDuck;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -35,7 +37,8 @@ public class PlayerMixin implements PlayerDuck {
 
 	@Inject(method = "tick", at = @At("TAIL"))
 	public void gd$tick(CallbackInfo ci) {
-		this.gdData.tick();
+		if (this.gdData.getPlayingGD())
+			this.gdData.tick();
 	}
 
 	@Inject(method = "isSwimming", at = @At("HEAD"), cancellable = true)
@@ -85,5 +88,11 @@ public class PlayerMixin implements PlayerDuck {
 	@Override
 	public void geometryDash$updateSyncedGDData() {
 		Player.class.cast(this).getEntityData().set(GDData.GD_DATA, this.gdData.save(new CompoundTag()), true);
+	}
+
+	@Inject(method = "playStepSound", at = @At("HEAD"), cancellable = true)
+	private void cancelGDStepSound(BlockPos pos, BlockState state, CallbackInfo ci) {
+		if (this.gdData.getPlayingGD())
+			ci.cancel();
 	}
 }

@@ -2,6 +2,7 @@ package me.treetrain1.geometrydash.util
 
 import com.mojang.blaze3d.systems.RenderSystem
 import de.keksuccino.melody.resources.audio.MelodyAudioException
+import de.keksuccino.melody.resources.audio.SimpleAudioFactory
 import de.keksuccino.melody.resources.audio.SimpleAudioFactory.SourceType
 import de.keksuccino.melody.resources.audio.openal.ALAudioBuffer
 import de.keksuccino.melody.resources.audio.openal.ALAudioClip
@@ -47,19 +48,20 @@ object GDMusic {
     }
 
     /**
-     * Gets an audio clip from either a NG id or resource location
+     * Gets an audio clip from either a NG id or [ResourceLocation]
      */
-    fun getMp3(source: String?): ALAudioClip? {
+    fun getSound(source: String?): ALAudioClip? {
         if (source == null) return null
         try {
             val isGDResource = source.contains(':')
             val resourceLocation = ResourceLocation.tryParse(source)?.let {
-                ResourceLocation(if (isGDResource) MOD_ID else it.namespace, it.path)
+                ResourceLocation(if (!isGDResource) MOD_ID else it.namespace, it.path)
             }
             if (resourceLocation != null) {
                 val newResource = ResourceLocation(resourceLocation.namespace, "sounds/music/${resourceLocation.path}.ogg")
-                val resource = mp3Clip(newResource.toString(), SourceType.RESOURCE_LOCATION)
-                if (resource != null) return resource
+                try {
+                    return SimpleAudioFactory.ogg(newResource.toString(), SourceType.RESOURCE_LOCATION).join()
+                } catch (_: Exception) {}
             }
         } catch (_: Exception) {}
 

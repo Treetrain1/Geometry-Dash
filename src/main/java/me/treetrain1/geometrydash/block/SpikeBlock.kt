@@ -1,11 +1,15 @@
 package me.treetrain1.geometrydash.block
 
 import me.treetrain1.geometrydash.GeometryDash
+import me.treetrain1.geometrydash.network.C2SFailPacket
+import me.treetrain1.geometrydash.util.gdData
 import me.treetrain1.geometrydash.util.isCollidingWithBlockShape
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.context.BlockPlaceContext
 import net.minecraft.world.level.BlockGetter
 import net.minecraft.world.level.Level
@@ -124,6 +128,12 @@ class SpikeBlock(props: Properties) : HalfTransparentBlock(props), Fallable, Sim
         super.entityInside(state, level, pos, entity)
         if (entity !is LivingEntity || entity.isDeadOrDying || !entity.isCollidingWithBlockShape(level, pos)) return
 
-        entity.hurt(level.damageSources().source(GeometryDash.LEVEL_FAIL), Float.MAX_VALUE)
+        if (level.isClientSide) {
+            if (entity is Player && entity.gdData.playingGD)
+                ClientPlayNetworking.send(C2SFailPacket())
+        } else {
+            if (entity !is Player || !entity.gdData.playingGD)
+                entity.hurt(level.damageSources().source(GeometryDash.LEVEL_FAIL), 1F)
+        }
     }
 }

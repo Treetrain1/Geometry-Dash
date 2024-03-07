@@ -11,11 +11,13 @@ import me.treetrain1.geometrydash.data.mode.GDModeData
 import me.treetrain1.geometrydash.data.mode.getGDModeData
 import me.treetrain1.geometrydash.data.mode.putGDModeData
 import me.treetrain1.geometrydash.duck.GDClip
+import me.treetrain1.geometrydash.duck.MCDuck
 import me.treetrain1.geometrydash.duck.PlayerDuck
 import me.treetrain1.geometrydash.entity.Checkpoint
 import me.treetrain1.geometrydash.util.*
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
+import net.minecraft.client.Minecraft
 import net.minecraft.core.Direction
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
@@ -28,7 +30,6 @@ import net.minecraft.util.StringRepresentable
 import net.minecraft.util.StringRepresentable.EnumCodec
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.Pose
-import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.GameType
 import net.minecraft.world.level.Level
@@ -117,20 +118,15 @@ open class GDData(
             this.modeData = modeData
         }
 
-    @Environment(EnvType.CLIENT)
-    var audioClip: ALAudioClip? = null
-        set(value) {
-            val cur = field
-            if (cur != null && cur != value && cur.isValidOpenAlSource) {
-                cur.stop()
-                cur.closeQuietly()
-            }
-            field = value
-        }
+    @get:Environment(EnvType.CLIENT)
+    @set:Environment(EnvType.CLIENT)
+    inline var audioClip: ALAudioClip?
+        get() = (Minecraft.getInstance() as MCDuck).`geometryDash$audioClip`
+        set(value) { (Minecraft.getInstance() as MCDuck).`geometryDash$audioClip` = value }
 
     @Environment(EnvType.CLIENT)
     private fun updateAudioClip() {
-        this.audioClip = GDMusic.getMp3(this.song?.audioSource)
+        this.audioClip = GDMusic.getSound(this.song?.audioSource)
         this.playAudio()
         this.timestamp = this.song?.startTimestamp
     }
@@ -356,7 +352,8 @@ open class GDData(
         }
         val prevGravityStrength = this.prevGravityStrength
         if (prevGravityStrength != null) {
-            player.gravityStrength = prevGravityStrength
+            // failsafe
+            player.gravityStrength = if (prevGravityStrength == 0.0) DEFAULT_GRAVITY_STRENGTH else prevGravityStrength
             this.prevGravityStrength = null
         }
         val prevGravityDirection = this.prevGravityDirection
