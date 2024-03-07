@@ -120,6 +120,9 @@ object GeometryDash : ModInitializer {
             ServerPlayNetworking.registerGlobalReceiver(C2SFailPacket.TYPE) { packet, player, _ ->
                 player.hurt(player.damageSources().source(LEVEL_FAIL), Float.MAX_VALUE)
             }
+            ServerPlayNetworking.registerGlobalReceiver(C2SExitPacket.TYPE) { packet, player, _ ->
+                player.gdData.exitGD()
+            }
 
             EntityDataSerializers.registerSerializer(DOUBLE_SERIALIZER)
             EntityDataSerializers.registerSerializer(Checkpoint.CheckpointType.SERIALIZER)
