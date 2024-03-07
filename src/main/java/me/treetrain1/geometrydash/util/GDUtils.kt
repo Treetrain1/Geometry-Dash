@@ -72,15 +72,15 @@ fun Entity.isCollidingWithBlockShape(level: Level, pos: BlockPos): Boolean {
     val movedBlockShape = blockShape.move(pos.x.toDouble(), pos.y.toDouble(), pos.z.toDouble()).toAabbs()
     val expandedPlayerBoundingBox = this.boundingBox.inflate(0.075)
 
-   for (aabb in movedBlockShape) {
-       if (expandedPlayerBoundingBox.intersects(aabb)) return true
-   }
+    for (aabb in movedBlockShape) {
+        if (expandedPlayerBoundingBox.intersects(aabb)) return true
+    }
 
     return false
 }
 
 // 0.42 is the player jump power
-private const val defaultLaunch = 0.42 * 2.1//1.53//1.8
+private const val defaultLaunch = 0.42 * 2.38//1.53//1.8
 
 fun LivingEntity.launch(multiplier: Double) {
     val vec3: Vec3 = this.deltaMovement

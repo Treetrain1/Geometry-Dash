@@ -41,7 +41,7 @@ open class SwingModeData : GDModeData() {
         }
     }
 
-    override fun tickInput(input: Input): Boolean {
+    override fun tickInput(): Boolean {
         val data = this.gdData!!
         val player = data.player
         val delta = player.deltaMovement

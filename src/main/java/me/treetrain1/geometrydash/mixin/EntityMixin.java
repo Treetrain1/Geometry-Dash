@@ -21,6 +21,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -56,6 +57,9 @@ public abstract class EntityMixin implements EntityDuck {
 	@Shadow
 	public boolean minorHorizontalCollision;
 
+	@Shadow
+	public abstract boolean onGround();
+
 	@WrapWithCondition(
 		method = "checkFallDamage",
 		at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/Block;fallOn(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/entity/Entity;F)V")
@@ -78,6 +82,18 @@ public abstract class EntityMixin implements EntityDuck {
 			if (!player.isDeadOrDying() && data.getPlayingGD() && !data.getModeData().getWithstandsCollisions() && this.horizontalCollision && !this.minorHorizontalCollision) {
 				player.setHealth(0);
 				ClientPlayNetworking.send(new C2SFailPacket());
+			}
+		}
+	}
+
+	@Inject(method = "move", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;setOnGroundWithKnownMovement(ZLnet/minecraft/world/phys/Vec3;)V", shift = At.Shift.AFTER))
+	private void instantGDInput(MoverType type, Vec3 pos, CallbackInfo ci) {
+		if (this instanceof PlayerDuck duck) {
+			var data = duck.geometryDash$getGDData();
+			if (this.onGround()) {
+				var mode = data.getModeData();
+				if (mode != null)
+					mode.tickInput();
 			}
 		}
 	}

@@ -85,7 +85,7 @@ public class LocalPlayerMixin {
 				if (gdModeData.unlockOnRelease())
 					gdData.bufferLocked = false;
 			}
-			if (gdModeData.tickInput(this.input)) {
+			if (gdModeData.tickInput()) {
 				gdData.orbLocked = true;
 				if (gdModeData.lockOnSuccess()) gdData.bufferLocked = true;
 			}

@@ -95,7 +95,7 @@ abstract class GDModeData {
      * @return if the input was successful
      */
     @Environment(EnvType.CLIENT)
-    abstract fun tickInput(input: Input): Boolean
+    abstract fun tickInput(): Boolean
 
     abstract fun getPose(): Pose
 

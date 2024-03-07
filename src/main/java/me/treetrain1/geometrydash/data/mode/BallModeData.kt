@@ -42,7 +42,7 @@ open class BallModeData(
         }
     }
 
-    override fun tickInput(input: Input): Boolean {
+    override fun tickInput(): Boolean {
         val data = this.gdData!!
         val player = data.player
         if (data.canProcessInput && player.onGround()) {
