@@ -5,6 +5,8 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
 import com.llamalad7.mixinextras.sugar.ref.LocalFloatRef;
+import com.llamalad7.mixinextras.sugar.ref.LocalRef;
+import me.treetrain1.geometrydash.data.CameraData;
 import me.treetrain1.geometrydash.duck.PlayerDuck;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -38,7 +40,8 @@ public abstract class CameraMixin {
 	private void gd$setupRotation(
 		Camera instance, float yRot, float xRot, Operation<Void> original,
 		BlockGetter level, Entity entity, boolean detached, boolean thirdPersonReverse, float partialTick,
-		@Share("gd$useGDCamera") LocalBooleanRef useGDCamera, @Share("gd$yRot") LocalFloatRef gdYRot
+		@Share("gd$useGDCamera") LocalBooleanRef useGDCamera, @Share("gd$yRot") LocalFloatRef gdYRot,
+		@Share("gd$cameraData") LocalRef<CameraData> cameraData
 	) {
 		if (entity instanceof PlayerDuck duck
 			&& duck.geometryDash$getGDData().getPlayingGD()
@@ -48,6 +51,7 @@ public abstract class CameraMixin {
 			gdYRot.set(yRot);
 			xRot = 0;
 			useGDCamera.set(true);
+			cameraData.set(duck.geometryDash$getGDData().cameraData)
 		}
 
 		original.call(instance, yRot, xRot);
@@ -64,13 +68,16 @@ public abstract class CameraMixin {
 	private void gd$setupPosition(
 		Camera instance, double x, double y, double z, Operation<Void> original,
 		BlockGetter level, Entity entity, boolean detached, boolean thirdPersonReverse, float partialTick,
-		@Share("gd$useGDCamera") LocalBooleanRef useGDCamera, @Share("gd$yRot") LocalFloatRef gdYRot
+		@Share("gd$useGDCamera") LocalBooleanRef useGDCamera, @Share("gd$yRot") LocalFloatRef gdYRot,
+		@Share("gd$cameraData") LocalRef<CameraData> cameraData
 	) {
 		original.call(instance, x, y, z);
 		if (!useGDCamera.get()) return;
+		var camData = cameraData.get()
+		var offset = camData.playerOffset
 
-		this.move(0D, 0D, -10D);
-		this.setRotation(gdYRot.get() + 270F, 0F);
+		this.move(offset.x, offset.y, offset.z - 10);
+		this.setRotation(gdYRot.get() + 270F + camData.pitch +, camData.yaw);
 	}
 
 	@Inject(

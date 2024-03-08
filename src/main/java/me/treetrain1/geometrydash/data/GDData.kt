@@ -333,6 +333,7 @@ open class GDData(
         this.scale = 1F
         this.modeData = null
         this.checkpoints.clear()
+        this.cameraData = CameraData()
         this.ignoreInput = false
         this.inputBuffer = false
         this.bufferLocked = false
