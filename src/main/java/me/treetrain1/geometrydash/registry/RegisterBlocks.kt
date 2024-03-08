@@ -54,6 +54,48 @@ object RegisterBlocks {
         "teleport_pad",
         jumpPad(JumpPadBlock.JumpPadType.TELEPORT)
     )
+
+    @JvmField
+    val RAINBOW_BLOCK: Block = register(
+        "rainbow_block",
+        Block(FabricBlockSettings.create())
+    )
+
+    @JvmField
+    val RED_BLOCK: Block = register(
+        "red_block",
+        Block(FabricBlockSettings.create())
+    )
+
+    @JvmField
+    val ORANGE_BLOCK: Block = register(
+        "orange_block",
+        Block(FabricBlockSettings.create())
+    )
+
+    @JvmField
+    val YELLOW_BLOCK: Block = register(
+        "yellow_block",
+        Block(FabricBlockSettings.create())
+    )
+
+    @JvmField
+    val LIME_BLOCK: Block = register(
+        "lime_block",
+        Block(FabricBlockSettings.create())
+    )
+
+    @JvmField
+    val LIGHT_BLUE_BLOCK: Block = register(
+        "light_blue_block",
+        Block(FabricBlockSettings.create())
+    )
+
+    @JvmField
+    val MAGENTA_BLOCK: Block = register(
+        "magenta_block",
+        Block(FabricBlockSettings.create())
+    )
 }
 
 private inline fun jumpPad(type: JumpPadBlock.JumpPadType): JumpPadBlock
