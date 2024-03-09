@@ -51,7 +51,7 @@ public abstract class CameraMixin {
 			gdYRot.set(yRot);
 			xRot = 0;
 			useGDCamera.set(true);
-			cameraData.set(duck.geometryDash$getGDData().cameraData)
+			cameraData.set(duck.geometryDash$getGDData().cameraData);
 		}
 
 		original.call(instance, yRot, xRot);
@@ -73,11 +73,11 @@ public abstract class CameraMixin {
 	) {
 		original.call(instance, x, y, z);
 		if (!useGDCamera.get()) return;
-		var camData = cameraData.get()
-		var offset = camData.playerOffset
+		var camData = cameraData.get();
+		var offset = camData.playerOffset;
 
 		this.move(offset.x, offset.y, offset.z - 10);
-		this.setRotation(gdYRot.get() + 270F + camData.pitch +, camData.yaw);
+		this.setRotation(gdYRot.get() + 270F + camData.pitch, camData.yaw);
 	}
 
 	@Inject(

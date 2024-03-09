@@ -92,6 +92,12 @@ object RegisterBlocks {
     )
 
     @JvmField
+    val BLUE_BLOCK: Block = register(
+        "blue_block",
+        Block(FabricBlockSettings.create())
+    )
+
+    @JvmField
     val MAGENTA_BLOCK: Block = register(
         "magenta_block",
         Block(FabricBlockSettings.create())

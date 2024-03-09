@@ -25,7 +25,7 @@ val MUSIC_DIRECTORY = Path("./.$MOD_ID/music/").apply {
 
 const val GD_TICKS_PER_SECOND: Int = 60
 
-const val GD_MOVEMENT_SPEED: Float = 1.74F
+const val GD_MOVEMENT_SPEED: Float = 1.75F
 const val GD_GRAVITY_PULL: Double = -0.25//-0.18
 
 /**

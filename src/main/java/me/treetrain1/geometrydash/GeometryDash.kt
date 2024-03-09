@@ -7,6 +7,7 @@ import me.treetrain1.geometrydash.datafix.GDDataFixer
 import me.treetrain1.geometrydash.entity.Checkpoint
 import me.treetrain1.geometrydash.entity.Portal
 import me.treetrain1.geometrydash.entity.Orb
+import me.treetrain1.geometrydash.network.C2SExitPacket
 import me.treetrain1.geometrydash.network.C2SFailPacket
 import me.treetrain1.geometrydash.portal.RegisterPortal
 import me.treetrain1.geometrydash.registry.*
@@ -51,22 +52,16 @@ object GeometryDash : ModInitializer {
                 entries.accept(RegisterBlocks.HIGH_JUMP_PAD)
                 entries.accept(RegisterBlocks.REVERSE_GRAVITY_JUMP_PAD)
                 entries.accept(RegisterBlocks.TELEPORT_PAD)
+                entries.accept(RegisterBlocks.RAINBOW_BLOCK)
+                entries.accept(RegisterBlocks.RED_BLOCK)
+                entries.accept(RegisterBlocks.ORANGE_BLOCK)
+                entries.accept(RegisterBlocks.YELLOW_BLOCK)
+                entries.accept(RegisterBlocks.LIME_BLOCK)
+                entries.accept(RegisterBlocks.LIGHT_BLUE_BLOCK)
+                entries.accept(RegisterBlocks.BLUE_BLOCK)
+                entries.accept(RegisterBlocks.RAINBOW_BLOCK)
 
-                entries.accept(RegisterItems.CUBE_PORTAL)
-                entries.accept(RegisterItems.SHIP_PORTAL)
-                entries.accept(RegisterItems.BALL_PORTAL)
-                entries.accept(RegisterItems.UFO_PORTAL)
-                entries.accept(RegisterItems.WAVE_PORTAL)
-                entries.accept(RegisterItems.ROBOT_PORTAL)
-                entries.accept(RegisterItems.SPIDER_PORTAL)
-                entries.accept(RegisterItems.SWING_PORTAL)
-                entries.accept(RegisterItems.CUBE_3D_PORTAL)
-                entries.accept(RegisterItems.ROBOT_3D_PORTAL)
-                entries.accept(RegisterItems.GRAVITY_FLIP_PORTAL)
-                entries.accept(RegisterItems.MIRROR_PORTAL)
-                entries.accept(RegisterItems.NORMAL_SCALE_PORTAL)
-                entries.accept(RegisterItems.SMALL_SCALE_PORTAL)
-                entries.accept(RegisterItems.LARGE_SCALE_PORTAL)
+                entries.accept(RegisterItems.EDIT_TOOL)
             }
             .build()
     ).key!!

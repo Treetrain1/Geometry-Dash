@@ -2,7 +2,12 @@ package me.treetrain1.geometrydash.item
 
 import me.treetrain1.geometrydash.data.GDMode
 import me.treetrain1.geometrydash.entity.Portal
+import me.treetrain1.geometrydash.item.EditTool.Mode.Companion.getMode
+import me.treetrain1.geometrydash.item.EditTool.Mode.Companion.putMode
+import me.treetrain1.geometrydash.item.EditTool.Type.Companion.getType
 import me.treetrain1.geometrydash.registry.RegisterEntities
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.util.StringRepresentable
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.InteractionResultHolder
@@ -25,8 +30,8 @@ open class EditTool(props: Properties = Properties().stacksTo(1)) : Item(props) 
         val mode = tag.getMode("mode")
 
         // switch modes when shifting
-        if (player.isShiftKeyDown()) {
-            if (!world.isClientSide) {
+        if (player.isShiftKeyDown) {
+            if (!level.isClientSide) {
                 val newTag = CompoundTag()
                 // TODO: switch type from crouch + left click
                 //newTag.putType("type", type.next())
@@ -63,12 +68,12 @@ open class EditTool(props: Properties = Properties().stacksTo(1)) : Item(props) 
     enum class Type : StringRepresentable {
         SPIKE,
         ORB,
-        PORTAL
+        PORTAL,
         CHECKPOINT;
 
         companion object {
             @JvmField
-            val CODEC: EnumCodec<Type> = StringRepresentable.fromEnum(::values)
+            val CODEC: StringRepresentable.EnumCodec<Type> = StringRepresentable.fromEnum(::values)
 
             fun CompoundTag.getType(key: String): Type {
                 return CODEC.byName(key) ?: SPIKE
@@ -80,11 +85,11 @@ open class EditTool(props: Properties = Properties().stacksTo(1)) : Item(props) 
             }
         }
 
-        override fun next(): Type = when (this) {
+        fun next(): Type = when (this) {
             SPIKE -> ORB
             ORB -> PORTAL
             PORTAL -> CHECKPOINT
-            CHECKPOINt -> SPIKE
+            CHECKPOINT -> SPIKE
         }
 
         override fun getSerializedName(): String = this.name.lowercase()
@@ -98,7 +103,7 @@ open class EditTool(props: Properties = Properties().stacksTo(1)) : Item(props) 
 
         companion object {
             @JvmField
-            val CODEC: EnumCodec<Mode> = StringRepresentable.fromEnum(::values)
+            val CODEC: StringRepresentable.EnumCodec<Mode> = StringRepresentable.fromEnum(::values)
 
             fun CompoundTag.getMode(key: String): Mode {
                 return CODEC.byName(key) ?: CREATE
