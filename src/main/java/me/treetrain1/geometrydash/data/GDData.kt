@@ -455,6 +455,10 @@ open class GDData(
         if (compound.contains(PREV_GRAVITY_DIRECTION_TAG))
             this.prevGravityDirection = Direction.byName(compound.getString(PREV_GRAVITY_DIRECTION_TAG))
         else this.prevGravityDirection = null
+
+        if (this.level.isClientSide) {
+            this.level.tickRateManager().setTickRate(GD_TICKS_PER_SECOND)
+        }
         return compound
     }
 
